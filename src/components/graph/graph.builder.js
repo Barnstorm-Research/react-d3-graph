@@ -103,6 +103,12 @@ function buildLinkProps(link, nodes, links, config, linkCallbacks, highlightedNo
 
     const markerId = config.directed ? getMarkerId(highlight, transform, config) : null;
 
+    var clsName = CONST.LINK_CLASS_NAME;
+
+    if (link.className || config.link.className) {
+        clsName += " " + (link.className || config.link.className);
+    }
+
     return {
         markerId,
         d,
@@ -111,7 +117,7 @@ function buildLinkProps(link, nodes, links, config, linkCallbacks, highlightedNo
         strokeWidth,
         stroke,
         mouseCursor: config.link.mouseCursor,
-        className: CONST.LINK_CLASS_NAME,
+        className: clsName,
         opacity,
         onClickLink: linkCallbacks.onClickLink,
         onRightClickLink: linkCallbacks.onRightClickLink,

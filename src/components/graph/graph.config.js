@@ -172,6 +172,7 @@
  * - "STRAIGHT" <small>(default)</small> - a straight line.
  * - "CURVE_SMOOTH" - a slight curve between two nodes
  * - "CURVE_FULL" - a semicircumference trajectory unites source and target nodes.
+ * @param {string} [link.className=undefined] the class names to pass onto this link. If undefined the CONST.LINK_CLASS_NAME will be used.
  * <br/>
  *
  * @example
@@ -243,5 +244,6 @@ export default {
         semanticStrokeWidth: false,
         strokeWidth: 1.5,
         type: "STRAIGHT",
+        className: undefined,
     },
 };
