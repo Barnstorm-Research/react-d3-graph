@@ -23,8 +23,10 @@ import {
     forceX as d3ForceX,
     forceY as d3ForceY,
     forceSimulation as d3ForceSimulation,
-    forceManyBody as d3ForceManyBody,
+    //    forceManyBody as d3ForceManyBody,
 } from "d3-force";
+
+import { forceManyBodyReuse as d3ForceManyBodyReuse } from "d3-force-reuse";
 
 import CONST from "./graph.const";
 import DEFAULT_CONFIG from "./graph.config";
@@ -34,7 +36,7 @@ import utils from "../../utils";
 import { computeNodeDegree } from "./collapse.helper";
 
 const NODE_PROPS_WHITELIST = ["id", "highlighted", "x", "y", "index", "vy", "vx"];
-const LINK_CUSTOM_PROPS_WHITELIST = ["color", "opacity", "strokeWidth"];
+const LINK_CUSTOM_PROPS_WHITELIST = ["color", "opacity", "strokeWidth", "className"];
 
 /**
  * Create d3 forceSimulation to be applied on the graph.<br/>
@@ -53,7 +55,7 @@ function _createForceSimulation(width, height, gravity) {
     const forceStrength = gravity;
 
     return d3ForceSimulation()
-        .force("charge", d3ForceManyBody().strength(forceStrength))
+        .force("charge", d3ForceManyBodyReuse()) //.strength(forceStrength)) //d3ForceManyBody().strength(forceStrength))
         .force("x", frx)
         .force("y", fry);
 }

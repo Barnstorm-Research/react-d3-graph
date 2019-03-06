@@ -81,6 +81,7 @@
  * all forces and drag events upon nodes will produce not effect. Note that, if this value is true the nodes will be
  * rendered with the initial provided **x and y coordinates** (links positions will be automatically set
  * from the given nodes positions by rd3g), no coordinates will be calculated by rd3g or subjacent d3 modules.
+ * @param {boolean} [automaticLayoutOn=true] - method for turning on and off animation of the nodes without locking the graph like staticGraph does.
  * @param {number} [width=800] - the width of the (svg) area where the graph will be rendered.
  * <br/>
  * @param {Object} d3 d3 object is explained in next section. ⬇️
@@ -193,6 +194,7 @@
  */
 export default {
     automaticRearrangeAfterDropNode: false,
+    automaticLayoutOn: true,
     collapsible: false,
     directed: false,
     focusAnimationDuration: 0.75,

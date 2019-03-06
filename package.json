@@ -104,5 +104,8 @@
         "social-network-analysis",
         "social-network-graph",
         "visualization"
-    ]
+    ],
+    "dependencies": {
+        "d3-force-reuse": "^1.0.1"
+    }
 }
