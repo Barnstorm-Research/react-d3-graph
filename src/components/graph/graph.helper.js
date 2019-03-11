@@ -36,7 +36,7 @@ import utils from "../../utils";
 import { computeNodeDegree } from "./collapse.helper";
 
 const NODE_PROPS_WHITELIST = ["id", "highlighted", "x", "y", "index", "vy", "vx"];
-const LINK_CUSTOM_PROPS_WHITELIST = ["color", "opacity", "strokeWidth", "className"];
+const LINK_CUSTOM_PROPS_WHITELIST = ["color", "opacity", "strokeWidth", "label"];
 
 /**
  * Create d3 forceSimulation to be applied on the graph.<br/>
@@ -182,6 +182,7 @@ function _mapDataLinkToD3Link(link, index, d3Links = [], config, state = {}) {
  * @param {Object.<string, Object>} linksMatrix - an object containing a matrix of connections of the graph, for each nodeId,
  * there is an object that maps adjacent nodes ids (string) and their values (number).
  * @returns {Object.<string, Object>} same input nodes structure with tagged orphans nodes where applicable.
+ * @memberof Graph/helper
  */
 function _tagOrphanNodes(nodes, linksMatrix) {
     return Object.keys(nodes).reduce((acc, nodeId) => {
