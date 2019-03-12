@@ -5,7 +5,7 @@ module.exports = {
     devtool: "cheap-module-eval-source-map",
     entry: "./index.jsx",
     output: {
-        path: __dirname + "/sandbox/",
+        path: path.join(__dirname, "sandbox"),
         filename: "rd3g.sandbox.bundle.js",
     },
     module: {
