@@ -12,6 +12,7 @@ import ERRORS from "../../err";
 import * as collapseHelper from "./collapse.helper";
 import * as graphHelper from "./graph.helper";
 import * as graphRenderer from "./graph.renderer";
+import * as layoutHelper from "./graph.layout";
 import utils from "../../utils";
 
 /**
@@ -415,6 +416,7 @@ export default class Graph extends React.Component {
             this.state
         );
         const state = graphElementsUpdated ? graphHelper.initializeGraphState(nextProps, this.state) : this.state;
+
         const newConfig = nextProps.config || {};
         const { configUpdated, d3ConfigUpdated } = graphHelper.checkForGraphConfigChanges(nextProps, this.state);
         const config = configUpdated ? utils.merge(DEFAULT_CONFIG, newConfig) : this.state.config;
@@ -445,7 +447,6 @@ export default class Graph extends React.Component {
     componentDidUpdate() {
         // if the property staticGraph was activated we want to stop possible ongoing simulation
         this.state.config.staticGraph && this.pauseSimulation();
-
         if (!this.state.config.staticGraph && (this.state.newGraphElements || this.state.d3ConfigUpdated)) {
             this._graphForcesConfig();
             this.restartSimulation();
@@ -472,6 +473,8 @@ export default class Graph extends React.Component {
     }
 
     render() {
+        let alpha = this.state.simulation.alpha();
+        console.log(this.state.simulation.alpha(), this.state.simulation.alphaMin());
         const { nodes, links, defs } = graphRenderer.renderGraph(
             this.state.nodes,
             {
@@ -487,20 +490,41 @@ export default class Graph extends React.Component {
                 onRightClickLink: this.props.onRightClickLink,
                 onMouseOverLink: this.onMouseOverLink,
                 onMouseOutLink: this.onMouseOutLink,
+                layoutCallback: layoutHelper.layoutCallbackHelper(this.state.config.d3.layoutMode),
             },
             this.state.config,
             this.state.highlightedNode,
             this.state.highlightedLink,
-            this.state.transform
+            this.state.transform,
+            alpha
         );
 
         const svgStyle = {
             height: this.state.config.height,
             width: this.state.config.width,
         };
-
+        console.log("nodes in render ", nodes);
+        console.log("links in render ", links);
         const containerProps = this._generateFocusAnimationProps();
 
+        // return (
+        //     <div id={`${this.state.id}-${CONST.GRAPH_WRAPPER_ID}`}>
+        //     {
+        //     alpha > this.state.config.d3.alphaMin ?
+        //         (<div>Loading...</div>)
+        //     :
+        //         (
+        //             <svg name={`svg-container-${this.state.id}`} style={svgStyle} onClick={this.onClickGraph}>
+        //                 {defs}
+        //                 <g id={`${this.state.id}-${CONST.GRAPH_CONTAINER_ID}`} {...containerProps}>
+        //                     {links}
+        //                     {nodes}
+        //                 </g>
+        //             </svg>
+        //         )
+        //     }
+        //     </div>
+        // );
         return (
             <div id={`${this.state.id}-${CONST.GRAPH_WRAPPER_ID}`}>
                 <svg name={`svg-container-${this.state.id}`} style={svgStyle} onClick={this.onClickGraph}>

@@ -157,7 +157,7 @@ export default class Sandbox extends React.Component {
 
             this.state.data.nodes.splice(0, 1);
             const links = this.state.data.links.filter(l => l.source !== id && l.target !== id);
-            const data = { nodes: this.state.data.nodes, links };
+            const data = { nodes: this.state.data.nodes, links: links };
 
             this.setState({ data });
         } else {

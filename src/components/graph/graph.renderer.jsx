@@ -27,7 +27,17 @@ import { isNodeVisible } from "./collapse.helper";
  * @returns {Array.<Object>} returns the generated array of Link components.
  * @memberof Graph/renderer
  */
-function _renderLinks(nodes, links, linksMatrix, config, linkCallbacks, highlightedNode, highlightedLink, transform) {
+function _renderLinks(
+    nodes,
+    links,
+    linksMatrix,
+    config,
+    linkCallbacks,
+    highlightedNode,
+    highlightedLink,
+    transform,
+    alpha
+) {
     let outLinks = links;
 
     if (config.collapsible) {
@@ -48,7 +58,8 @@ function _renderLinks(nodes, links, linksMatrix, config, linkCallbacks, highligh
             linkCallbacks,
             `${highlightedNode}`,
             highlightedLink,
-            transform
+            transform,
+            alpha
         );
 
         return <Link key={key} id={key} {...props} />;
@@ -192,7 +203,8 @@ function renderGraph(
     config,
     highlightedNode,
     highlightedLink,
-    transform
+    transform,
+    alpha
 ) {
     return {
         nodes: _renderNodes(nodes, nodeCallbacks, config, highlightedNode, highlightedLink, transform, linksMatrix),
@@ -204,7 +216,8 @@ function renderGraph(
             linkCallbacks,
             highlightedNode,
             highlightedLink,
-            transform
+            transform,
+            alpha
         ),
         defs: _memoizedRenderDefs(config),
     };

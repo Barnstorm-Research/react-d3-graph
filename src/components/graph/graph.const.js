@@ -11,5 +11,9 @@ export default {
     },
     LINK_CLASS_NAME: "link",
     NODE_CLASS_NAME: "node",
+    LAYOUT_MODES: {
+        FREEFORM: "freeform",
+        WEAKTREE: "weaktree",
+    },
     ...CONST,
 };

@@ -139,7 +139,10 @@ function _initializeNodes(graphNodes) {
  * @memberof Graph/helper
  */
 function _mapDataLinkToD3Link(link, index, d3Links = [], config, state = {}) {
-    const d3Link = d3Links[index];
+    const d3LinkIndex = d3Links.findIndex(elem => {
+        elem["source"] == link["source"] && elem["source"] == link["source"];
+    });
+    const d3Link = d3Links[d3LinkIndex];
     const customProps = utils.pick(link, LINK_CUSTOM_PROPS_WHITELIST);
 
     if (d3Link) {

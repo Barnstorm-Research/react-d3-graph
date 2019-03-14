@@ -226,9 +226,11 @@ export default {
     width: 800,
     d3: {
         alphaTarget: 0.05,
+        alphaMin: 0.001,
         gravity: -100,
         linkLength: 100,
         linkStrength: 1,
+        layoutMode: "WEAKTREE",
     },
     node: {
         color: "#d3d3d3",
