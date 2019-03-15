@@ -35,7 +35,7 @@ function layoutCallbackHelper(layoutOption) {
             return function(nodes, links, source, target, alpha) {
                 var k = 6 * alpha;
 
-                if (nodes.size > 0) {
+                if (nodes[source] != undefined && nodes[target] != undefined) {
                     nodes[source].y -= k;
                     nodes[target].y += k;
                 }
