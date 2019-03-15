@@ -20,21 +20,30 @@
  * @memberof Graph/layout
  */
 
-import CONST from "./graph.const";
-import DEFAULT_CONFIG from "./graph.config";
-import ERRORS from "../../err";
+//import CONST from "./graph.const";
+//import DEFAULT_CONFIG from "./graph.config";
+//import ERRORS from "../../err";
 
+/**
+ * Helper to create alternative layout functions
+ * @param {string} layoutOption WEAKTREE or default
+ * @returns {function} tick layout function
+ */
 function layoutCallbackHelper(layoutOption) {
     switch (layoutOption) {
         case "WEAKTREE":
             return function(nodes, links, source, target, alpha) {
                 var k = 6 * alpha;
-                nodes[source].y -= k;
-                nodes[target].y += k;
+
+                if (nodes.size > 0) {
+                    nodes[source].y -= k;
+                    nodes[target].y += k;
+                }
 
                 return nodes, links;
             };
         default:
+            /* eslint no-unused-vars: ["error", { "args": "none" }] */
             return function(nodes, links, source, target, alpha) {
                 return nodes, links;
             };

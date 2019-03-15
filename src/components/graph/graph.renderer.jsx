@@ -24,6 +24,7 @@ import { isNodeVisible } from "./collapse.helper";
  * @param  {string} highlightedNode - same as {@link #graphrenderer|highlightedNode in renderGraph}.
  * @param  {Object} highlightedLink - same as {@link #graphrenderer|highlightedLink in renderGraph}.
  * @param  {number} transform - value that indicates the amount of zoom transformation.
+ * @param  {number} alpha - the alpha value for layout
  * @returns {Array.<Object>} returns the generated array of Link components.
  * @memberof Graph/renderer
  */
@@ -191,6 +192,7 @@ const _memoizedRenderDefs = _renderDefs();
  * @param  {string} highlightedLink.source - id of source node for highlighted link.
  * @param  {string} highlightedLink.target - id of target node for highlighted link.
  * @param  {number} transform - value that indicates the amount of zoom transformation.
+ * @param  {number} alpha - the alpha value for layout
  * @returns {Object} returns an object containing the generated nodes and links that form the graph.
  * @memberof Graph/renderer
  */

@@ -49,12 +49,15 @@ function _getNodeOpacity(node, highlightedNode, highlightedLink, config) {
  * @param  {string} highlightedNode - same as {@link #graphrenderer|highlightedNode in renderGraph}.
  * @param  {Object} highlightedLink - same as {@link #graphrenderer|highlightedLink in renderGraph}.
  * @param  {number} transform - value that indicates the amount of zoom transformation.
+ * @param  {number} alpha - the alpha value
  * @returns {Object} returns an object that aggregates all props for creating respective Link component instance.
  * @memberof Graph/builder
  */
 function buildLinkProps(link, nodes, links, config, linkCallbacks, highlightedNode, highlightedLink, transform, alpha) {
     const { source, target } = link;
+
     nodes, (links = linkCallbacks["layoutCallback"](nodes, links, source, target, alpha));
+
     const x1 = (nodes[source] && nodes[source].x) || 0;
     const y1 = (nodes[source] && nodes[source].y) || 0;
     const x2 = (nodes[target] && nodes[target].x) || 0;
@@ -118,6 +121,12 @@ function buildLinkProps(link, nodes, links, config, linkCallbacks, highlightedNo
         fontWeight = highlight ? config.link.highlightFontWeight : config.link.fontWeight;
     }
 
+    var clsName = CONST.LINK_CLASS_NAME;
+
+    if (link.className || config.link.className) {
+        clsName += " " + (link.className || config.link.className);
+    }
+
     return {
         markerId,
         d,
@@ -130,7 +139,7 @@ function buildLinkProps(link, nodes, links, config, linkCallbacks, highlightedNo
         fontColor,
         fontSize: fontSize * t,
         fontWeight,
-        className: CONST.LINK_CLASS_NAME,
+        className: clsName,
         opacity,
         onClickLink: linkCallbacks.onClickLink,
         onRightClickLink: linkCallbacks.onRightClickLink,

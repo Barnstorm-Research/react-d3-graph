@@ -55,7 +55,7 @@ function _createForceSimulation(width, height, gravity) {
     const forceStrength = gravity;
 
     return d3ForceSimulation()
-        .force("charge", d3ForceManyBodyReuse()) //.strength(forceStrength)) //d3ForceManyBody().strength(forceStrength))
+        .force("charge", d3ForceManyBodyReuse().strength(forceStrength)) //d3ForceManyBody().strength(forceStrength))
         .force("x", frx)
         .force("y", fry);
 }

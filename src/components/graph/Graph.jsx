@@ -474,7 +474,8 @@ export default class Graph extends React.Component {
 
     render() {
         let alpha = this.state.simulation.alpha();
-        console.log(this.state.simulation.alpha(), this.state.simulation.alphaMin());
+
+        //console.log(this.state.simulation.alpha(), this.state.simulation.alphaMin());
         const { nodes, links, defs } = graphRenderer.renderGraph(
             this.state.nodes,
             {
@@ -503,8 +504,9 @@ export default class Graph extends React.Component {
             height: this.state.config.height,
             width: this.state.config.width,
         };
-        console.log("nodes in render ", nodes);
-        console.log("links in render ", links);
+
+        //console.log("nodes in render ", nodes);
+        //console.log("links in render ", links);
         const containerProps = this._generateFocusAnimationProps();
 
         // return (

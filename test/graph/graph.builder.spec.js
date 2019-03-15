@@ -4,6 +4,7 @@ import config from "../../src/components/graph/graph.config";
 
 import utils from "../../src/utils";
 import * as linkHelper from "../../src/components/link/link.helper";
+import * as layoutHelper from "../../src/components/graph/graph.layout";
 
 describe("Graph Helper", () => {
     beforeAll(() => {
@@ -21,12 +22,24 @@ describe("Graph Helper", () => {
             that = {
                 config: { link: config.link },
                 link: { source: "source", target: "target" },
+                layoutcallback: { layoutCallback: layoutHelper.layoutCallbackHelper("WEAKTREE") },
             };
         });
 
         describe("when building props for a link", () => {
             test("should call buildLinkPathDefinition with expected parameters", () => {
-                graphHelper.buildLinkProps(that.link, {}, {}, that.config, [], undefined, undefined, 1);
+                graphHelper.buildLinkProps(
+                    that.link,
+                    {},
+                    {},
+                    that.config,
+                    that.layoutcallback,
+                    [],
+                    [],
+                    undefined,
+                    undefined,
+                    1
+                );
 
                 expect(linkHelper.buildLinkPathDefinition).toHaveBeenCalledWith(
                     { source: { x: 0, y: 0 }, target: { x: 0, y: 0 } },
@@ -41,6 +54,8 @@ describe("Graph Helper", () => {
                         {},
                         {},
                         that.config,
+                        that.layoutcallback,
+                        [],
                         [],
                         undefined,
                         undefined,
@@ -58,6 +73,8 @@ describe("Graph Helper", () => {
                         {},
                         {},
                         that.config,
+                        that.layoutcallback,
+                        [],
                         [],
                         undefined,
                         undefined,
