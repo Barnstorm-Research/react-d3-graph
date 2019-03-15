@@ -93,3 +93,8 @@
     border: none !important;
     font-size: 0;
 }
+
+.link-dotted {
+    stroke-dasharray: 5;
+    stroke-linejoin: round;
+}

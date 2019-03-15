@@ -84,6 +84,25 @@ describe("Graph Helper", () => {
                     expect(props.stroke).toEqual("green");
                 });
             });
+
+            describe("and custom class is set to dottedLine", () => {
+                test("should return link and dottedLine in the props", () => {
+                    const props = graphHelper.buildLinkProps(
+                        { ...that.link, className: "dottedLine" },
+                        {},
+                        {},
+                        that.config,
+                        that.layoutcallback,
+                        [],
+                        [],
+                        undefined,
+                        undefined,
+                        1
+                    );
+
+                    expect(props.className).toEqual("link dottedLine");
+                });
+            });
         });
     });
 

@@ -139,6 +139,50 @@ describe("Graph Helper", () => {
                 });
             });
 
+            describe("and received state is empty with custom link classes in data", () => {
+                test("should create new graph structure with nodes and links with custom class in links", () => {
+                    const data = {
+                        nodes: [{ id: "A" }, { id: "B" }, { id: "C" }],
+                        links: [{ source: "A", target: "B", className: "dottedLine" }, { source: "C", target: "A" }],
+                    };
+                    const state = {};
+
+                    const newState = graphHelper.initializeGraphState({ data, id: "id", config: {} }, state);
+
+                    expect(newState.d3Nodes).toEqual([
+                        {
+                            highlighted: false,
+                            id: "A",
+                            x: 0,
+                            y: 0,
+                        },
+                        {
+                            highlighted: false,
+                            id: "B",
+                            x: 0,
+                            y: 0,
+                        },
+                        {
+                            highlighted: false,
+                            id: "C",
+                            x: 0,
+                            y: 0,
+                        },
+                    ]);
+                    expect(newState.d3Links).toEqual([
+                        {
+                            source: "A",
+                            target: "B",
+                            className: "dottedLine",
+                        },
+                        {
+                            source: "C",
+                            target: "A",
+                        },
+                    ]);
+                });
+            });
+
             test("should return proper state object for given inputs", () => {
                 const forceStub = jest.fn();
 
