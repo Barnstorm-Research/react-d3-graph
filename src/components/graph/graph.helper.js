@@ -202,6 +202,45 @@ function _tagOrphanNodes(nodes, linksMatrix) {
 }
 
 /**
+ * Determines the node degree.
+ * @param {Object.<string, Object>} nodes - nodes mapped by their id.
+ * @param {Array.<Object>} links - an array of Objects with source and target keys
+ * @returns {Object.<string, Object>} same input nodes structure with degree added to nodes
+ * @memberof Graph/helper
+ */
+function _findNodeDegree(nodes, links) {
+    let linksClone = [...links];
+    let sources = linksClone.filter(link => links.findIndex(l => l.target == link.source) < 0);
+    const sourceCounts = sources.reduce(function(allNodes, node) {
+        if (node.source in allNodes) {
+            allNodes[node.source]++;
+        } else {
+            allNodes[node.source] = 1;
+        }
+        return allNodes;
+    }, {});
+    Object.keys(sourceCounts).forEach(source => (nodes[source].degree = 1));
+
+    let degree = 2;
+
+    let hasTargets = sources.length > 0;
+
+    while (hasTargets) {
+        let newSources = [];
+        sources.forEach(function(source) {
+            nodes[source.target].degree = degree;
+            newSources.push(linksClone.filter(link => link.source == source.target));
+            linksClone.splice(linksClone.findIndex(l => l.source == source.source && l.target == source.target), 1);
+        });
+        sources = [...new Set(newSources.flat())];
+        hasTargets = sources.length > 0;
+        degree++;
+    }
+
+    return nodes;
+}
+
+/**
  * Some integrity validations on links and nodes structure. If some validation fails the function will
  * throw an error.
  * @param  {Object} data - Same as {@link #initializeGraphState|data in initializeGraphState}.
@@ -349,6 +388,7 @@ function initializeGraphState({ data, id, config }, state) {
     let newConfig = Object.assign({}, utils.merge(DEFAULT_CONFIG, config || {}));
     let links = _initializeLinks(graph.links, newConfig); // matrix of graph connections
     let nodes = _tagOrphanNodes(_initializeNodes(graph.nodes), links);
+    nodes = _findNodeDegree(nodes, data.links);
     const { nodes: d3Nodes, links: d3Links } = graph;
     const formatedId = id.replace(/ /g, "_");
     const simulation = _createForceSimulation(newConfig.width, newConfig.height, newConfig.d3 && newConfig.d3.gravity);

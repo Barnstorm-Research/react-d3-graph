@@ -231,6 +231,7 @@ export default {
         linkLength: 100,
         linkStrength: 1,
         layoutMode: "default",
+        maxDegrees: 5,
     },
     node: {
         color: "#d3d3d3",

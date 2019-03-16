@@ -52,8 +52,23 @@ function safeNodePositioner(position, isX, config) {
 }
 
 /**
+ * Helper to place nodes according to degree of connections
+ * @param {number} degree - node connection degree
+ * @param {boolean} isX - boolean to check if comparing width (true) or height (false)
+ * @param {Object} config - same as {@link #graphrenderer|config in renderGraph}
+ * @returns {number} - coordinate
+ */
+function degreeNodePositioner(degree, isX, config) {
+    if (isX) {
+        return (degree * config["width"]) / config.d3["maxDegrees"];
+    } else {
+        return (degree * config["height"]) / config.d3["maxDegrees"];
+    }
+}
+
+/**
  * Helper to create alternative layout functions
- * @param {string} layoutOption WEAKTREE or default
+ * @param {string} layoutOption WEAKTREE, STRONGTREE, WEAKFLOW, STRONGFLOW or default
  * @returns {function} tick layout function
  */
 function layoutCallbackHelper(layoutOption) {
@@ -69,6 +84,25 @@ function layoutCallbackHelper(layoutOption) {
 
                 return nodes, links;
             };
+        case "STRONGTREE":
+            return function(nodes, links, source, target, config, alpha) {
+                var k = alpha;
+
+                if (nodes[source] != undefined && nodes[target] != undefined) {
+                    nodes[source].y = safeNodePositioner(
+                        degreeNodePositioner(nodes[source].degree, false, config) - k,
+                        true,
+                        config
+                    );
+                    nodes[target].y = safeNodePositioner(
+                        degreeNodePositioner(nodes[target].degree, false, config) + k,
+                        true,
+                        config
+                    );
+                }
+
+                return nodes, links;
+            };
         case "WEAKFLOW":
             return function(nodes, links, source, target, config, alpha) {
                 var k = alpha;
@@ -76,6 +110,25 @@ function layoutCallbackHelper(layoutOption) {
                 if (nodes[source] != undefined && nodes[target] != undefined) {
                     nodes[source].x = safeNodePositioner(nodes[source].x - k, true, config);
                     nodes[target].x = safeNodePositioner(nodes[target].x + k, true, config);
+                }
+
+                return nodes, links;
+            };
+        case "STRONGFLOW":
+            return function(nodes, links, source, target, config, alpha) {
+                var k = alpha;
+
+                if (nodes[source] != undefined && nodes[target] != undefined) {
+                    nodes[source].x = safeNodePositioner(
+                        degreeNodePositioner(nodes[source].degree, true, config) - k,
+                        true,
+                        config
+                    );
+                    nodes[target].x = safeNodePositioner(
+                        degreeNodePositioner(nodes[target].degree, true, config) + k,
+                        true,
+                        config
+                    );
                 }
 
                 return nodes, links;
