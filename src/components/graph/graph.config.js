@@ -230,7 +230,7 @@ export default {
         gravity: -100,
         linkLength: 100,
         linkStrength: 1,
-        layoutMode: "WEAKTREE",
+        layoutMode: "default",
     },
     node: {
         color: "#d3d3d3",

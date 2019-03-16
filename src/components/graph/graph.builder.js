@@ -56,7 +56,7 @@ function _getNodeOpacity(node, highlightedNode, highlightedLink, config) {
 function buildLinkProps(link, nodes, links, config, linkCallbacks, highlightedNode, highlightedLink, transform, alpha) {
     const { source, target } = link;
 
-    nodes, (links = linkCallbacks["layoutCallback"](nodes, links, source, target, alpha));
+    nodes, (links = linkCallbacks["layoutCallback"](nodes, links, source, target, config, alpha));
 
     const x1 = (nodes[source] && nodes[source].x) || 0;
     const y1 = (nodes[source] && nodes[source].y) || 0;

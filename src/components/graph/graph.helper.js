@@ -22,6 +22,7 @@
 import {
     forceX as d3ForceX,
     forceY as d3ForceY,
+    forceCollide as d3ForceCollide,
     forceSimulation as d3ForceSimulation,
     //    forceManyBody as d3ForceManyBody,
 } from "d3-force";
@@ -56,6 +57,7 @@ function _createForceSimulation(width, height, gravity) {
 
     return d3ForceSimulation()
         .force("charge", d3ForceManyBodyReuse().strength(forceStrength)) //d3ForceManyBody().strength(forceStrength))
+        .force("collision", d3ForceCollide(CONST.RADIUS_COLLIDE))
         .force("x", frx)
         .force("y", fry);
 }

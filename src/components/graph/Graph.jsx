@@ -474,8 +474,6 @@ export default class Graph extends React.Component {
 
     render() {
         let alpha = this.state.simulation.alpha();
-
-        //console.log(this.state.simulation.alpha(), this.state.simulation.alphaMin());
         const { nodes, links, defs } = graphRenderer.renderGraph(
             this.state.nodes,
             {
