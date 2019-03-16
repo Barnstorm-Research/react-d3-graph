@@ -60,11 +60,22 @@ function layoutCallbackHelper(layoutOption) {
     switch (layoutOption) {
         case "WEAKTREE":
             return function(nodes, links, source, target, config, alpha) {
-                var k = 6 * alpha;
+                var k = alpha;
 
                 if (nodes[source] != undefined && nodes[target] != undefined) {
                     nodes[source].y = safeNodePositioner(nodes[source].y - k, false, config);
                     nodes[target].y = safeNodePositioner(nodes[target].y + k, false, config);
+                }
+
+                return nodes, links;
+            };
+        case "WEAKFLOW":
+            return function(nodes, links, source, target, config, alpha) {
+                var k = alpha;
+
+                if (nodes[source] != undefined && nodes[target] != undefined) {
+                    nodes[source].x = safeNodePositioner(nodes[source].x - k, true, config);
+                    nodes[target].x = safeNodePositioner(nodes[target].x + k, true, config);
                 }
 
                 return nodes, links;

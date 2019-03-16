@@ -15,6 +15,7 @@ export default {
     LAYOUT_MODES: {
         FREEFORM: "freeform",
         WEAKTREE: "weaktree",
+        WEAKFLOW: "weakflow",
     },
     ...CONST,
 };
