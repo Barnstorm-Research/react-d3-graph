@@ -19,6 +19,7 @@
  * @property {string} [svg=] - custom svg for node (optional).
  * @memberof Graph/helper
  */
+/* global Set */
 import {
     forceX as d3ForceX,
     forceY as d3ForceY,
@@ -38,6 +39,14 @@ import { computeNodeDegree } from "./collapse.helper";
 
 const NODE_PROPS_WHITELIST = ["id", "highlighted", "x", "y", "index", "vy", "vx"];
 const LINK_CUSTOM_PROPS_WHITELIST = ["color", "opacity", "strokeWidth", "label", "className"];
+
+Object.defineProperty(Array.prototype, "flat", {
+    value: function(depth = 1) {
+        return this.reduce(function(flat, toFlatten) {
+            return flat.concat(Array.isArray(toFlatten) && depth - 1 ? toFlatten.flat(depth - 1) : toFlatten);
+        }, []);
+    },
+});
 
 /**
  * Create d3 forceSimulation to be applied on the graph.<br/>
@@ -210,7 +219,7 @@ function _tagOrphanNodes(nodes, linksMatrix) {
  */
 function _findNodeDegree(nodes, links) {
     let linksClone = [...links];
-    let sources = linksClone.filter(link => links.findIndex(l => l.target == link.source) < 0);
+    let sources = linksClone.filter(link => linksClone.findIndex(l => l.target == link.source) < 0);
     const sourceCounts = sources.reduce(function(allNodes, node) {
         if (node.source in allNodes) {
             allNodes[node.source]++;
@@ -220,7 +229,13 @@ function _findNodeDegree(nodes, links) {
         return allNodes;
     }, {});
 
-    Object.keys(sourceCounts).forEach(source => (nodes[source].degree = 1));
+    Object.keys(sourceCounts).forEach(function(source) {
+        if (nodes[source]) {
+            nodes[source].degree = 1;
+        } else {
+            utils.throwErr("Graph", `${ERRORS.INVALID_LINKS} - "${source}" is not a valid source node id`);
+        }
+    });
 
     let degree = 2;
 
@@ -230,9 +245,13 @@ function _findNodeDegree(nodes, links) {
         let newSources = [];
 
         sources.forEach(function(source) {
-            nodes[source.target].degree = degree;
-            newSources.push(linksClone.filter(link => link.source == source.target));
-            linksClone.splice(linksClone.findIndex(l => l.source == source.source && l.target == source.target), 1);
+            if (nodes[source.target]) {
+                nodes[source.target].degree = degree;
+                newSources.push(linksClone.filter(link => link.source == source.target));
+                linksClone.splice(linksClone.findIndex(l => l.source == source.source && l.target == source.target), 1);
+            } else {
+                utils.throwErr("Graph", `${ERRORS.INVALID_LINKS} - "${source.target}" is not a valid target node id`);
+            }
         });
         sources = [...new Set(newSources.flat())];
         hasTargets = sources.length > 0;

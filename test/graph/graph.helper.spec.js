@@ -8,6 +8,7 @@ import {
     forceY as d3ForceY,
     forceSimulation as d3ForceSimulation,
     forceManyBody as d3ForceManyBody,
+    forceCollide as d3ForceCollide,
 } from "d3-force";
 
 describe("Graph Helper", () => {
@@ -27,6 +28,7 @@ describe("Graph Helper", () => {
                 d3ForceX.mockImplementation(() => ({ strength: () => fr }));
                 d3ForceY.mockImplementation(() => ({ strength: () => fr }));
                 d3ForceManyBody.mockImplementation(() => ({ strength: () => fr }));
+                d3ForceCollide.mockImplementation(() => ({ strength: () => fr }));
                 forceStub.mockImplementation(() => ({ force: forceStub }));
                 d3ForceSimulation.mockImplementation(() => ({ force: forceStub }));
                 utils.merge.mockImplementation(() => ({ config: "config" }));
@@ -55,18 +57,21 @@ describe("Graph Helper", () => {
                             id: "A",
                             x: 20,
                             y: 40,
+                            degree: 2,
                         },
                         {
                             highlighted: false,
                             id: "B",
                             x: 40,
                             y: 60,
+                            degree: 3,
                         },
                         {
                             highlighted: false,
                             id: "C",
                             x: 0,
                             y: 0,
+                            degree: 1,
                         },
                     ]);
                     expect(newState.d3Links).toEqual([
@@ -112,18 +117,21 @@ describe("Graph Helper", () => {
                             id: "A",
                             x: 0,
                             y: 0,
+                            degree: 2,
                         },
                         {
                             highlighted: false,
                             id: "B",
                             x: 0,
                             y: 0,
+                            degree: 3,
                         },
                         {
                             highlighted: false,
                             id: "C",
                             x: 0,
                             y: 0,
+                            degree: 1,
                         },
                     ]);
                     expect(newState.d3Links).toEqual([
@@ -155,18 +163,21 @@ describe("Graph Helper", () => {
                             id: "A",
                             x: 0,
                             y: 0,
+                            degree: 2,
                         },
                         {
                             highlighted: false,
                             id: "B",
                             x: 0,
                             y: 0,
+                            degree: 3,
                         },
                         {
                             highlighted: false,
                             id: "C",
                             x: 0,
                             y: 0,
+                            degree: 1,
                         },
                     ]);
                     expect(newState.d3Links).toEqual([
@@ -248,18 +259,21 @@ describe("Graph Helper", () => {
                             id: "A",
                             x: 20,
                             y: 40,
+                            degree: 2,
                         },
                         {
                             highlighted: false,
                             id: "B",
                             x: 40,
                             y: 60,
+                            degree: 3,
                         },
                         {
                             highlighted: false,
                             id: "C",
                             x: 0,
                             y: 0,
+                            degree: 1,
                         },
                     ],
                     highlightedNode: "",
@@ -283,18 +297,21 @@ describe("Graph Helper", () => {
                             id: "A",
                             x: 20,
                             y: 40,
+                            degree: 2,
                         },
                         B: {
                             highlighted: false,
                             id: "B",
                             x: 40,
                             y: 60,
+                            degree: 3,
                         },
                         C: {
                             highlighted: false,
                             id: "C",
                             x: 0,
                             y: 0,
+                            degree: 1,
                         },
                     },
                     simulation: {
