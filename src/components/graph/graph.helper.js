@@ -219,6 +219,7 @@ function _findNodeDegree(nodes, links) {
         }
         return allNodes;
     }, {});
+
     Object.keys(sourceCounts).forEach(source => (nodes[source].degree = 1));
 
     let degree = 2;
@@ -227,6 +228,7 @@ function _findNodeDegree(nodes, links) {
 
     while (hasTargets) {
         let newSources = [];
+
         sources.forEach(function(source) {
             nodes[source.target].degree = degree;
             newSources.push(linksClone.filter(link => link.source == source.target));
@@ -388,6 +390,7 @@ function initializeGraphState({ data, id, config }, state) {
     let newConfig = Object.assign({}, utils.merge(DEFAULT_CONFIG, config || {}));
     let links = _initializeLinks(graph.links, newConfig); // matrix of graph connections
     let nodes = _tagOrphanNodes(_initializeNodes(graph.nodes), links);
+
     nodes = _findNodeDegree(nodes, data.links);
     const { nodes: d3Nodes, links: d3Links } = graph;
     const formatedId = id.replace(/ /g, "_");
