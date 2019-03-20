@@ -161,6 +161,7 @@ export default class Graph extends React.Component {
      */
     _onDragEnd = () =>
         !this.state.config.staticGraph &&
+        this.state.config.automaticLayoutOn &&
         this.state.config.automaticRearrangeAfterDropNode &&
         this.state.simulation.alphaTarget(this.state.config.d3.alphaTarget).restart();
 
@@ -447,7 +448,11 @@ export default class Graph extends React.Component {
     componentDidUpdate() {
         // if the property staticGraph was activated we want to stop possible ongoing simulation
         this.state.config.staticGraph && this.pauseSimulation();
-        if (!this.state.config.staticGraph && (this.state.newGraphElements || this.state.d3ConfigUpdated)) {
+        if (
+            !this.state.config.staticGraph &&
+            this.state.config.automaticLayoutOn &&
+            (this.state.newGraphElements || this.state.d3ConfigUpdated)
+        ) {
             this._graphForcesConfig();
             this.restartSimulation();
             this.setState({ newGraphElements: false, d3ConfigUpdated: false });
