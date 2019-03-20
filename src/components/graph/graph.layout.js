@@ -68,10 +68,25 @@ function degreeNodePositioner(degree, isX, config) {
 
 /**
  * Helper to create alternative layout functions
- * @param {string} layoutOption WEAKTREE, STRONGTREE, WEAKFLOW, STRONGFLOW or default
+ * @param {string} layoutOptionInput WEAKTREE, STRONGTREE, WEAKFLOW, STRONGFLOW or default
  * @returns {function} tick layout function
  */
-function layoutCallbackHelper(layoutOption) {
+function layoutCallbackHelper(layoutOptionInput) {
+    // First check if defined, if not set to default
+    if (!layoutOptionInput) {
+        layoutOptionInput = "default";
+    }
+    // Check what type of variable we have
+    let layoutOption;
+
+    if (layoutOptionInput.constructor === Array) {
+        layoutOption = layoutOptionInput[0];
+    } else if (layoutOptionInput.constructor === Function) {
+        return layoutOptionInput;
+    } else {
+        layoutOption = layoutOptionInput;
+    }
+
     switch (layoutOption) {
         case "WEAKTREE":
             return function(nodes, links, source, target, config, alpha) {
