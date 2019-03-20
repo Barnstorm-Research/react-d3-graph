@@ -89,7 +89,7 @@ function layoutCallbackHelper(layoutOptionInput) {
 
     switch (layoutOption) {
         case "WEAKTREE":
-            return function(nodes, links, source, target, config, alpha) {
+            return function(nodes, links, source, target, link, config, alpha) {
                 var k = alpha;
 
                 if (nodes[source] != undefined && nodes[target] != undefined) {
@@ -100,7 +100,7 @@ function layoutCallbackHelper(layoutOptionInput) {
                 return nodes, links;
             };
         case "STRONGTREE":
-            return function(nodes, links, source, target, config, alpha) {
+            return function(nodes, links, source, target, link, config, alpha) {
                 var k = alpha;
 
                 if (nodes[source] != undefined && nodes[target] != undefined) {
@@ -119,7 +119,7 @@ function layoutCallbackHelper(layoutOptionInput) {
                 return nodes, links;
             };
         case "WEAKFLOW":
-            return function(nodes, links, source, target, config, alpha) {
+            return function(nodes, links, source, target, link, config, alpha) {
                 var k = alpha;
 
                 if (nodes[source] != undefined && nodes[target] != undefined) {
@@ -130,7 +130,7 @@ function layoutCallbackHelper(layoutOptionInput) {
                 return nodes, links;
             };
         case "STRONGFLOW":
-            return function(nodes, links, source, target, config, alpha) {
+            return function(nodes, links, source, target, link, config, alpha) {
                 var k = alpha;
 
                 if (nodes[source] != undefined && nodes[target] != undefined) {
@@ -150,7 +150,7 @@ function layoutCallbackHelper(layoutOptionInput) {
             };
         default:
             /* eslint no-unused-vars: ["error", { "args": "none" }] */
-            return function(nodes, links, source, target, config, alpha) {
+            return function(nodes, links, source, target, link, config, alpha) {
                 return nodes, links;
             };
     }
