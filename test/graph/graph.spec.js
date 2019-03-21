@@ -16,6 +16,7 @@ describe("Graph Component", () => {
         width: that.svgSize,
         nodeHighlightBehavior: true,
         highlightOpacity: that.highlightOpacity,
+        automaticLayoutOn: false,
         staticGraph: true,
         node: {
             color: that.nodeColor,
@@ -24,6 +25,13 @@ describe("Graph Component", () => {
         },
         link: {
             highlightColor: that.highlightColor,
+        },
+        d3: {
+            showAllTicks: true,
+            // showAllTicksMaxMod:0,
+            // showAllTicksMinMod:0,
+            layoutMode: "default",
+            alphaMin: 1,
         },
     };
     that.mouseOverNodeCallback = jest.fn();

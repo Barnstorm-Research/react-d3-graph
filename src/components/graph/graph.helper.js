@@ -466,6 +466,7 @@ function updateNodeHighlightedValue(nodes, links, config, id, value = false) {
     return {
         nodes: updatedNodes,
         highlightedNode,
+        d3ElementChange: true,
     };
 }
 
