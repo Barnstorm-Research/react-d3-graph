@@ -31,7 +31,7 @@ describe("Graph Component", () => {
             // showAllTicksMaxMod:0,
             // showAllTicksMinMod:0,
             layoutMode: "default",
-            alphaMin: 1,
+            alphaMin: 0.9,
         },
     };
     that.mouseOverNodeCallback = jest.fn();

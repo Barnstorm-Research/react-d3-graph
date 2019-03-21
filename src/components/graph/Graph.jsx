@@ -234,10 +234,10 @@ export default class Graph extends React.Component {
      * @returns {undefined}
      */
     _tick = (state = {}, cb) => {
-        this._tock(state, cb);
         if (!this.state.runningSimulation && this.props.config.d3.showAllTicks) {
-            this.setState({ runningSimulation: true });
+            state.runningSimulation = true;
         }
+        this._tock(state, cb);
     };
 
     /**
@@ -248,7 +248,14 @@ export default class Graph extends React.Component {
      * @returns {undefined}
      */
     _tock = (state = {}, cb) => {
-        if (this.state.simulation.alpha() < this.state.simulation.alphaMin()) {
+        if (
+            !this.state.runningSimulation &&
+            !this.state.newGraphElements &&
+            !this.state.d3ConfigUpdated &&
+            !this.state.configUpdated &&
+            !this.state.d3ElementChange &&
+            this.state.simulation.alpha() < this.state.simulation.alphaMin()
+        ) {
             //  this.pauseSimulation();
             return;
         }
@@ -352,7 +359,6 @@ export default class Graph extends React.Component {
      */
     onMouseOverNode = id => {
         this.props.onMouseOverNode && this.props.onMouseOverNode(id);
-
         this.state.config.nodeHighlightBehavior && this._setNodeHighlightedValue(id, true);
     };
 
@@ -363,7 +369,6 @@ export default class Graph extends React.Component {
      */
     onMouseOutNode = id => {
         this.props.onMouseOutNode && this.props.onMouseOutNode(id);
-
         this.state.config.nodeHighlightBehavior && this._setNodeHighlightedValue(id, false);
     };
 
@@ -379,7 +384,6 @@ export default class Graph extends React.Component {
         if (this.state.config.linkHighlightBehavior) {
             this.setState({ d3ElementChange: true });
             this.state.highlightedLink = { source, target };
-
             this._tock();
         }
     };
