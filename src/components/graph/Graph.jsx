@@ -1,3 +1,4 @@
+/* eslint max-lines: "off" */
 import React from "react";
 
 import { drag as d3Drag } from "d3-drag";
@@ -514,23 +515,27 @@ export default class Graph extends React.Component {
         });
     }
 
-    componentDidUpdate() {
-        // if the property staticGraph was activated we want to stop possible ongoing simulation
-        this.state.config.staticGraph && this.pauseSimulation();
-        if (
-            !this.state.config.staticGraph &&
-            this.state.config.automaticLayoutOn &&
-            (this.state.newGraphElements || this.state.d3ConfigUpdated)
-        ) {
-            //this.setState({runningSimulation: true}); // this does not actually seem to work...
-            this._graphForcesConfig();
-            this.restartSimulation();
-            this.setState({ newGraphElements: false, d3ConfigUpdated: false, d3ElementChange: false });
-        }
+    componentDidUpdate(prevProps, prevState) {
+        if (prevState !== this.state) {
+            if (
+                !this.state.config.staticGraph &&
+                this.state.config.automaticLayoutOn &&
+                (this.state.newGraphElements || this.state.d3ConfigUpdated)
+            ) {
+                //this.setState({runningSimulation: true}); // this does not actually seem to work...
+                this._graphForcesConfig();
+                this.restartSimulation();
+                this.setState({ newGraphElements: false, d3ConfigUpdated: false, d3ElementChange: false });
+            }
 
-        if (this.state.configUpdated) {
-            this._zoomConfig();
-            this.setState({ configUpdated: false, d3ElementChange: false });
+            if (this.state.configUpdated) {
+                // if the property staticGraph was activated we want to stop possible ongoing simulation
+                if (this.state.config.staticGraph) {
+                    this.pauseSimulation();
+                }
+                this._zoomConfig();
+                this.setState({ configUpdated: false, d3ElementChange: false });
+            }
         }
     }
 
@@ -552,36 +557,45 @@ export default class Graph extends React.Component {
      *  If the simulation is running and d3.showAllTicks == false then
      *  this function will only return true when the alpha*100%10 is between the showAllTicksMinMod and showAllTicksMaxMod
      *  this will reduce the number of updates to the display
+     * @param {Object} nextProps - next props
+     * @param {Object} nextState - next state
      * @returns {boolean} true/false if should render or not
      */
-    shouldComponentUpdate() {
-        // d3 == undefined only happens in unit tests
-        if (this.props.config.d3 == undefined || this.props.config.d3.showAllTicks) {
-            return true;
-        }
-
-        if (this.state.runningSimulation === true) {
-            var count = (this.state.simulation.alpha() * 100) % 10;
-
-            if (this.state.simulation.alpha() < this.state.simulation.alphaMin()) {
-                this.pauseSimulation();
+    shouldComponentUpdate(nextProps, nextState) {
+        if (this.state === nextState) {
+            return false;
+        } else {
+            // d3 == undefined only happens in unit tests
+            if (nextProps.config.d3 == undefined || nextProps.config.d3.showAllTicks) {
                 return true;
             }
-            if (count <= this.props.config.d3.showAllTicksMaxMod && count >= this.props.config.d3.showAllTicksMinMod) {
+
+            if (nextState.runningSimulation === true) {
+                var count = (nextState.simulation.alpha() * 100) % 10;
+
+                if (nextState.simulation.alpha() < nextState.simulation.alphaMin()) {
+                    this.pauseSimulation();
+                    return true;
+                }
+                if (
+                    count <= nextProps.config.d3.showAllTicksMaxMod &&
+                    count >= nextProps.config.d3.showAllTicksMinMod
+                ) {
+                    return true;
+                }
+            }
+
+            if (
+                nextState.newGraphElements ||
+                nextState.d3ConfigUpdated ||
+                nextState.configUpdated ||
+                nextState.d3ElementChange
+            ) {
                 return true;
             }
-        }
 
-        if (
-            this.state.newGraphElements ||
-            this.state.d3ConfigUpdated ||
-            this.state.configUpdated ||
-            this.state.d3ElementChange
-        ) {
-            return true;
+            return false;
         }
-
-        return false;
     }
 
     render() {
