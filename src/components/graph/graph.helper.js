@@ -318,19 +318,29 @@ function checkForGraphElementsChanges(nextProps, currentState) {
     const nextNodes = nextProps.data.nodes.map(n => utils.antiPick(n, NODE_PROPERTIES_DISCARD_TO_COMPARE));
     const nextLinks = nextProps.data.links;
     const stateD3Nodes = currentState.d3Nodes.map(n => utils.antiPick(n, NODE_PROPERTIES_DISCARD_TO_COMPARE));
-    const stateD3Links = currentState.d3Links.map(l => ({
-        // FIXME: solve this source data inconsistency later
-        source: l.source.id !== undefined && l.source.id !== null ? l.source.id : l.source,
-        target: l.target.id !== undefined && l.target.id !== null ? l.target.id : l.target,
-    }));
+    const stateD3Links = currentState.d3Links.map(function(l) {
+        var newObj = {};
+
+        Object.keys(l).forEach(function(key) {
+            if (key === "source") {
+                newObj["source"] = l.source.id !== undefined && l.source.id !== null ? l.source.id : l.source;
+            } else if (key === "target") {
+                newObj["target"] = l.target.id !== undefined && l.target.id !== null ? l.target.id : l.target;
+            } else {
+                newObj[key] = l[key];
+            }
+        });
+        return newObj;
+    });
     const graphElementsUpdated = !(
         utils.isDeepEqual(nextNodes, stateD3Nodes) && utils.isDeepEqual(nextLinks, stateD3Links)
     );
+
     const newGraphElements =
         nextNodes.length !== stateD3Nodes.length ||
         nextLinks.length !== stateD3Links.length ||
         !utils.isDeepEqual(nextNodes.map(({ id }) => ({ id })), stateD3Nodes.map(({ id }) => ({ id }))) ||
-        !utils.isDeepEqual(nextLinks, stateD3Links.map(({ source, target }) => ({ source, target })));
+        !utils.isDeepEqual(nextLinks, stateD3Links);
 
     return { graphElementsUpdated, newGraphElements };
 }
