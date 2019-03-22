@@ -158,7 +158,7 @@ exports[`Snapshot - Graph Component should match snapshot 1`] = `
       <svg>
         <path
           className="link"
-          d="M30,184A0,0 0 0,1 305,745"
+          d="M30,184A0,0 0 0,1 305,590"
           id="Sarah,Alice"
           onClick={[Function]}
           onContextMenu={[Function]}
@@ -178,7 +178,7 @@ exports[`Snapshot - Graph Component should match snapshot 1`] = `
       <svg>
         <path
           className="link"
-          d="M200,300A0,0 0 0,1 305,745"
+          d="M200,300A0,0 0 0,1 305,590"
           id="Eveie,Alice"
           onClick={[Function]}
           onContextMenu={[Function]}
@@ -198,7 +198,7 @@ exports[`Snapshot - Graph Component should match snapshot 1`] = `
       <svg>
         <path
           className="link"
-          d="M120,270A0,0 0 0,1 305,745"
+          d="M120,270A0,0 0 0,1 305,590"
           id="Peter,Alice"
           onClick={[Function]}
           onContextMenu={[Function]}
@@ -218,7 +218,7 @@ exports[`Snapshot - Graph Component should match snapshot 1`] = `
       <svg>
         <path
           className="link"
-          d="M20,110A0,0 0 0,1 305,745"
+          d="M20,110A0,0 0 0,1 305,590"
           id="Mario,Alice"
           onClick={[Function]}
           onContextMenu={[Function]}
@@ -238,7 +238,7 @@ exports[`Snapshot - Graph Component should match snapshot 1`] = `
       <svg>
         <path
           className="link"
-          d="M190,609A0,0 0 0,1 305,745"
+          d="M190,590A0,0 0 0,1 305,590"
           id="James,Alice"
           onClick={[Function]}
           onContextMenu={[Function]}
@@ -278,7 +278,7 @@ exports[`Snapshot - Graph Component should match snapshot 1`] = `
       <svg>
         <path
           className="link"
-          d="M40,200A0,0 0 0,1 2,200"
+          d="M40,200A0,0 0 0,1 10,200"
           id="Harry,Nicky"
           onClick={[Function]}
           onContextMenu={[Function]}
@@ -318,7 +318,7 @@ exports[`Snapshot - Graph Component should match snapshot 1`] = `
       <svg>
         <path
           className="link"
-          d="M305,745A0,0 0 0,1 20,110"
+          d="M305,590A0,0 0 0,1 20,110"
           id="Alice,Mario"
           onClick={[Function]}
           onContextMenu={[Function]}
@@ -358,7 +358,7 @@ exports[`Snapshot - Graph Component should match snapshot 1`] = `
       <svg>
         <path
           className="link"
-          d="M30,184A0,0 0 0,1 190,609"
+          d="M30,184A0,0 0 0,1 190,590"
           id="Sarah,James"
           onClick={[Function]}
           onContextMenu={[Function]}
@@ -378,7 +378,7 @@ exports[`Snapshot - Graph Component should match snapshot 1`] = `
       <svg>
         <path
           className="link"
-          d="M14,259A0,0 0 0,1 190,609"
+          d="M14,259A0,0 0 0,1 190,590"
           id="Roger,James"
           onClick={[Function]}
           onContextMenu={[Function]}
@@ -398,7 +398,7 @@ exports[`Snapshot - Graph Component should match snapshot 1`] = `
       <svg>
         <path
           className="link"
-          d="M409,500A0,0 0 0,1 190,609"
+          d="M409,500A0,0 0 0,1 190,590"
           id="Maddy,James"
           onClick={[Function]}
           onContextMenu={[Function]}
@@ -438,7 +438,7 @@ exports[`Snapshot - Graph Component should match snapshot 1`] = `
       <svg>
         <path
           className="link"
-          d="M190,609A0,0 0 0,1 14,259"
+          d="M190,590A0,0 0 0,1 14,259"
           id="James,Roger"
           onClick={[Function]}
           onContextMenu={[Function]}
@@ -458,7 +458,7 @@ exports[`Snapshot - Graph Component should match snapshot 1`] = `
       <svg>
         <path
           className="link"
-          d="M305,745A0,0 0 0,1 120,270"
+          d="M305,590A0,0 0 0,1 120,270"
           id="Alice,Peter"
           onClick={[Function]}
           onContextMenu={[Function]}
@@ -498,7 +498,7 @@ exports[`Snapshot - Graph Component should match snapshot 1`] = `
       <svg>
         <path
           className="link"
-          d="M305,745A0,0 0 0,1 200,300"
+          d="M305,590A0,0 0 0,1 200,300"
           id="Alice,Eveie"
           onClick={[Function]}
           onContextMenu={[Function]}
@@ -558,7 +558,7 @@ exports[`Snapshot - Graph Component should match snapshot 1`] = `
       <svg>
         <path
           className="link"
-          d="M20,1A0,0 0 0,1 90,90"
+          d="M20,10A0,0 0 0,1 90,90"
           id="Henry,Mikey"
           onClick={[Function]}
           onContextMenu={[Function]}
@@ -578,7 +578,7 @@ exports[`Snapshot - Graph Component should match snapshot 1`] = `
       <svg>
         <path
           className="link"
-          d="M90,656A0,0 0 0,1 90,90"
+          d="M90,590A0,0 0 0,1 90,90"
           id="Elric,Mikey"
           onClick={[Function]}
           onContextMenu={[Function]}
@@ -598,7 +598,7 @@ exports[`Snapshot - Graph Component should match snapshot 1`] = `
       <svg>
         <path
           className="link"
-          d="M190,609A0,0 0 0,1 30,184"
+          d="M190,590A0,0 0 0,1 30,184"
           id="James,Sarah"
           onClick={[Function]}
           onContextMenu={[Function]}
@@ -618,7 +618,7 @@ exports[`Snapshot - Graph Component should match snapshot 1`] = `
       <svg>
         <path
           className="link"
-          d="M305,745A0,0 0 0,1 30,184"
+          d="M305,590A0,0 0 0,1 30,184"
           id="Alice,Sarah"
           onClick={[Function]}
           onContextMenu={[Function]}
@@ -638,7 +638,7 @@ exports[`Snapshot - Graph Component should match snapshot 1`] = `
       <svg>
         <path
           className="link"
-          d="M190,609A0,0 0 0,1 409,500"
+          d="M190,590A0,0 0 0,1 409,500"
           id="James,Maddy"
           onClick={[Function]}
           onContextMenu={[Function]}

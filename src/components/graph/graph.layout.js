@@ -32,22 +32,14 @@
  * @returns {number} - safe coordinate
  */
 function safeNodePositioner(position, isX, config) {
+    const buffer = 10;
+
+    if (position.isNaN) return buffer;
+
     if (isX) {
-        if (position > config["width"] - 10) {
-            return config["width"] - 20;
-        } else if (position < 10) {
-            return 20;
-        } else {
-            return position;
-        }
+        return Math.max(buffer, Math.min(config["width"] - buffer, position));
     } else {
-        if (position > config["height"] - 10) {
-            return config["height"] - 20;
-        } else if (position < 10) {
-            return 20;
-        } else {
-            return position;
-        }
+        return Math.max(buffer, Math.min(config["height"] - buffer, position));
     }
 }
 
@@ -95,6 +87,10 @@ function layoutCallbackHelper(layoutOptionInput) {
                 if (nodes[source] != undefined && nodes[target] != undefined) {
                     nodes[source].y = safeNodePositioner(nodes[source].y - k, false, config);
                     nodes[target].y = safeNodePositioner(nodes[target].y + k, false, config);
+
+                    //make sure these don't wiggle out of the box
+                    nodes[source].x = safeNodePositioner(nodes[source].x, true, config);
+                    nodes[target].x = safeNodePositioner(nodes[target].x, true, config);
                 }
 
                 return nodes, links;
@@ -109,11 +105,15 @@ function layoutCallbackHelper(layoutOptionInput) {
                         true,
                         config
                     );
+
+                    nodes[source].x = safeNodePositioner(nodes[source].x, true, config);
+
                     nodes[target].y = safeNodePositioner(
                         degreeNodePositioner(nodes[target].degree, false, config) + k,
                         true,
                         config
                     );
+                    nodes[target].x = safeNodePositioner(nodes[target].x, true, config);
                 }
 
                 return nodes, links;
@@ -125,6 +125,10 @@ function layoutCallbackHelper(layoutOptionInput) {
                 if (nodes[source] != undefined && nodes[target] != undefined) {
                     nodes[source].x = safeNodePositioner(nodes[source].x - k, true, config);
                     nodes[target].x = safeNodePositioner(nodes[target].x + k, true, config);
+
+                    //make sure these don't wiggle out of the box
+                    nodes[source].y = safeNodePositioner(nodes[source].y, false, config);
+                    nodes[target].y = safeNodePositioner(nodes[target].y, false, config);
                 }
 
                 return nodes, links;
@@ -144,6 +148,9 @@ function layoutCallbackHelper(layoutOptionInput) {
                         true,
                         config
                     );
+                    //make sure these don't wiggle out of the box
+                    nodes[source].y = safeNodePositioner(nodes[source].y, false, config);
+                    nodes[target].y = safeNodePositioner(nodes[target].y, false, config);
                 }
 
                 return nodes, links;
@@ -151,6 +158,14 @@ function layoutCallbackHelper(layoutOptionInput) {
         default:
             /* eslint no-unused-vars: ["error", { "args": "none" }] */
             return function(nodes, links, source, target, link, config, alpha) {
+                //make sure these don't wiggle out of the box
+                nodes[source].x = safeNodePositioner(nodes[source].x, true, config);
+                nodes[target].x = safeNodePositioner(nodes[target].x, true, config);
+
+                //make sure these don't wiggle out of the box
+                nodes[source].y = safeNodePositioner(nodes[source].y, false, config);
+                nodes[target].y = safeNodePositioner(nodes[target].y, false, config);
+
                 return nodes, links;
             };
     }
