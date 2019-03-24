@@ -248,12 +248,15 @@ function _findNodeDegree(nodes, links) {
             if (nodes[source.target]) {
                 nodes[source.target].degree = degree;
                 newSources.push(linksClone.filter(link => link.source == source.target));
-                linksClone.splice(linksClone.findIndex(l => l.source == source.source && l.target == source.target), 1);
             } else {
                 utils.throwErr("Graph", `${ERRORS.INVALID_LINKS} - "${source.target}" is not a valid target node id`);
             }
         });
-        sources = [...new Set(newSources.flat())];
+        let newFiltSources = newSources
+            .flat()
+            .filter(link => newSources.flat().findIndex(l => l.target == link.source) < 0);
+
+        sources = [...new Set(newFiltSources)];
         hasTargets = sources.length > 0;
         degree++;
     }
