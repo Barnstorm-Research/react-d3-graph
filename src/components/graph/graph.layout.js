@@ -51,6 +51,8 @@ function safeNodePositioner(position, isX, config) {
  * @returns {number} - coordinate
  */
 function degreeNodePositioner(degree, isX, config) {
+    degree = degree == undefined ? config.d3["maxDegrees"] : Math.min(config.d3["maxDegrees"], degree) - 1;
+
     if (isX) {
         return (degree * config["width"]) / config.d3["maxDegrees"];
     } else {
