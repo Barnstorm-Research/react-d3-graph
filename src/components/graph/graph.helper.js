@@ -240,15 +240,17 @@ function _findNodeDegree(nodes, links) {
     let degree = 2;
 
     let hasTargets = sources.length > 0;
+    let visitedSources = new Set();
 
     while (hasTargets) {
         let newSources = [];
 
         sources.forEach(function(source) {
-            if (nodes[source.target]) {
+            if (nodes[source.target] && !visitedSources.has(source.target)) {
                 nodes[source.target].degree = degree;
                 newSources.push(linksClone.filter(link => link.source == source.target));
-            } else {
+                visitedSources.add(source.source);
+            } else if (!nodes[source.target]) {
                 utils.throwErr("Graph", `${ERRORS.INVALID_LINKS} - "${source.target}" is not a valid target node id`);
             }
         });
