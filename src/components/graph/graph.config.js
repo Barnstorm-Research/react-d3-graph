@@ -96,8 +96,7 @@
  * @param {string} [d3.layoutMode=default] - type of layout to use WEAKTREE, STRONGTREE, WEAKFLOW, STRONGFLOW or default
  * @param {number} [d3.maxDegrees=5] - the depth or height of the tree or flow
  * @param {boolean} [d3.showAllTicks=true] - if we should render all ticks
- * @param {number} [d3.showAllTicksMinMod=1] - if showAllTicks == false, this will only render when the alpha*100 is between minMod and maxMod
- * @param {number} [d3.showAllTicksMaxMod=1.5] -  if showAllTicks == false, this will only render when the alpha*100 is between minMod and maxMod
+ * @param {number} [d3.ticks=1000] - if showAllTicks == false, this will run 1000 iterations of the force without rendering the result
  * <br/>
  * @param {Object} node node object is explained in next section. ⬇️
  * <h2 id="config-node"><a href="#config-node">#</a> Node level configurations</h2>
@@ -238,8 +237,7 @@ export default {
         layoutMode: "default",
         maxDegrees: 5,
         showAllTicks: true,
-        showAllTicksMaxMod: 1.5,
-        showAllTicksMinMod: 1,
+        ticks: 1000,
     },
     node: {
         color: "#d3d3d3",

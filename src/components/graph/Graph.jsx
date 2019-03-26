@@ -149,6 +149,12 @@ export default class Graph extends React.Component {
 
         this.state.simulation.force(CONST.LINK_CLASS_NAME, forceLink);
 
+        if (this.props.config.d3 && !this.props.config.d3.showAllTicks) {
+            this.state.simulation.stop();
+            for (var i = 0; i < this.props.config.d3.ticks; ++i) this.state.simulation.tick();
+            this._tock();
+        }
+
         const customNodeDrag = d3Drag()
             .on("start", this._onDragStart)
             .on("drag", this._onDragMove)
@@ -235,9 +241,6 @@ export default class Graph extends React.Component {
      * @returns {undefined}
      */
     _tick = (state = {}, cb) => {
-        if (!this.state.runningSimulation && this.props.config.d3.showAllTicks) {
-            state.runningSimulation = true;
-        }
         this._tock(state, cb);
     };
 
@@ -250,17 +253,14 @@ export default class Graph extends React.Component {
      */
     _tock = (state = {}, cb) => {
         if (
-            !this.state.runningSimulation &&
             !this.state.newGraphElements &&
             !this.state.d3ConfigUpdated &&
             !this.state.configUpdated &&
             !this.state.d3ElementChange &&
             this.state.simulation.alpha() < this.state.simulation.alphaMin()
         ) {
-            //  this.pauseSimulation();
             return;
         }
-        //console.log("tock");
         cb ? this.setState(state, cb) : this.setState(state);
     };
 
@@ -269,7 +269,6 @@ export default class Graph extends React.Component {
      * @returns {undefined}
      */
     _simulationEnd = () => {
-        this.setState({ runningSimulation: false });
         this.forceUpdate();
     };
 
@@ -413,7 +412,6 @@ export default class Graph extends React.Component {
      */
     pauseSimulation = () => {
         this.state.simulation.stop();
-        this.setState({ runningSimulation: false });
     };
 
     /**
@@ -446,7 +444,6 @@ export default class Graph extends React.Component {
      */
     restartSimulation = () => {
         !this.state.config.staticGraph && this.state.simulation.restart();
-        this.setState({ runningSimulation: true });
     };
 
     /**
@@ -456,7 +453,6 @@ export default class Graph extends React.Component {
      * @returns {undefined}
      */
     restartSimulationAlpha = alpha => {
-        this.setState({ runningSimulation: true });
         this.state.simulation.alphaTarget(alpha).restart();
     };
 
@@ -522,7 +518,6 @@ export default class Graph extends React.Component {
                 this.state.config.automaticLayoutOn &&
                 (this.state.newGraphElements || this.state.d3ConfigUpdated)
             ) {
-                //this.setState({runningSimulation: true}); // this does not actually seem to work...
                 this._graphForcesConfig();
                 this.restartSimulation();
                 this.setState({ newGraphElements: false, d3ConfigUpdated: false, d3ElementChange: false });
@@ -550,52 +545,6 @@ export default class Graph extends React.Component {
 
     componentWillUnmount() {
         this.pauseSimulation();
-    }
-
-    /**
-     * Called to determine if the changes should be rendered
-     *  If the simulation is running and d3.showAllTicks == false then
-     *  this function will only return true when the alpha*100%10 is between the showAllTicksMinMod and showAllTicksMaxMod
-     *  this will reduce the number of updates to the display
-     * @param {Object} nextProps - next props
-     * @param {Object} nextState - next state
-     * @returns {boolean} true/false if should render or not
-     */
-    shouldComponentUpdate(nextProps, nextState) {
-        if (this.state === nextState) {
-            return false;
-        } else {
-            // d3 == undefined only happens in unit tests
-            if (nextProps.config.d3 == undefined || nextProps.config.d3.showAllTicks) {
-                return true;
-            }
-
-            if (nextState.runningSimulation === true) {
-                var count = (nextState.simulation.alpha() * 100) % 10;
-
-                if (nextState.simulation.alpha() < nextState.simulation.alphaMin()) {
-                    this.pauseSimulation();
-                    return true;
-                }
-                if (
-                    count <= nextProps.config.d3.showAllTicksMaxMod &&
-                    count >= nextProps.config.d3.showAllTicksMinMod
-                ) {
-                    return true;
-                }
-            }
-
-            if (
-                nextState.newGraphElements ||
-                nextState.d3ConfigUpdated ||
-                nextState.configUpdated ||
-                nextState.d3ElementChange
-            ) {
-                return true;
-            }
-
-            return false;
-        }
     }
 
     render() {
