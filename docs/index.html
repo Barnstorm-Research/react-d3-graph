@@ -90,6 +90,18 @@
                       </a></li>
                       
                       <li><a
+                        href='#graph_tock'
+                        class='regular pre-open'>
+                        #_tock
+                      </a></li>
+                      
+                      <li><a
+                        href='#graph_simulationend'
+                        class='regular pre-open'>
+                        #_simulationEnd
+                      </a></li>
+                      
+                      <li><a
                         href='#graph_zoomconfig'
                         class='regular pre-open'>
                         #_zoomConfig
@@ -153,6 +165,12 @@
                         href='#graphrestartsimulation'
                         class='regular pre-open'>
                         #restartSimulation
+                      </a></li>
+                      
+                      <li><a
+                        href='#graphrestartsimulationalpha'
+                        class='regular pre-open'>
+                        #restartSimulationAlpha
                       </a></li>
                       
                       <li><a
@@ -1241,6 +1259,28 @@ from the given nodes positions by rd3g), no coordinates will be calculated by rd
     (default <code>5</code>)
   </td>
   <td class='break-word'><span>the depth or height of the tree or flow
+</span></td>
+</tr>
+
+
+              
+                <tr>
+  <td class='break-word'><span class='code bold'>d3.showAllTicks</span> <code class='quiet'><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></code>
+  
+    (default <code>true</code>)
+  </td>
+  <td class='break-word'><span>if we should render all ticks
+</span></td>
+</tr>
+
+
+              
+                <tr>
+  <td class='break-word'><span class='code bold'>d3.ticks</span> <code class='quiet'><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></code>
+  
+    (default <code>1000</code>)
+  </td>
+  <td class='break-word'><span>if showAllTicks == false, this will run 1000 iterations of the force without rendering the result
 
 <br/>
 </span></td>
@@ -2458,6 +2498,141 @@ along time as d3 calculates new node positioning.</p>
       </div>
     </div>
   
+    <div class='border-bottom' id='graph_tock'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>_tock</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+
+  <p>The tick function simply calls React set state in order to update component and render nodes
+along time as d3 calculates new node positioning.</p>
+
+
+  <div class='pre p1 fill-light mt0'>_tock</div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>state</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>
+            = <code>{}</code>)</code>
+	    new state to pass on.
+
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>cb</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function">Function</a>?)</code>
+	    optional callback to fed in to 
+<a href="setState()">https://reactjs.org/docs/react-component.html#setstate</a>
+.
+
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+    
+      <div class='py1 quiet mt1 prose-big'>Returns</div>
+      <code><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/undefined">undefined</a></code>:
+        
+
+      
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
+    <div class='border-bottom' id='graph_simulationend'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>_simulationEnd</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+
+  <p>called when simulation ends</p>
+
+
+  <div class='pre p1 fill-light mt0'>_simulationEnd</div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+    
+      <div class='py1 quiet mt1 prose-big'>Returns</div>
+      <code><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/undefined">undefined</a></code>:
+        
+
+      
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
     <div class='border-bottom' id='graph_zoomconfig'>
       <div class="clearfix small pointer toggle-sibling">
         <div class="py1 contain">
@@ -3131,6 +3306,75 @@ to their original positions (or at least new positions according to the d3 force
   
   
 
+  
+
+  
+
+  
+    
+      <div class='py1 quiet mt1 prose-big'>Returns</div>
+      <code><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/undefined">undefined</a></code>:
+        
+
+      
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
+    <div class='border-bottom' id='graphrestartsimulationalpha'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>restartSimulationAlpha</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+
+  <p>Calls d3 simulation.alphaTarget(alpha).restart().<br/>
+<a href="https://github.com/d3/d3-force#simulation_restart">https://github.com/d3/d3-force#simulation_restart</a></p>
+
+
+  <div class='pre p1 fill-light mt0'>restartSimulationAlpha</div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>alpha</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a>)</code>
+	    the new alpha value
+
+          </div>
+          
+        </div>
+      
+    </div>
   
 
   
