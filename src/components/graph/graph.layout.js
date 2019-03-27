@@ -35,7 +35,7 @@
 function safeNodePositioner(position, isX, config, transform) {
     const buffer = 50;
 
-    if (position.isNaN) return buffer;
+    if (isNaN(position)) return buffer;
 
     if (isX) {
         return Math.max(buffer / transform, Math.min((config["width"] - buffer) / transform, position));
