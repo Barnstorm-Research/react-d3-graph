@@ -57,7 +57,7 @@ function buildLinkProps(link, nodes, links, config, linkCallbacks, highlightedNo
     const { source, target } = link;
 
     if (config.automaticLayoutOn) {
-        nodes, (links = linkCallbacks["layoutCallback"](nodes, links, source, target, link, config, alpha));
+        nodes, (links = linkCallbacks["layoutCallback"](nodes, links, source, target, link, config, transform, alpha));
     }
 
     const x1 = (nodes[source] && nodes[source].x) || 0;

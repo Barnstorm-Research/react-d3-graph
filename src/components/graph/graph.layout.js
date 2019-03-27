@@ -29,17 +29,18 @@
  * @param {number} position - new coordinate for node
  * @param {boolean} isX - boolean to check if comparing width (true) or height (false)
  * @param {Object} config - same as {@link #graphrenderer|config in renderGraph}
+ * @param {number} transform - the panAndZoom scale value
  * @returns {number} - safe coordinate
  */
-function safeNodePositioner(position, isX, config) {
-    const buffer = 10;
+function safeNodePositioner(position, isX, config, transform) {
+    const buffer = 50;
 
     if (position.isNaN) return buffer;
 
     if (isX) {
-        return Math.max(buffer, Math.min(config["width"] - buffer, position));
+        return Math.max(buffer / transform, Math.min((config["width"] - buffer) / transform, position));
     } else {
-        return Math.max(buffer, Math.min(config["height"] - buffer, position));
+        return Math.max(buffer / transform, Math.min((config["height"] - buffer) / transform, position));
     }
 }
 
@@ -48,15 +49,18 @@ function safeNodePositioner(position, isX, config) {
  * @param {number} degree - node connection degree
  * @param {boolean} isX - boolean to check if comparing width (true) or height (false)
  * @param {Object} config - same as {@link #graphrenderer|config in renderGraph}
+ * @param {number} transform - the panAndZoom scale value
  * @returns {number} - coordinate
  */
-function degreeNodePositioner(degree, isX, config) {
+function degreeNodePositioner(degree, isX, config, transform) {
+    const buffer = 50;
+
     degree = degree == undefined ? config.d3["maxDegrees"] : Math.min(config.d3["maxDegrees"], degree) - 1;
 
     if (isX) {
-        return (degree * config["width"]) / config.d3["maxDegrees"];
+        return (degree * ((config["width"] - buffer) / transform)) / config.d3["maxDegrees"];
     } else {
-        return (degree * config["height"]) / config.d3["maxDegrees"];
+        return (degree * ((config["height"] - buffer) / transform)) / config.d3["maxDegrees"];
     }
 }
 
@@ -83,90 +87,94 @@ function layoutCallbackHelper(layoutOptionInput) {
 
     switch (layoutOption) {
         case "WEAKTREE":
-            return function(nodes, links, source, target, link, config, alpha) {
+            return function(nodes, links, source, target, link, config, transform, alpha) {
                 var k = alpha;
 
                 if (nodes[source] != undefined && nodes[target] != undefined) {
-                    nodes[source].y = safeNodePositioner(nodes[source].y - k, false, config);
-                    nodes[target].y = safeNodePositioner(nodes[target].y + k, false, config);
+                    nodes[source].y = safeNodePositioner(nodes[source].y - k, false, config, transform);
+                    nodes[target].y = safeNodePositioner(nodes[target].y + k, false, config, transform);
 
                     //make sure these don't wiggle out of the box
-                    nodes[source].x = safeNodePositioner(nodes[source].x, true, config);
-                    nodes[target].x = safeNodePositioner(nodes[target].x, true, config);
+                    nodes[source].x = safeNodePositioner(nodes[source].x, true, config, transform);
+                    nodes[target].x = safeNodePositioner(nodes[target].x, true, config, transform);
                 }
 
                 return nodes, links;
             };
         case "STRONGTREE":
-            return function(nodes, links, source, target, link, config, alpha) {
+            return function(nodes, links, source, target, link, config, transform, alpha) {
                 var k = alpha;
 
                 if (nodes[source] != undefined && nodes[target] != undefined) {
                     nodes[source].y = safeNodePositioner(
-                        degreeNodePositioner(nodes[source].degree, false, config) - k,
+                        degreeNodePositioner(nodes[source].degree, false, config, transform) - k,
                         true,
-                        config
+                        config,
+                        transform
                     );
 
-                    nodes[source].x = safeNodePositioner(nodes[source].x, true, config);
+                    nodes[source].x = safeNodePositioner(nodes[source].x, true, config, transform);
 
                     nodes[target].y = safeNodePositioner(
-                        degreeNodePositioner(nodes[target].degree, false, config) + k,
+                        degreeNodePositioner(nodes[target].degree, false, config, transform) + k,
                         true,
-                        config
+                        config,
+                        transform
                     );
-                    nodes[target].x = safeNodePositioner(nodes[target].x, true, config);
+                    nodes[target].x = safeNodePositioner(nodes[target].x, true, config, transform);
                 }
 
                 return nodes, links;
             };
         case "WEAKFLOW":
-            return function(nodes, links, source, target, link, config, alpha) {
+            return function(nodes, links, source, target, link, config, transform, alpha) {
                 var k = alpha;
 
                 if (nodes[source] != undefined && nodes[target] != undefined) {
-                    nodes[source].x = safeNodePositioner(nodes[source].x - k, true, config);
-                    nodes[target].x = safeNodePositioner(nodes[target].x + k, true, config);
+                    nodes[source].x = safeNodePositioner(nodes[source].x - k, true, config, transform);
+                    nodes[target].x = safeNodePositioner(nodes[target].x + k, true, config, transform);
 
                     //make sure these don't wiggle out of the box
-                    nodes[source].y = safeNodePositioner(nodes[source].y, false, config);
-                    nodes[target].y = safeNodePositioner(nodes[target].y, false, config);
+                    nodes[source].y = safeNodePositioner(nodes[source].y, false, config, transform);
+                    nodes[target].y = safeNodePositioner(nodes[target].y, false, config, transform);
                 }
 
                 return nodes, links;
             };
         case "STRONGFLOW":
-            return function(nodes, links, source, target, link, config, alpha) {
+            return function(nodes, links, source, target, link, config, transform, alpha) {
                 var k = alpha;
 
                 if (nodes[source] != undefined && nodes[target] != undefined) {
                     nodes[source].x = safeNodePositioner(
-                        degreeNodePositioner(nodes[source].degree, true, config) - k,
+                        degreeNodePositioner(nodes[source].degree, true, config, transform) - k,
                         true,
-                        config
+                        config,
+                        transform
                     );
                     nodes[target].x = safeNodePositioner(
-                        degreeNodePositioner(nodes[target].degree, true, config) + k,
+                        degreeNodePositioner(nodes[target].degree, true, config, transform) + k,
                         true,
-                        config
+                        config,
+                        transform
                     );
                     //make sure these don't wiggle out of the box
-                    nodes[source].y = safeNodePositioner(nodes[source].y, false, config);
-                    nodes[target].y = safeNodePositioner(nodes[target].y, false, config);
+                    nodes[source].y = safeNodePositioner(nodes[source].y, false, config, transform);
+                    nodes[target].y = safeNodePositioner(nodes[target].y, false, config, transform);
                 }
 
                 return nodes, links;
             };
         default:
             /* eslint no-unused-vars: ["error", { "args": "none" }] */
-            return function(nodes, links, source, target, link, config, alpha) {
+            return function(nodes, links, source, target, link, config, transform, alpha) {
                 //make sure these don't wiggle out of the box
-                nodes[source].x = safeNodePositioner(nodes[source].x, true, config);
-                nodes[target].x = safeNodePositioner(nodes[target].x, true, config);
+                nodes[source].x = safeNodePositioner(nodes[source].x, true, config, transform);
+                nodes[target].x = safeNodePositioner(nodes[target].x, true, config, transform);
 
                 //make sure these don't wiggle out of the box
-                nodes[source].y = safeNodePositioner(nodes[source].y, false, config);
-                nodes[target].y = safeNodePositioner(nodes[target].y, false, config);
+                nodes[source].y = safeNodePositioner(nodes[source].y, false, config, transform);
+                nodes[target].y = safeNodePositioner(nodes[target].y, false, config, transform);
 
                 return nodes, links;
             };
