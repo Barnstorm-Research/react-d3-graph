@@ -31,7 +31,7 @@ describe("[rd3g-link] link tests", function() {
         });
 
         describe("and some link has a 'label' property", function() {
-            it("should properly render the label in the link between two nodes", function() {
+            it.skip("should properly render the label in the link between two nodes", function() {
                 // link between nodes' 1 and 2 should have a label
                 this.link12PO.getLabel().contains("link 1 and 2");
             });
