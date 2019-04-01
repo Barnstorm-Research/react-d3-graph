@@ -49,11 +49,40 @@ function _getNodeOpacity(node, highlightedNode, highlightedLink, config) {
  * @param  {string} highlightedNode - same as {@link #graphrenderer|highlightedNode in renderGraph}.
  * @param  {Object} highlightedLink - same as {@link #graphrenderer|highlightedLink in renderGraph}.
  * @param  {number} transform - value that indicates the amount of zoom transformation.
+ * @param  {boolean} nodeDragged - is repositioning happening because of node being dragged.
+ * @param  {number} alpha - the alpha value
  * @returns {Object} returns an object that aggregates all props for creating respective Link component instance.
  * @memberof Graph/builder
  */
-function buildLinkProps(link, nodes, links, config, linkCallbacks, highlightedNode, highlightedLink, transform) {
+function buildLinkProps(
+    link,
+    nodes,
+    links,
+    config,
+    linkCallbacks,
+    highlightedNode,
+    highlightedLink,
+    transform,
+    nodeDragged,
+    alpha
+) {
     const { source, target } = link;
+
+    if (config.automaticLayoutOn) {
+        nodes,
+            (links = linkCallbacks["layoutCallback"](
+                nodes,
+                links,
+                source,
+                target,
+                link,
+                config,
+                transform,
+                nodeDragged,
+                alpha
+            ));
+    }
+
     const x1 = (nodes[source] && nodes[source].x) || 0;
     const y1 = (nodes[source] && nodes[source].y) || 0;
     const x2 = (nodes[target] && nodes[target].x) || 0;
@@ -117,6 +146,12 @@ function buildLinkProps(link, nodes, links, config, linkCallbacks, highlightedNo
         fontWeight = highlight ? config.link.highlightFontWeight : config.link.fontWeight;
     }
 
+    var clsName = CONST.LINK_CLASS_NAME;
+
+    if (link.className || config.link.className) {
+        clsName += " " + (link.className || config.link.className);
+    }
+
     return {
         markerId,
         d,
@@ -129,7 +164,7 @@ function buildLinkProps(link, nodes, links, config, linkCallbacks, highlightedNo
         fontColor,
         fontSize: fontSize * t,
         fontWeight,
-        className: CONST.LINK_CLASS_NAME,
+        className: clsName,
         opacity,
         onClickLink: linkCallbacks.onClickLink,
         onRightClickLink: linkCallbacks.onRightClickLink,
@@ -181,20 +216,16 @@ function buildNodeProps(node, config, nodeCallbacks = {}, highlightedNode, highl
     }
 
     const t = 1 / transform;
-    const nodeSize = node.size || config.node.size;
-    var nodeSizeWidth = node.width || config.node.width;
-    var nodeSizeHeight = node.height || config.node.height;
+    // if there is a node config level width and height specified clear out the
+    //size if it is set
+    const nodeWidth = node.width || config.node.width;
+    const nodeHeight = node.height || config.node.height;
+    const nodeSize = nodeWidth && nodeHeight ? undefined : node.size || config.node.size;
+
     const fontSize = highlight ? config.node.highlightFontSize : config.node.fontSize;
     const dx = fontSize * t + nodeSize / 100 + 1.5;
     const svg = node.svg || config.node.svg;
     const fontColor = node.fontColor || config.node.fontColor;
-
-    // if there is a node config level size specified clear out the
-    //width and hight if they are set
-    if (node.size != undefined) {
-        nodeSizeWidth = undefined;
-        nodeSizeHeight = undefined;
-    }
 
     return {
         ...node,
@@ -215,9 +246,9 @@ function buildNodeProps(node, config, nodeCallbacks = {}, highlightedNode, highl
         onMouseOut: nodeCallbacks.onMouseOut,
         opacity,
         renderLabel: config.node.renderLabel,
-        size: nodeSize * t,
-        width: nodeSizeWidth,
-        height: nodeSizeHeight,
+        size: nodeSize ? nodeSize * t : undefined,
+        width: nodeWidth ? nodeWidth * t : undefined,
+        height: nodeHeight ? nodeHeight * t : undefined,
         stroke,
         strokeWidth: strokeWidth * t,
         svg,

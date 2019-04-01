@@ -29,7 +29,10 @@ describe("Link Component", () => {
     });
 
     test("should call callback function when onClick is performed", () => {
-        that.tree.children[0].props.onClick();
+        //Change this back when the support for label is added back into Link
+        // ALSO un-skip test in link.e2.js "should properly render the label in the link between two nodes"
+        //  that.tree.children[0].props.onClick();
+        that.tree.props.onClick();
         expect(that.callbackMock).toBeCalled();
     });
 });

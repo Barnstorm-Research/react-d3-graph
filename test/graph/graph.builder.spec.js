@@ -4,6 +4,7 @@ import config from "../../src/components/graph/graph.config";
 
 import utils from "../../src/utils";
 import * as linkHelper from "../../src/components/link/link.helper";
+import * as layoutHelper from "../../src/components/graph/graph.layout";
 
 describe("Graph Helper", () => {
     beforeAll(() => {
@@ -21,12 +22,24 @@ describe("Graph Helper", () => {
             that = {
                 config: { link: config.link },
                 link: { source: "source", target: "target" },
+                layoutcallback: { layoutCallback: layoutHelper.layoutCallbackHelper("WEAKTREE") },
             };
         });
 
         describe("when building props for a link", () => {
             test("should call buildLinkPathDefinition with expected parameters", () => {
-                graphHelper.buildLinkProps(that.link, {}, {}, that.config, [], undefined, undefined, 1);
+                graphHelper.buildLinkProps(
+                    that.link,
+                    {},
+                    {},
+                    that.config,
+                    that.layoutcallback,
+                    [],
+                    [],
+                    undefined,
+                    undefined,
+                    1
+                );
 
                 expect(linkHelper.buildLinkPathDefinition).toHaveBeenCalledWith(
                     { source: { x: 0, y: 0 }, target: { x: 0, y: 0 } },
@@ -41,6 +54,8 @@ describe("Graph Helper", () => {
                         {},
                         {},
                         that.config,
+                        that.layoutcallback,
+                        [],
                         [],
                         undefined,
                         undefined,
@@ -58,6 +73,8 @@ describe("Graph Helper", () => {
                         {},
                         {},
                         that.config,
+                        that.layoutcallback,
+                        [],
                         [],
                         undefined,
                         undefined,
@@ -65,6 +82,25 @@ describe("Graph Helper", () => {
                     );
 
                     expect(props.stroke).toEqual("green");
+                });
+            });
+
+            describe("and custom class is set to dottedLine", () => {
+                test("should return link and dottedLine in the props", () => {
+                    const props = graphHelper.buildLinkProps(
+                        { ...that.link, className: "dottedLine" },
+                        {},
+                        {},
+                        that.config,
+                        that.layoutcallback,
+                        [],
+                        [],
+                        undefined,
+                        undefined,
+                        1
+                    );
+
+                    expect(props.className).toEqual("link dottedLine");
                 });
             });
         });
@@ -121,6 +157,8 @@ describe("Graph Helper", () => {
                     opacity: 1,
                     renderLabel: true,
                     size: 200,
+                    width: undefined,
+                    height: undefined,
                     stroke: "yellow",
                     strokeWidth: 2,
                     svg: "file.svg",
@@ -167,6 +205,8 @@ describe("Graph Helper", () => {
                         opacity: undefined,
                         renderLabel: true,
                         size: 200,
+                        width: undefined,
+                        height: undefined,
                         stroke: "none",
                         strokeWidth: 1.5,
                         svg: "file.svg",
@@ -212,6 +252,8 @@ describe("Graph Helper", () => {
                         opacity: undefined,
                         renderLabel: true,
                         size: 200,
+                        width: undefined,
+                        height: undefined,
                         stroke: "none",
                         strokeWidth: 1.5,
                         svg: "file.svg",
@@ -241,6 +283,20 @@ describe("Graph Helper", () => {
                 );
 
                 expect(props.stroke).toEqual("yellow");
+            });
+        });
+        describe("when node to build width and height specified", () => {
+            test("should return node props with proper width, height and size values", () => {
+                that.node.highlighted = true;
+                Object.assign(that.config.node, {
+                    width: 5000,
+                    height: 100,
+                });
+                const props = graphHelper.buildNodeProps(that.node, that.config, undefined, "id", undefined, 1);
+
+                expect(props.width).toEqual(5000);
+                expect(props.height).toEqual(100);
+                expect(props.size).toEqual(undefined);
             });
         });
     });

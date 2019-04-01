@@ -157,7 +157,7 @@ export default class Sandbox extends React.Component {
 
             this.state.data.nodes.splice(0, 1);
             const links = this.state.data.links.filter(l => l.source !== id && l.target !== id);
-            const data = { nodes: this.state.data.nodes, links };
+            const data = { nodes: this.state.data.nodes, links: links };
 
             this.setState({ data });
         } else {
@@ -165,23 +165,31 @@ export default class Sandbox extends React.Component {
         }
     };
 
-    _buildGraphConfig = data => {
+    _buildGraphConfig = (data, oldConfig) => {
         let config = {};
         let schemaPropsValues = {};
 
         for (let k of Object.keys(data.formData)) {
+            let dataVal;
+
+            if (data.formData[k] == undefined) {
+                const oldVal = utils.getValue(oldConfig, k);
+
+                dataVal = oldVal;
+            } else {
+                dataVal = data.formData[k];
+            }
             // Set value mapping correctly for config object of react-d3-graph
-            utils.setValue(config, k, data.formData[k]);
+            utils.setValue(config, k, dataVal);
             // Set new values for schema of jsonform
             schemaPropsValues[k] = {};
-            schemaPropsValues[k]["default"] = data.formData[k];
+            schemaPropsValues[k]["default"] = dataVal;
         }
-
         return { config, schemaPropsValues };
     };
 
     refreshGraph = data => {
-        const { config, schemaPropsValues } = this._buildGraphConfig(data);
+        const { config, schemaPropsValues } = this._buildGraphConfig(data, this.state.config);
 
         this.state.schema.properties = reactD3GraphUtils.merge(this.state.schema.properties, schemaPropsValues);
 

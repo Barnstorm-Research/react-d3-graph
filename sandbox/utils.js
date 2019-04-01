@@ -1,6 +1,7 @@
 /*eslint require-jsdoc: 0, valid-jsdoc: 0, no-undef: 0, no-empty: 0, no-console: 0*/
 import queryString from "query-string";
 import { LINE_TYPES } from "../src/components/link/link.const";
+import GRAPH_CONST from "../src/components/graph/graph.const";
 import DEFAULT_CONFIG from "../src/components/graph/graph.config";
 import utils from "../src/utils";
 
@@ -17,6 +18,16 @@ function formMap(k, v) {
                 title: "link.type",
                 items: {
                     enum: Object.keys(LINE_TYPES),
+                },
+                uniqueItems: true,
+            };
+        }
+        case "d3.layoutMode": {
+            return {
+                type: "array",
+                title: "d3.layoutMode",
+                items: {
+                    enum: Object.keys(GRAPH_CONST.LAYOUT_MODES),
                 },
                 uniqueItems: true,
             };
@@ -76,6 +87,10 @@ function loadDataset() {
     };
 }
 
+function getValue(object, path) {
+    return path.split(".").reduce((o, p) => (o ? o[p] : null), object);
+}
+
 function setValue(obj, access, value) {
     if (typeof access == "string") {
         access = access.split(".");
@@ -92,5 +107,6 @@ function setValue(obj, access, value) {
 export default {
     generateFormSchema,
     loadDataset,
+    getValue,
     setValue,
 };

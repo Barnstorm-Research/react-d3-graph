@@ -19,9 +19,11 @@
  * @property {string} [svg=] - custom svg for node (optional).
  * @memberof Graph/helper
  */
+/* global Set */
 import {
     forceX as d3ForceX,
     forceY as d3ForceY,
+    forceCollide as d3ForceCollide,
     forceSimulation as d3ForceSimulation,
     //    forceManyBody as d3ForceManyBody,
 } from "d3-force";
@@ -36,7 +38,15 @@ import utils from "../../utils";
 import { computeNodeDegree } from "./collapse.helper";
 
 const NODE_PROPS_WHITELIST = ["id", "highlighted", "x", "y", "index", "vy", "vx"];
-const LINK_CUSTOM_PROPS_WHITELIST = ["color", "opacity", "strokeWidth", "label"];
+const LINK_CUSTOM_PROPS_WHITELIST = ["color", "opacity", "strokeWidth", "label", "className"];
+
+Object.defineProperty(Array.prototype, "flat", {
+    value: function(depth = 1) {
+        return this.reduce(function(flat, toFlatten) {
+            return flat.concat(Array.isArray(toFlatten) && depth - 1 ? toFlatten.flat(depth - 1) : toFlatten);
+        }, []);
+    },
+});
 
 /**
  * Create d3 forceSimulation to be applied on the graph.<br/>
@@ -55,7 +65,8 @@ function _createForceSimulation(width, height, gravity) {
     const forceStrength = gravity;
 
     return d3ForceSimulation()
-        .force("charge", d3ForceManyBodyReuse()) //.strength(forceStrength)) //d3ForceManyBody().strength(forceStrength))
+        .force("charge", d3ForceManyBodyReuse().strength(forceStrength)) //d3ForceManyBody().strength(forceStrength))
+        .force("collision", d3ForceCollide(CONST.RADIUS_COLLIDE))
         .force("x", frx)
         .force("y", fry);
 }
@@ -139,7 +150,10 @@ function _initializeNodes(graphNodes) {
  * @memberof Graph/helper
  */
 function _mapDataLinkToD3Link(link, index, d3Links = [], config, state = {}) {
-    const d3Link = d3Links[index];
+    const d3LinkIndex = d3Links.findIndex(elem => {
+        elem["source"] == link["source"] && elem["source"] == link["source"];
+    });
+    const d3Link = d3Links[d3LinkIndex];
     const customProps = utils.pick(link, LINK_CUSTOM_PROPS_WHITELIST);
 
     if (d3Link) {
@@ -194,6 +208,62 @@ function _tagOrphanNodes(nodes, linksMatrix) {
 
         return acc;
     }, {});
+}
+
+/**
+ * Determines the node degree.
+ * @param {Object.<string, Object>} nodes - nodes mapped by their id.
+ * @param {Array.<Object>} links - an array of Objects with source and target keys
+ * @returns {Object.<string, Object>} same input nodes structure with degree added to nodes
+ * @memberof Graph/helper
+ */
+function _findNodeDegree(nodes, links) {
+    let linksClone = [...links];
+    let sources = linksClone.filter(link => linksClone.findIndex(l => l.target == link.source) < 0);
+    const sourceCounts = sources.reduce(function(allNodes, node) {
+        if (node.source in allNodes) {
+            allNodes[node.source]++;
+        } else {
+            allNodes[node.source] = 1;
+        }
+        return allNodes;
+    }, {});
+
+    Object.keys(sourceCounts).forEach(function(source) {
+        if (nodes[source]) {
+            nodes[source].degree = 1;
+        } else {
+            utils.throwErr("Graph", `${ERRORS.INVALID_LINKS} - "${source}" is not a valid source node id`);
+        }
+    });
+
+    let degree = 2;
+
+    let hasTargets = sources.length > 0;
+    let visitedSources = new Set();
+
+    while (hasTargets) {
+        let newSources = [];
+
+        sources.forEach(function(source) {
+            if (nodes[source.target] && !visitedSources.has(source.target)) {
+                nodes[source.target].degree = degree;
+                newSources.push(linksClone.filter(link => link.source == source.target));
+                visitedSources.add(source.source);
+            } else if (!nodes[source.target]) {
+                utils.throwErr("Graph", `${ERRORS.INVALID_LINKS} - "${source.target}" is not a valid target node id`);
+            }
+        });
+        let newFiltSources = newSources
+            .flat()
+            .filter(link => newSources.flat().findIndex(l => l.target == link.source) < 0);
+
+        sources = [...new Set(newFiltSources)];
+        hasTargets = sources.length > 0;
+        degree++;
+    }
+
+    return nodes;
 }
 
 /**
@@ -253,19 +323,29 @@ function checkForGraphElementsChanges(nextProps, currentState) {
     const nextNodes = nextProps.data.nodes.map(n => utils.antiPick(n, NODE_PROPERTIES_DISCARD_TO_COMPARE));
     const nextLinks = nextProps.data.links;
     const stateD3Nodes = currentState.d3Nodes.map(n => utils.antiPick(n, NODE_PROPERTIES_DISCARD_TO_COMPARE));
-    const stateD3Links = currentState.d3Links.map(l => ({
-        // FIXME: solve this source data inconsistency later
-        source: l.source.id !== undefined && l.source.id !== null ? l.source.id : l.source,
-        target: l.target.id !== undefined && l.target.id !== null ? l.target.id : l.target,
-    }));
+    const stateD3Links = currentState.d3Links.map(function(l) {
+        var newObj = {};
+
+        Object.keys(l).forEach(function(key) {
+            if (key === "source") {
+                newObj["source"] = l.source.id !== undefined && l.source.id !== null ? l.source.id : l.source;
+            } else if (key === "target") {
+                newObj["target"] = l.target.id !== undefined && l.target.id !== null ? l.target.id : l.target;
+            } else {
+                newObj[key] = l[key];
+            }
+        });
+        return newObj;
+    });
     const graphElementsUpdated = !(
         utils.isDeepEqual(nextNodes, stateD3Nodes) && utils.isDeepEqual(nextLinks, stateD3Links)
     );
+
     const newGraphElements =
         nextNodes.length !== stateD3Nodes.length ||
         nextLinks.length !== stateD3Links.length ||
         !utils.isDeepEqual(nextNodes.map(({ id }) => ({ id })), stateD3Nodes.map(({ id }) => ({ id }))) ||
-        !utils.isDeepEqual(nextLinks, stateD3Links.map(({ source, target }) => ({ source, target })));
+        !utils.isDeepEqual(nextLinks, stateD3Links);
 
     return { graphElementsUpdated, newGraphElements };
 }
@@ -344,6 +424,8 @@ function initializeGraphState({ data, id, config }, state) {
     let newConfig = Object.assign({}, utils.merge(DEFAULT_CONFIG, config || {}));
     let links = _initializeLinks(graph.links, newConfig); // matrix of graph connections
     let nodes = _tagOrphanNodes(_initializeNodes(graph.nodes), links);
+
+    nodes = _findNodeDegree(nodes, data.links);
     const { nodes: d3Nodes, links: d3Links } = graph;
     const formatedId = id.replace(/ /g, "_");
     const simulation = _createForceSimulation(newConfig.width, newConfig.height, newConfig.d3 && newConfig.d3.gravity);
@@ -368,6 +450,7 @@ function initializeGraphState({ data, id, config }, state) {
         newGraphElements: false,
         configUpdated: false,
         transform: 1,
+        nodeDragged: false,
     };
 }
 
@@ -399,6 +482,7 @@ function updateNodeHighlightedValue(nodes, links, config, id, value = false) {
     return {
         nodes: updatedNodes,
         highlightedNode,
+        d3ElementChange: true,
     };
 }
 

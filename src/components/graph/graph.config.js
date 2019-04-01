@@ -93,6 +93,10 @@
  *  - If value is negative, nodes will repel each other. Most of the times this is what we want, so nodes don"t overlap.
  * @param {number} [d3.linkLength=100] - the length of each link from the center of the nodes it joins.
  * @param {number} [d3.linkStrength=1] - [see d3-force link.strength](https://github.com/d3/d3-force#link_strength)
+ * @param {string} [d3.layoutMode=default] - type of layout to use WEAKTREE, STRONGTREE, WEAKFLOW, STRONGFLOW or default
+ * @param {number} [d3.maxDegrees=5] - the depth or height of the tree or flow
+ * @param {boolean} [d3.showAllTicks=true] - if we should render all ticks
+ * @param {number} [d3.ticks=1000] - if showAllTicks == false, this will run 1000 iterations of the force without rendering the result
  * <br/>
  * @param {Object} node node object is explained in next section. ⬇️
  * <h2 id="config-node"><a href="#config-node">#</a> Node level configurations</h2>
@@ -226,9 +230,14 @@ export default {
     width: 800,
     d3: {
         alphaTarget: 0.05,
+        alphaMin: 0.001,
         gravity: -100,
         linkLength: 100,
         linkStrength: 1,
+        layoutMode: "default",
+        maxDegrees: 5,
+        showAllTicks: true,
+        ticks: 1000,
     },
     node: {
         color: "#d3d3d3",

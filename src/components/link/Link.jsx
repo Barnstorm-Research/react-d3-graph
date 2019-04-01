@@ -87,6 +87,7 @@ export default class Link extends React.Component {
             lineProps.markerEnd = `url(#${this.props.markerId})`;
         }
 
+        /* eslint-disable no-unused-vars */
         const { label, id } = this.props;
         const textProps = {
             dy: -1,
@@ -96,18 +97,24 @@ export default class Link extends React.Component {
                 fontWeight: this.props.fontWeight,
             },
         };
+        /* eslint-enable no-unused-vars */
 
-        return (
-            <svg>
-                <path {...lineProps} id={id} />
-                {label && (
-                    <text style={{ textAnchor: "middle" }} {...textProps}>
-                        <textPath href={`#${id}`} startOffset="50%">
-                            {label}
-                        </textPath>
-                    </text>
-                )}
-            </svg>
-        );
+        // NOTE: this adds support for labels on the arcs but causes an issue
+        //     where if you pan the graph then only part of the line is rendered.
+        //     I think it is a viewbox/viewport issue with the wrapping svg but
+        //    I'm not sure how to fix it so for now i'm removing support for
+        //    the line labels so all lines draw properly.
+        // <svg>
+        //     <path {...lineProps} id={id} />
+        //     {label && (
+        //         <text style={{ textAnchor: "middle" }} {...textProps}>
+        //             <textPath href={`#${id}`} startOffset="50%">
+        //                 {label}
+        //             </textPath>
+        //         </text>
+        //     )}
+        // </svg>
+
+        return <path {...lineProps} id={id} />;
     }
 }

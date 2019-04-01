@@ -24,10 +24,23 @@ import { isNodeVisible } from "./collapse.helper";
  * @param  {string} highlightedNode - same as {@link #graphrenderer|highlightedNode in renderGraph}.
  * @param  {Object} highlightedLink - same as {@link #graphrenderer|highlightedLink in renderGraph}.
  * @param  {number} transform - value that indicates the amount of zoom transformation.
+ * @param  {boolean} nodeDragged - is repositioning happening because of node being dragged.
+ * @param  {number} alpha - the alpha value for layout
  * @returns {Array.<Object>} returns the generated array of Link components.
  * @memberof Graph/renderer
  */
-function _renderLinks(nodes, links, linksMatrix, config, linkCallbacks, highlightedNode, highlightedLink, transform) {
+function _renderLinks(
+    nodes,
+    links,
+    linksMatrix,
+    config,
+    linkCallbacks,
+    highlightedNode,
+    highlightedLink,
+    transform,
+    nodeDragged,
+    alpha
+) {
     let outLinks = links;
 
     if (config.collapsible) {
@@ -48,7 +61,9 @@ function _renderLinks(nodes, links, linksMatrix, config, linkCallbacks, highligh
             linkCallbacks,
             `${highlightedNode}`,
             highlightedLink,
-            transform
+            transform,
+            nodeDragged,
+            alpha
         );
 
         return <Link key={key} id={key} {...props} />;
@@ -109,13 +124,12 @@ function _renderDefs() {
         // of the Node.  Because these defs are static if the node sizes change
         // the arrow location will still be in the same spot.  Also if the node is
         // rectangular or irregular sometimes it will be off.
-        const maxSide = Math.max(config.node.width, config.node.height) / 10 / 2 || config.node.size / 10 / 2;
-        const minSide = Math.min(config.node.width, config.node.height) / 10 / 2 || config.node.size / 10 / 2;
-        //  const maxSize = (maxSide/10)/(2+maxSide/minSide) || ((config.node.size/10)/2);
+        const maxSize = Math.max(config.node.width, config.node.height) / 10 / 2 || config.node.size / 10 / 2;
+        const minSize = Math.min(config.node.width, config.node.height) / 10 / 2 || config.node.size / 10 / 2;
 
-        const maxCornerDist = Math.sqrt(maxSide * maxSide + minSide * minSide) / 2;
+        const maxCornerDistance = Math.sqrt(maxSize * maxSize + minSize * minSize) / 2;
 
-        const small = Math.max(maxCornerDist, MARKER_SMALL_SIZE);
+        const small = Math.max(maxCornerDistance, MARKER_SMALL_SIZE);
         const medium = small + (MARKER_MEDIUM_OFFSET * config.maxZoom) / 3;
         const large = small + (MARKER_LARGE_OFFSET * config.maxZoom) / 3;
 
@@ -180,6 +194,8 @@ const _memoizedRenderDefs = _renderDefs();
  * @param  {string} highlightedLink.source - id of source node for highlighted link.
  * @param  {string} highlightedLink.target - id of target node for highlighted link.
  * @param  {number} transform - value that indicates the amount of zoom transformation.
+ * @param  {boolean} nodeDragged - is repositioning happening because of node being dragged.
+ * @param  {number} alpha - the alpha value for layout
  * @returns {Object} returns an object containing the generated nodes and links that form the graph.
  * @memberof Graph/renderer
  */
@@ -192,7 +208,9 @@ function renderGraph(
     config,
     highlightedNode,
     highlightedLink,
-    transform
+    transform,
+    nodeDragged,
+    alpha
 ) {
     return {
         nodes: _renderNodes(nodes, nodeCallbacks, config, highlightedNode, highlightedLink, transform, linksMatrix),
@@ -204,7 +222,9 @@ function renderGraph(
             linkCallbacks,
             highlightedNode,
             highlightedLink,
-            transform
+            transform,
+            nodeDragged,
+            alpha
         ),
         defs: _memoizedRenderDefs(config),
     };

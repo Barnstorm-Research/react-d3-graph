@@ -1,3 +1,4 @@
+/* eslint max-lines: "off" */
 import React from "react";
 
 import { drag as d3Drag } from "d3-drag";
@@ -12,6 +13,7 @@ import ERRORS from "../../err";
 import * as collapseHelper from "./collapse.helper";
 import * as graphHelper from "./graph.helper";
 import * as graphRenderer from "./graph.renderer";
+import * as layoutHelper from "./graph.layout";
 import utils from "../../utils";
 
 /**
@@ -135,7 +137,10 @@ export default class Graph extends React.Component {
      * @returns {undefined}
      */
     _graphForcesConfig() {
-        this.state.simulation.nodes(this.state.d3Nodes).on("tick", this._tick);
+        this.state.simulation
+            .nodes(this.state.d3Nodes)
+            .on("tick", this._tick)
+            .on("end", this._simulationEnd);
 
         const forceLink = d3ForceLink(this.state.d3Links)
             .id(l => l.id)
@@ -143,6 +148,12 @@ export default class Graph extends React.Component {
             .strength(this.state.config.d3.linkStrength);
 
         this.state.simulation.force(CONST.LINK_CLASS_NAME, forceLink);
+
+        if (this.props.config.d3 && !this.props.config.d3.showAllTicks) {
+            this.state.simulation.stop();
+            for (var i = 0; i < this.props.config.d3.ticks; ++i) this.state.simulation.tick();
+            this._tock();
+        }
 
         const customNodeDrag = d3Drag()
             .on("start", this._onDragStart)
@@ -158,10 +169,20 @@ export default class Graph extends React.Component {
      * Handles d3 drag 'end' event.
      * @returns {undefined}
      */
-    _onDragEnd = () =>
-        !this.state.config.staticGraph &&
-        this.state.config.automaticRearrangeAfterDropNode &&
-        this.state.simulation.alphaTarget(this.state.config.d3.alphaTarget).restart();
+    _onDragEnd = () => {
+        if (
+            !this.state.config.staticGraph &&
+            this.state.config.automaticLayoutOn &&
+            this.state.config.automaticRearrangeAfterDropNode
+        ) {
+            this.setState({
+                d3ElementChange: false,
+                nodeDragged: false,
+            });
+            this._setNodeHighlightedValue(this.state.highlightedNode, false);
+            this.restartSimulationAlpha(this.state.config.d3.alphaTarget);
+        }
+    };
 
     /**
      * Handles d3 'drag' event.
@@ -186,7 +207,7 @@ export default class Graph extends React.Component {
             draggedNode["fx"] = draggedNode.x;
             draggedNode["fy"] = draggedNode.y;
 
-            this._tick();
+            this._tock();
         }
     };
 
@@ -196,6 +217,11 @@ export default class Graph extends React.Component {
      */
     _onDragStart = () => {
         this.pauseSimulation();
+        this.setState({
+            d3ElementChange: true,
+            nodeDragged: true,
+        });
+
         if (this.state.enableFocusAnimation) {
             this.setState({ enableFocusAnimation: false });
         }
@@ -207,10 +233,11 @@ export default class Graph extends React.Component {
      * @param  {boolean} [value=false] - the highlight value to be set (true or false).
      * @returns {undefined}
      */
-    _setNodeHighlightedValue = (id, value = false) =>
-        this._tick(
+    _setNodeHighlightedValue = (id, value = false) => {
+        this._tock(
             graphHelper.updateNodeHighlightedValue(this.state.nodes, this.state.links, this.state.config, id, value)
         );
+    };
 
     /**
      * The tick function simply calls React set state in order to update component and render nodes
@@ -219,7 +246,37 @@ export default class Graph extends React.Component {
      * @param {Function} [cb] - optional callback to fed in to {@link setState()|https://reactjs.org/docs/react-component.html#setstate}.
      * @returns {undefined}
      */
-    _tick = (state = {}, cb) => (cb ? this.setState(state, cb) : this.setState(state));
+    _tick = (state = {}, cb) => {
+        this._tock(state, cb);
+    };
+
+    /**
+     * The tick function simply calls React set state in order to update component and render nodes
+     * along time as d3 calculates new node positioning.
+     * @param {Object} state - new state to pass on.
+     * @param {Function} [cb] - optional callback to fed in to {@link setState()|https://reactjs.org/docs/react-component.html#setstate}.
+     * @returns {undefined}
+     */
+    _tock = (state = {}, cb) => {
+        if (
+            !this.state.newGraphElements &&
+            !this.state.d3ConfigUpdated &&
+            !this.state.configUpdated &&
+            !this.state.d3ElementChange &&
+            this.state.simulation.alpha() < this.state.simulation.alphaMin()
+        ) {
+            return;
+        }
+        cb ? this.setState(state, cb) : this.setState(state);
+    };
+
+    /**
+     * called when simulation ends
+     * @returns {undefined}
+     */
+    _simulationEnd = () => {
+        this.forceUpdate();
+    };
 
     /**
      * Configures zoom upon graph with default or user provided values.<br/>
@@ -273,6 +330,8 @@ export default class Graph extends React.Component {
      */
     onClickNode = clickedNodeId => {
         if (this.state.config.collapsible) {
+            this.setState({ d3ElementChange: true });
+
             const leafConnections = collapseHelper.getTargetLeafConnections(
                 clickedNodeId,
                 this.state.links,
@@ -285,7 +344,7 @@ export default class Graph extends React.Component {
             );
             const d3Links = collapseHelper.toggleLinksConnections(this.state.d3Links, links);
 
-            this._tick(
+            this._tock(
                 {
                     links,
                     d3Links,
@@ -293,6 +352,8 @@ export default class Graph extends React.Component {
                 () => this.props.onClickNode && this.props.onClickNode(clickedNodeId)
             );
         } else {
+            this.setState({ d3ElementChange: true });
+
             this.props.onClickNode && this.props.onClickNode(clickedNodeId);
         }
     };
@@ -304,7 +365,6 @@ export default class Graph extends React.Component {
      */
     onMouseOverNode = id => {
         this.props.onMouseOverNode && this.props.onMouseOverNode(id);
-
         this.state.config.nodeHighlightBehavior && this._setNodeHighlightedValue(id, true);
     };
 
@@ -315,7 +375,6 @@ export default class Graph extends React.Component {
      */
     onMouseOutNode = id => {
         this.props.onMouseOutNode && this.props.onMouseOutNode(id);
-
         this.state.config.nodeHighlightBehavior && this._setNodeHighlightedValue(id, false);
     };
 
@@ -329,9 +388,9 @@ export default class Graph extends React.Component {
         this.props.onMouseOverLink && this.props.onMouseOverLink(source, target);
 
         if (this.state.config.linkHighlightBehavior) {
+            this.setState({ d3ElementChange: true });
             this.state.highlightedLink = { source, target };
-
-            this._tick();
+            this._tock();
         }
     };
 
@@ -345,9 +404,10 @@ export default class Graph extends React.Component {
         this.props.onMouseOutLink && this.props.onMouseOutLink(source, target);
 
         if (this.state.config.linkHighlightBehavior) {
+            this.setState({ d3ElementChange: true });
             this.state.highlightedLink = undefined;
 
-            this._tick();
+            this._tock();
         }
     };
 
@@ -356,7 +416,9 @@ export default class Graph extends React.Component {
      * {@link https://github.com/d3/d3-force#simulation_stop}
      * @returns {undefined}
      */
-    pauseSimulation = () => this.state.simulation.stop();
+    pauseSimulation = () => {
+        this.state.simulation.stop();
+    };
 
     /**
      * This method resets all nodes fixed positions by deleting the properties fx (fixed x)
@@ -375,9 +437,9 @@ export default class Graph extends React.Component {
                 }
             }
 
-            this.state.simulation.alphaTarget(this.state.config.d3.alphaTarget).restart();
-
-            this._tick();
+            //this.state.simulation.alphaTarget(this.state.config.d3.alphaTarget).restart();
+            this.restartSimulationAlpha(this.state.config.d3.alphaTarget);
+            this._tock();
         }
     };
 
@@ -386,7 +448,19 @@ export default class Graph extends React.Component {
      * {@link https://github.com/d3/d3-force#simulation_restart}
      * @returns {undefined}
      */
-    restartSimulation = () => !this.state.config.staticGraph && this.state.simulation.restart();
+    restartSimulation = () => {
+        !this.state.config.staticGraph && this.state.simulation.restart();
+    };
+
+    /**
+     * Calls d3 simulation.alphaTarget(alpha).restart().<br/>
+     * {@link https://github.com/d3/d3-force#simulation_restart}
+     * @param {number} alpha the new alpha value
+     * @returns {undefined}
+     */
+    restartSimulationAlpha = alpha => {
+        this.state.simulation.alphaTarget(alpha).restart();
+    };
 
     constructor(props) {
         super(props);
@@ -415,6 +489,7 @@ export default class Graph extends React.Component {
             this.state
         );
         const state = graphElementsUpdated ? graphHelper.initializeGraphState(nextProps, this.state) : this.state;
+
         const newConfig = nextProps.config || {};
         const { configUpdated, d3ConfigUpdated } = graphHelper.checkForGraphConfigChanges(nextProps, this.state);
         const config = configUpdated ? utils.merge(DEFAULT_CONFIG, newConfig) : this.state.config;
@@ -442,19 +517,26 @@ export default class Graph extends React.Component {
         });
     }
 
-    componentDidUpdate() {
-        // if the property staticGraph was activated we want to stop possible ongoing simulation
-        this.state.config.staticGraph && this.pauseSimulation();
+    componentDidUpdate(prevProps, prevState) {
+        if (prevState !== this.state) {
+            if (
+                !this.state.config.staticGraph &&
+                this.state.config.automaticLayoutOn &&
+                (this.state.newGraphElements || this.state.d3ConfigUpdated)
+            ) {
+                this._graphForcesConfig();
+                this.restartSimulation();
+                this.setState({ newGraphElements: false, d3ConfigUpdated: false, d3ElementChange: false });
+            }
 
-        if (!this.state.config.staticGraph && (this.state.newGraphElements || this.state.d3ConfigUpdated)) {
-            this._graphForcesConfig();
-            this.restartSimulation();
-            this.setState({ newGraphElements: false, d3ConfigUpdated: false });
-        }
-
-        if (this.state.configUpdated) {
-            this._zoomConfig();
-            this.setState({ configUpdated: false });
+            if (this.state.configUpdated) {
+                // if the property staticGraph was activated we want to stop possible ongoing simulation
+                if (this.state.config.staticGraph) {
+                    this.pauseSimulation();
+                }
+                this._zoomConfig();
+                this.setState({ configUpdated: false, d3ElementChange: false });
+            }
         }
     }
 
@@ -472,6 +554,7 @@ export default class Graph extends React.Component {
     }
 
     render() {
+        let alpha = this.state.simulation.alpha();
         const { nodes, links, defs } = graphRenderer.renderGraph(
             this.state.nodes,
             {
@@ -487,11 +570,14 @@ export default class Graph extends React.Component {
                 onRightClickLink: this.props.onRightClickLink,
                 onMouseOverLink: this.onMouseOverLink,
                 onMouseOutLink: this.onMouseOutLink,
+                layoutCallback: layoutHelper.layoutCallbackHelper(this.state.config.d3.layoutMode),
             },
             this.state.config,
             this.state.highlightedNode,
             this.state.highlightedLink,
-            this.state.transform
+            this.state.transform,
+            this.state.nodeDragged,
+            alpha
         );
 
         const svgStyle = {
@@ -499,6 +585,8 @@ export default class Graph extends React.Component {
             width: this.state.config.width,
         };
 
+        //console.log("nodes in render ", nodes);
+        //console.log("links in render ", links);
         const containerProps = this._generateFocusAnimationProps();
 
         return (

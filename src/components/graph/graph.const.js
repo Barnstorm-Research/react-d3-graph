@@ -4,6 +4,7 @@ export default {
     COORDS_SEPARATOR: ",",
     FORCE_X: 0.06,
     FORCE_Y: 0.06,
+    RADIUS_COLLIDE: 25,
     GRAPH_CONTAINER_ID: "graph-container-zoomable",
     GRAPH_WRAPPER_ID: "graph-wrapper",
     KEYWORDS: {
@@ -11,5 +12,12 @@ export default {
     },
     LINK_CLASS_NAME: "link",
     NODE_CLASS_NAME: "node",
+    LAYOUT_MODES: {
+        DEFAULT: "DEFAULT",
+        WEAKTREE: "WEAKTREE",
+        WEAKFLOW: "WEAKFLOW",
+        STRONGTREE: "STRONGTREE",
+        STRONGFLOW: "STRONGFLOW",
+    },
     ...CONST,
 };
