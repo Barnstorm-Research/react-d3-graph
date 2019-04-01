@@ -291,6 +291,7 @@ describe("Graph Helper", () => {
                         },
                     },
                     newGraphElements: false,
+                    nodeDragged: false,
                     nodes: {
                         A: {
                             highlighted: false,

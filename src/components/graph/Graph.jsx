@@ -175,7 +175,10 @@ export default class Graph extends React.Component {
             this.state.config.automaticLayoutOn &&
             this.state.config.automaticRearrangeAfterDropNode
         ) {
-            this.setState({ d3ElementChange: false });
+            this.setState({
+                d3ElementChange: false,
+                nodeDragged: false,
+            });
             this._setNodeHighlightedValue(this.state.highlightedNode, false);
             this.restartSimulationAlpha(this.state.config.d3.alphaTarget);
         }
@@ -214,7 +217,10 @@ export default class Graph extends React.Component {
      */
     _onDragStart = () => {
         this.pauseSimulation();
-        this.setState({ d3ElementChange: true });
+        this.setState({
+            d3ElementChange: true,
+            nodeDragged: true,
+        });
 
         if (this.state.enableFocusAnimation) {
             this.setState({ enableFocusAnimation: false });
@@ -570,6 +576,7 @@ export default class Graph extends React.Component {
             this.state.highlightedNode,
             this.state.highlightedLink,
             this.state.transform,
+            this.state.nodeDragged,
             alpha
         );
 
@@ -582,24 +589,6 @@ export default class Graph extends React.Component {
         //console.log("links in render ", links);
         const containerProps = this._generateFocusAnimationProps();
 
-        // return (
-        //     <div id={`${this.state.id}-${CONST.GRAPH_WRAPPER_ID}`}>
-        //     {
-        //     alpha > this.state.config.d3.alphaMin ?
-        //         (<div>Loading...</div>)
-        //     :
-        //         (
-        //             <svg name={`svg-container-${this.state.id}`} style={svgStyle} onClick={this.onClickGraph}>
-        //                 {defs}
-        //                 <g id={`${this.state.id}-${CONST.GRAPH_CONTAINER_ID}`} {...containerProps}>
-        //                     {links}
-        //                     {nodes}
-        //                 </g>
-        //             </svg>
-        //         )
-        //     }
-        //     </div>
-        // );
         return (
             <div id={`${this.state.id}-${CONST.GRAPH_WRAPPER_ID}`}>
                 <svg name={`svg-container-${this.state.id}`} style={svgStyle} onClick={this.onClickGraph}>

@@ -49,15 +49,38 @@ function _getNodeOpacity(node, highlightedNode, highlightedLink, config) {
  * @param  {string} highlightedNode - same as {@link #graphrenderer|highlightedNode in renderGraph}.
  * @param  {Object} highlightedLink - same as {@link #graphrenderer|highlightedLink in renderGraph}.
  * @param  {number} transform - value that indicates the amount of zoom transformation.
+ * @param  {boolean} nodeDragged - is repositioning happening because of node being dragged.
  * @param  {number} alpha - the alpha value
  * @returns {Object} returns an object that aggregates all props for creating respective Link component instance.
  * @memberof Graph/builder
  */
-function buildLinkProps(link, nodes, links, config, linkCallbacks, highlightedNode, highlightedLink, transform, alpha) {
+function buildLinkProps(
+    link,
+    nodes,
+    links,
+    config,
+    linkCallbacks,
+    highlightedNode,
+    highlightedLink,
+    transform,
+    nodeDragged,
+    alpha
+) {
     const { source, target } = link;
 
     if (config.automaticLayoutOn) {
-        nodes, (links = linkCallbacks["layoutCallback"](nodes, links, source, target, link, config, transform, alpha));
+        nodes,
+            (links = linkCallbacks["layoutCallback"](
+                nodes,
+                links,
+                source,
+                target,
+                link,
+                config,
+                transform,
+                nodeDragged,
+                alpha
+            ));
     }
 
     const x1 = (nodes[source] && nodes[source].x) || 0;

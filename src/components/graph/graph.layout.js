@@ -87,7 +87,7 @@ function layoutCallbackHelper(layoutOptionInput) {
 
     switch (layoutOption) {
         case "WEAKTREE":
-            return function(nodes, links, source, target, link, config, transform, alpha) {
+            return function(nodes, links, source, target, link, config, transform, nodeDragged, alpha) {
                 var k = alpha;
 
                 if (nodes[source] != undefined && nodes[target] != undefined) {
@@ -102,32 +102,37 @@ function layoutCallbackHelper(layoutOptionInput) {
                 return nodes, links;
             };
         case "STRONGTREE":
-            return function(nodes, links, source, target, link, config, transform, alpha) {
+            return function(nodes, links, source, target, link, config, transform, nodeDragged, alpha) {
                 var k = alpha;
 
                 if (nodes[source] != undefined && nodes[target] != undefined) {
-                    nodes[source].y = safeNodePositioner(
-                        degreeNodePositioner(nodes[source].degree, false, config, transform) - k,
-                        true,
-                        config,
-                        transform
-                    );
+                    if (nodeDragged) {
+                        nodes[source].y = safeNodePositioner(nodes[source].y, false, config, transform);
+                        nodes[target].y = safeNodePositioner(nodes[target].y, false, config, transform);
+                    } else {
+                        nodes[source].y = safeNodePositioner(
+                            degreeNodePositioner(nodes[source].degree, false, config, transform) - k,
+                            true,
+                            config,
+                            transform
+                        );
+                        nodes[target].y = safeNodePositioner(
+                            degreeNodePositioner(nodes[target].degree, false, config, transform) + k,
+                            true,
+                            config,
+                            transform
+                        );
+                    }
 
                     nodes[source].x = safeNodePositioner(nodes[source].x, true, config, transform);
 
-                    nodes[target].y = safeNodePositioner(
-                        degreeNodePositioner(nodes[target].degree, false, config, transform) + k,
-                        true,
-                        config,
-                        transform
-                    );
                     nodes[target].x = safeNodePositioner(nodes[target].x, true, config, transform);
                 }
 
                 return nodes, links;
             };
         case "WEAKFLOW":
-            return function(nodes, links, source, target, link, config, transform, alpha) {
+            return function(nodes, links, source, target, link, config, transform, nodeDragged, alpha) {
                 var k = alpha;
 
                 if (nodes[source] != undefined && nodes[target] != undefined) {
@@ -142,22 +147,28 @@ function layoutCallbackHelper(layoutOptionInput) {
                 return nodes, links;
             };
         case "STRONGFLOW":
-            return function(nodes, links, source, target, link, config, transform, alpha) {
+            return function(nodes, links, source, target, link, config, transform, nodeDragged, alpha) {
                 var k = alpha;
 
                 if (nodes[source] != undefined && nodes[target] != undefined) {
-                    nodes[source].x = safeNodePositioner(
-                        degreeNodePositioner(nodes[source].degree, true, config, transform) - k,
-                        true,
-                        config,
-                        transform
-                    );
-                    nodes[target].x = safeNodePositioner(
-                        degreeNodePositioner(nodes[target].degree, true, config, transform) + k,
-                        true,
-                        config,
-                        transform
-                    );
+                    if (nodeDragged) {
+                        nodes[source].x = safeNodePositioner(nodes[source].x, true, config, transform);
+                        nodes[target].x = safeNodePositioner(nodes[target].x, true, config, transform);
+                    } else {
+                        nodes[source].x = safeNodePositioner(
+                            degreeNodePositioner(nodes[source].degree, true, config, transform) - k,
+                            true,
+                            config,
+                            transform
+                        );
+                        nodes[target].x = safeNodePositioner(
+                            degreeNodePositioner(nodes[target].degree, true, config, transform) + k,
+                            true,
+                            config,
+                            transform
+                        );
+                    }
+
                     //make sure these don't wiggle out of the box
                     nodes[source].y = safeNodePositioner(nodes[source].y, false, config, transform);
                     nodes[target].y = safeNodePositioner(nodes[target].y, false, config, transform);
@@ -167,7 +178,7 @@ function layoutCallbackHelper(layoutOptionInput) {
             };
         default:
             /* eslint no-unused-vars: ["error", { "args": "none" }] */
-            return function(nodes, links, source, target, link, config, transform, alpha) {
+            return function(nodes, links, source, target, link, config, transform, nodeDragged, alpha) {
                 //make sure these don't wiggle out of the box
                 nodes[source].x = safeNodePositioner(nodes[source].x, true, config, transform);
                 nodes[target].x = safeNodePositioner(nodes[target].x, true, config, transform);

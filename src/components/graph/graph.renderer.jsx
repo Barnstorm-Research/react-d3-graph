@@ -24,6 +24,7 @@ import { isNodeVisible } from "./collapse.helper";
  * @param  {string} highlightedNode - same as {@link #graphrenderer|highlightedNode in renderGraph}.
  * @param  {Object} highlightedLink - same as {@link #graphrenderer|highlightedLink in renderGraph}.
  * @param  {number} transform - value that indicates the amount of zoom transformation.
+ * @param  {boolean} nodeDragged - is repositioning happening because of node being dragged.
  * @param  {number} alpha - the alpha value for layout
  * @returns {Array.<Object>} returns the generated array of Link components.
  * @memberof Graph/renderer
@@ -37,6 +38,7 @@ function _renderLinks(
     highlightedNode,
     highlightedLink,
     transform,
+    nodeDragged,
     alpha
 ) {
     let outLinks = links;
@@ -60,6 +62,7 @@ function _renderLinks(
             `${highlightedNode}`,
             highlightedLink,
             transform,
+            nodeDragged,
             alpha
         );
 
@@ -191,6 +194,7 @@ const _memoizedRenderDefs = _renderDefs();
  * @param  {string} highlightedLink.source - id of source node for highlighted link.
  * @param  {string} highlightedLink.target - id of target node for highlighted link.
  * @param  {number} transform - value that indicates the amount of zoom transformation.
+ * @param  {boolean} nodeDragged - is repositioning happening because of node being dragged.
  * @param  {number} alpha - the alpha value for layout
  * @returns {Object} returns an object containing the generated nodes and links that form the graph.
  * @memberof Graph/renderer
@@ -205,6 +209,7 @@ function renderGraph(
     highlightedNode,
     highlightedLink,
     transform,
+    nodeDragged,
     alpha
 ) {
     return {
@@ -218,6 +223,7 @@ function renderGraph(
             highlightedNode,
             highlightedLink,
             transform,
+            nodeDragged,
             alpha
         ),
         defs: _memoizedRenderDefs(config),
