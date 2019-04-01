@@ -157,6 +157,8 @@ describe("Graph Helper", () => {
                     opacity: 1,
                     renderLabel: true,
                     size: 200,
+                    width: undefined,
+                    height: undefined,
                     stroke: "yellow",
                     strokeWidth: 2,
                     svg: "file.svg",
@@ -203,6 +205,8 @@ describe("Graph Helper", () => {
                         opacity: undefined,
                         renderLabel: true,
                         size: 200,
+                        width: undefined,
+                        height: undefined,
                         stroke: "none",
                         strokeWidth: 1.5,
                         svg: "file.svg",
@@ -248,6 +252,8 @@ describe("Graph Helper", () => {
                         opacity: undefined,
                         renderLabel: true,
                         size: 200,
+                        width: undefined,
+                        height: undefined,
                         stroke: "none",
                         strokeWidth: 1.5,
                         svg: "file.svg",
@@ -277,6 +283,20 @@ describe("Graph Helper", () => {
                 );
 
                 expect(props.stroke).toEqual("yellow");
+            });
+        });
+        describe("when node to build width and height specified", () => {
+            test("should return node props with proper width, height and size values", () => {
+                that.node.highlighted = true;
+                Object.assign(that.config.node, {
+                    width: 5000,
+                    height: 100,
+                });
+                const props = graphHelper.buildNodeProps(that.node, that.config, undefined, "id", undefined, 1);
+
+                expect(props.width).toEqual(5000);
+                expect(props.height).toEqual(100);
+                expect(props.size).toEqual(undefined);
             });
         });
     });
