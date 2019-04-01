@@ -23,10 +23,8 @@ import {
     forceX as d3ForceX,
     forceY as d3ForceY,
     forceSimulation as d3ForceSimulation,
-    //    forceManyBody as d3ForceManyBody,
+    forceManyBody as d3ForceManyBody,
 } from "d3-force";
-
-import { forceManyBodyReuse as d3ForceManyBodyReuse } from "d3-force-reuse";
 
 import CONST from "./graph.const";
 import DEFAULT_CONFIG from "./graph.config";
@@ -55,7 +53,7 @@ function _createForceSimulation(width, height, gravity) {
     const forceStrength = gravity;
 
     return d3ForceSimulation()
-        .force("charge", d3ForceManyBodyReuse()) //.strength(forceStrength)) //d3ForceManyBody().strength(forceStrength))
+        .force("charge", d3ForceManyBody().strength(forceStrength))
         .force("x", frx)
         .force("y", fry);
 }
