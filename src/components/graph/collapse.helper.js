@@ -158,8 +158,8 @@ function isNodeVisible(nodeId, nodes, linksMatrix) {
 function toggleLinksConnections(d3Links, connectionMatrix) {
     return d3Links.map(d3Link => {
         const { source, target } = d3Link;
-        const sourceId = source.id || source;
-        const targetId = target.id || target;
+        const sourceId = source.id != null ? source.id : source;
+        const targetId = target.id != null ? target.id : target;
         // connectionMatrix[sourceId][targetId] can be 0 or non existent
         const connection = connectionMatrix && connectionMatrix[sourceId] && connectionMatrix[sourceId][targetId];
 
