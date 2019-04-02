@@ -133,7 +133,7 @@ export default class Graph extends React.Component {
     };
 
     /**
-     * Sets d3 tick function and configures other d3 stuff such as forces and drag events.
+     * Sets d3 tick function and configures other d3 stuff such as forces
      * @returns {undefined}
      */
     _graphForcesConfig() {
@@ -154,7 +154,13 @@ export default class Graph extends React.Component {
             for (var i = 0; i < this.props.config.d3.ticks; ++i) this.state.simulation.tick();
             this._tock();
         }
+    }
 
+    /**
+     * Configures other stuff like drag events
+     * @returns {undefined}
+     */
+    _graphConfigFunctions() {
         const customNodeDrag = d3Drag()
             .on("start", this._onDragStart)
             .on("drag", this._onDragMove)
@@ -519,13 +525,14 @@ export default class Graph extends React.Component {
 
     componentDidUpdate(prevProps, prevState) {
         if (prevState !== this.state) {
-            if (
-                !this.state.config.staticGraph &&
-                this.state.config.automaticLayoutOn &&
-                (this.state.newGraphElements || this.state.d3ConfigUpdated)
-            ) {
-                this._graphForcesConfig();
-                this.restartSimulation();
+            if (this.state.newGraphElements || this.state.d3ConfigUpdated) {
+                if (!this.state.config.staticGraph && this.state.config.automaticLayoutOn) {
+                    this._graphForcesConfig();
+                    this.restartSimulation();
+                }
+
+                this._graphConfigFunctions();
+
                 this.setState({ newGraphElements: false, d3ConfigUpdated: false, d3ElementChange: false });
             }
 
@@ -544,6 +551,8 @@ export default class Graph extends React.Component {
         if (!this.state.config.staticGraph) {
             this._graphForcesConfig();
         }
+        //setup drag and drop
+        this._graphConfigFunctions();
 
         // graph zoom and drag&drop all network
         this._zoomConfig();
