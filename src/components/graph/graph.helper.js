@@ -351,8 +351,11 @@ function checkForGraphElementsChanges(nextProps, currentState) {
     const newGraphElements =
         nextNodes.length !== stateD3Nodes.length ||
         nextLinks.length !== stateD3Links.length ||
-        !utils.isDeepEqual(nextNodes.map(({ id }) => ({ id })), stateD3Nodes.map(({ id }) => ({ id }))); // ||
-    // !utils.isDeepEqual(nextLinks, stateD3Links);
+        !utils.isDeepEqual(nextNodes.map(({ id }) => ({ id })), stateD3Nodes.map(({ id }) => ({ id }))) ||
+        !utils.isDeepEqual(
+            nextLinks.map(({ source, target }) => `${source}-${target}`),
+            stateD3Links.map(({ source, target }) => `${source}-${target}`)
+        );
 
     return { graphElementsUpdated, newGraphElements };
 }
