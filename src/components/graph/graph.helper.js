@@ -277,6 +277,10 @@ function _findNodeDegree(nodes, links) {
  * @memberof Graph/helper
  */
 function _validateGraphData(data) {
+    // remove any entries in nodes or links array that are "falsy" aka null or undefined
+    data.nodes = data.nodes.filter(Boolean);
+    data.links = data.links.filter(Boolean);
+
     if (!data.nodes || !data.nodes.length) {
         utils.throwErr("Graph", ERRORS.INSUFFICIENT_DATA);
     }
@@ -301,6 +305,7 @@ function _validateGraphData(data) {
             );
         }
     }
+    return data;
 }
 
 // list of properties that are of no interest when it comes to nodes and links comparison
@@ -332,7 +337,9 @@ function checkForGraphElementsChanges(nextProps, currentState) {
             } else if (key === "target") {
                 newObj["target"] = l.target.id !== undefined && l.target.id !== null ? l.target.id : l.target;
             } else {
-                newObj[key] = l[key];
+                if (key !== "index") {
+                    newObj[key] = l[key];
+                }
             }
         });
         return newObj;
@@ -345,7 +352,10 @@ function checkForGraphElementsChanges(nextProps, currentState) {
         nextNodes.length !== stateD3Nodes.length ||
         nextLinks.length !== stateD3Links.length ||
         !utils.isDeepEqual(nextNodes.map(({ id }) => ({ id })), stateD3Nodes.map(({ id }) => ({ id }))) ||
-        !utils.isDeepEqual(nextLinks, stateD3Links);
+        !utils.isDeepEqual(
+            nextLinks.map(({ source, target }) => `${source}-${target}`),
+            stateD3Links.map(({ source, target }) => `${source}-${target}`)
+        );
 
     return { graphElementsUpdated, newGraphElements };
 }
@@ -401,7 +411,7 @@ function getCenterAndZoomTransformation(d3Node, config) {
  * @memberof Graph/helper
  */
 function initializeGraphState({ data, id, config }, state) {
-    _validateGraphData(data);
+    data = _validateGraphData(data);
 
     let graph;
 
