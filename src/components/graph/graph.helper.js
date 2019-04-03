@@ -332,7 +332,9 @@ function checkForGraphElementsChanges(nextProps, currentState) {
             } else if (key === "target") {
                 newObj["target"] = l.target.id !== undefined && l.target.id !== null ? l.target.id : l.target;
             } else {
-                newObj[key] = l[key];
+                if (key !== "index") {
+                    newObj[key] = l[key];
+                }
             }
         });
         return newObj;
@@ -344,8 +346,8 @@ function checkForGraphElementsChanges(nextProps, currentState) {
     const newGraphElements =
         nextNodes.length !== stateD3Nodes.length ||
         nextLinks.length !== stateD3Links.length ||
-        !utils.isDeepEqual(nextNodes.map(({ id }) => ({ id })), stateD3Nodes.map(({ id }) => ({ id }))) ||
-        !utils.isDeepEqual(nextLinks, stateD3Links);
+        !utils.isDeepEqual(nextNodes.map(({ id }) => ({ id })), stateD3Nodes.map(({ id }) => ({ id }))); // ||
+    // !utils.isDeepEqual(nextLinks, stateD3Links);
 
     return { graphElementsUpdated, newGraphElements };
 }
