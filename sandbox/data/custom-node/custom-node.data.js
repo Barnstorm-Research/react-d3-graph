@@ -2,6 +2,10 @@ module.exports = {
     links: [
         {
             source: 0,
+            target: 1,
+        },
+        {
+            source: 0,
             target: 2,
         },
         {
@@ -9,12 +13,8 @@ module.exports = {
             target: 3,
         },
         {
-            source: 0,
-            target: 4,
-        },
-        {
-            source: 3,
-            target: 4,
+            source: 2,
+            target: 3,
         },
     ],
     nodes: [
@@ -26,21 +26,21 @@ module.exports = {
             hasBike: false,
         },
         {
-            id: 2,
+            id: 1,
             name: "Roy",
             gender: "male",
             hasCar: false,
             hasBike: true,
         },
         {
-            id: 3,
+            id: 2,
             name: "Frank",
             gender: "male",
             hasCar: true,
             hasBike: true,
         },
         {
-            id: 4,
+            id: 3,
             name: "Melanie",
             gender: "female",
             hasCar: true,
