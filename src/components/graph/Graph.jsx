@@ -16,24 +16,29 @@ import * as graphRenderer from "./graph.renderer";
 import * as layoutHelper from "./graph.layout";
 import utils from "../../utils";
 
+Object.filter = (obj, predicate) =>
+    Object.keys(obj)
+        .filter(key => predicate(obj[key]))
+        .reduce((res, key) => ((res[key] = obj[key]), res), {});
+
 /**
  * Graph component is the main component for react-d3-graph components, its interface allows its user
  * to build the graph once the user provides the data, configuration (optional) and callback interactions (also optional).
  * The code for the [live example](https://danielcaldas.github.io/react-d3-graph/sandbox/index.html)
  * can be consulted [here](https://github.com/danielcaldas/react-d3-graph/blob/master/sandbox/Sandbox.jsx)
  * @example
- * import { Graph } from 'react-d3-graph';
+ * import { Graph } from "react-d3-graph";
  *
  * // graph payload (with minimalist structure)
  * const data = {
  *     nodes: [
- *       {id: 'Harry'},
- *       {id: 'Sally'},
- *       {id: 'Alice'}
+ *       {id: "Harry"},
+ *       {id: "Sally"},
+ *       {id: "Alice"}
  *     ],
  *     links: [
- *         {source: 'Harry', target: 'Sally'},
- *         {source: 'Harry', target: 'Alice'},
+ *         {source: "Harry", target: "Sally"},
+ *         {source: "Harry", target: "Alice"},
  *     ]
  * };
  *
@@ -42,26 +47,26 @@ import utils from "../../utils";
  * const myConfig = {
  *     nodeHighlightBehavior: true,
  *     node: {
- *         color: 'lightgreen',
+ *         color: "lightgreen",
  *         size: 120,
- *         highlightStrokeColor: 'blue'
+ *         highlightStrokeColor: "blue"
  *     },
  *     link: {
- *         highlightColor: 'lightblue'
+ *         highlightColor: "lightblue"
  *     }
  * };
  *
  * // graph event callbacks
  * const onClickGraph = function() {
- *      window.alert('Clicked the graph background');
+ *      window.alert("Clicked the graph background");
  * };
  *
  * const onClickNode = function(nodeId) {
- *      window.alert('Clicked node ${nodeId}');
+ *      window.alert("Clicked node ${nodeId}");
  * };
  *
  * const onRightClickNode = function(event, nodeId) {
- *      window.alert('Right clicked node ${nodeId}');
+ *      window.alert("Right clicked node ${nodeId}");
  * };
  *
  * const onMouseOverNode = function(nodeId) {
@@ -77,7 +82,7 @@ import utils from "../../utils";
  * };
  *
  * const onRightClickLink = function(event, source, target) {
- *      window.alert('Right clicked link between ${source} and ${target}');
+ *      window.alert("Right clicked link between ${source} and ${target}");
  * };
  *
  * const onMouseOverLink = function(source, target) {
@@ -89,7 +94,7 @@ import utils from "../../utils";
  * };
  *
  * <Graph
- *      id='graph-id' // id is mandatory, if no id is defined rd3g will throw an error
+ *      id="graph-id" // id is mandatory, if no id is defined rd3g will throw an error
  *      data={data}
  *      config={myConfig}
  *      onClickGraph={onClickGraph}
@@ -172,7 +177,7 @@ export default class Graph extends React.Component {
     }
 
     /**
-     * Handles d3 drag 'end' event.
+     * Handles d3 drag "end" event.
      * @returns {undefined}
      */
     _onDragEnd = () => {
@@ -191,7 +196,7 @@ export default class Graph extends React.Component {
     };
 
     /**
-     * Handles d3 'drag' event.
+     * Handles d3 "drag" event.
      * {@link https://github.com/d3/d3-drag/blob/master/README.md#drag_subject|more about d3 drag}
      * @param  {Object} ev - if not undefined it will contain event data.
      * @param  {number} index - index of the node that is being dragged.
@@ -200,30 +205,58 @@ export default class Graph extends React.Component {
      * @returns {undefined}
      */
     _onDragMove = (ev, index, nodeList) => {
-        const id = nodeList[index].id;
+        // const id = nodeList[index].id;
+        let nodes = this.state.nodes;
 
         if (!this.state.config.staticGraph) {
             // this is where d3 and react bind
-            let draggedNode = this.state.nodes[id];
+            let selected = Object.keys(
+                Object.filter(this.state.nodes, function(d) {
+                    return d.selected;
+                })
+            );
 
-            draggedNode.x += d3Event.dx;
-            draggedNode.y += d3Event.dy;
+            selected.forEach(function(idx) {
+                nodes[idx].x += d3Event.dx;
+                nodes[idx].y += d3Event.dy;
 
-            // set nodes fixing coords fx and fy
-            draggedNode["fx"] = draggedNode.x;
-            draggedNode["fy"] = draggedNode.y;
+                nodes[idx]["fx"] = nodes[idx].x;
+                nodes[idx]["fy"] = nodes[idx].y;
+            });
+            // let draggedNode = this.state.nodes[id];
+
+            // draggedNode.x += d3Event.dx;
+            // draggedNode.y += d3Event.dy;
+
+            // // set nodes fixing coords fx and fy
+            // draggedNode["fx"] = draggedNode.x;
+            // draggedNode["fy"] = draggedNode.y;
 
             this._tock();
         }
     };
 
     /**
-     * Handles d3 drag 'start' event.
+     * Handles d3 drag "start" event.
+     * @param  {Object} ev - if not undefined it will contain event data.
+     * @param  {number} index - index of the node that is being dragged.
+     * @param  {Array.<Object>} nodeList - array of d3 nodes. This list of nodes is provided by d3, each
+     * node contains all information that was previously fed by rd3g.
      * @returns {undefined}
      */
-    _onDragStart = () => {
+    _onDragStart = (ev, index, nodeList) => {
+        const id = nodeList[index].id;
+        let nodes = this.state.nodes;
+
         this.pauseSimulation();
+        if (!nodes[id]["selected"] && !(d3Event.sourceEvent.shiftKey || d3Event.sourceEvent.metaKey)) {
+            Object.keys(nodes).forEach(key => {
+                nodes[key].selected = nodes[key].previouslySelected = false;
+            });
+            nodes[id]["selected"] = !nodes[id]["previouslySelected"];
+        }
         this.setState({
+            nodes: nodes,
             d3ElementChange: true,
             nodeDragged: true,
         });
@@ -297,7 +330,7 @@ export default class Graph extends React.Component {
         );
 
     /**
-     * Handler for 'zoom' event within zoom config.
+     * Handler for "zoom" event within zoom config.
      * @returns {Object} returns the transformed elements within the svg graph area.
      */
     _zoomed = () => {
@@ -331,36 +364,55 @@ export default class Graph extends React.Component {
 
     /**
      * Collapses the nodes, then calls the callback passed to the component.
+     * @param  {Object} e - d3 event Object.
      * @param  {string} clickedNodeId - The id of the node where the click was performed.
      * @returns {undefined}
      */
-    onClickNode = clickedNodeId => {
-        if (this.state.config.collapsible) {
-            this.setState({ d3ElementChange: true });
+    onClickNode = (e, clickedNodeId) => {
+        if (e.shiftKey || e.metaKey) {
+            const node = Object.assign({}, this.state.nodes[clickedNodeId], {
+                selected: !this.state.nodes[clickedNodeId]["previouslySelected"],
+            });
 
-            const leafConnections = collapseHelper.getTargetLeafConnections(
-                clickedNodeId,
-                this.state.links,
-                this.state.config
-            );
-            const links = collapseHelper.toggleLinksMatrixConnections(
-                this.state.links,
-                leafConnections,
-                this.state.config
-            );
-            const d3Links = collapseHelper.toggleLinksConnections(this.state.d3Links, links);
+            let updatedNodes = Object.assign({}, this.state.nodes, { [clickedNodeId]: node });
 
-            this._tock(
-                {
-                    links,
-                    d3Links,
-                },
-                () => this.props.onClickNode && this.props.onClickNode(clickedNodeId)
-            );
+            this.setState({
+                nodes: updatedNodes,
+            });
         } else {
-            this.setState({ d3ElementChange: true });
+            let nodes = Object.keys(this.state.nodes).forEach(key => {
+                this.state.nodes[key].selected = this.state.nodes[key].previouslySelected = false;
+            });
 
-            this.props.onClickNode && this.props.onClickNode(clickedNodeId);
+            nodes[clickedNodeId]["selected"] = !nodes[clickedNodeId]["previouslySelected"];
+
+            if (this.state.config.collapsible) {
+                this.setState({ d3ElementChange: true, nodes: nodes });
+
+                const leafConnections = collapseHelper.getTargetLeafConnections(
+                    clickedNodeId,
+                    this.state.links,
+                    this.state.config
+                );
+                const links = collapseHelper.toggleLinksMatrixConnections(
+                    this.state.links,
+                    leafConnections,
+                    this.state.config
+                );
+                const d3Links = collapseHelper.toggleLinksConnections(this.state.d3Links, links);
+
+                this._tock(
+                    {
+                        links,
+                        d3Links,
+                    },
+                    () => this.props.onClickNode && this.props.onClickNode(clickedNodeId)
+                );
+            } else {
+                this.setState({ d3ElementChange: true, nodes: nodes });
+
+                this.props.onClickNode && this.props.onClickNode(clickedNodeId);
+            }
         }
     };
 

@@ -249,6 +249,8 @@ function buildNodeProps(node, config, nodeCallbacks = {}, highlightedNode, highl
         size: nodeSize ? nodeSize : undefined,
         width: nodeWidth ? nodeWidth : undefined,
         height: nodeHeight ? nodeHeight : undefined,
+        selected: false,
+        previouslySelected: false,
         stroke,
         strokeWidth: strokeWidth * t,
         svg,
