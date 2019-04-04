@@ -250,7 +250,12 @@ export default class Sandbox extends React.Component {
      * by JsonTree
      * @param {Object} data update graph data (nodes and links)
      */
-    onGraphDataUpdate = data => this.setState({ data });
+    onGraphDataUpdate = data => {
+        // Remove any null entries caused by removing node or link
+        data.nodes = data.nodes.filter(Boolean);
+        data.links = data.links.filter(Boolean);
+        this.setState({ data });
+    };
 
     /**
      * Build common piece of the interface that contains some interactions such as

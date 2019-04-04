@@ -494,6 +494,7 @@ export default class Graph extends React.Component {
             nextProps,
             this.state
         );
+
         const state = graphElementsUpdated ? graphHelper.initializeGraphState(nextProps, this.state) : this.state;
 
         const newConfig = nextProps.config || {};
