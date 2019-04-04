@@ -44,6 +44,7 @@ import nodeHelper from "./node.helper";
  *     type='square'
  *     viewGenerator=(node) => <CustomComponent node={node} />
  *     className='node'
+ *     isHidden=undefined
  *     onClickNode={onClickNode}
  *     onRightClickNode={onRightClickNode}
  *     onMouseOverNode={onMouseOverNode}

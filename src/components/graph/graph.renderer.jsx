@@ -43,9 +43,9 @@ function _renderLinks(
 ) {
     let outLinks = links;
 
-    if (config.collapsible) {
-        outLinks = outLinks.filter(({ isHidden }) => !isHidden);
-    }
+    //if (config.collapsible) {
+    outLinks = outLinks.filter(({ isHidden }) => !isHidden);
+    //}
 
     return outLinks.map(link => {
         const { source, target } = link;
@@ -89,6 +89,11 @@ function _renderNodes(nodes, nodeCallbacks, config, highlightedNode, highlighted
 
     if (config.collapsible) {
         outNodes = outNodes.filter(nodeId => isNodeVisible(nodeId, nodes, linksMatrix));
+    } else {
+        // always allow the user to control if a node is hidden
+        outNodes = outNodes.filter(nodeId => {
+            return nodes[nodeId].isHidden ? !nodes[nodeId].isHidden : true;
+        });
     }
 
     return outNodes.map(nodeId => {
