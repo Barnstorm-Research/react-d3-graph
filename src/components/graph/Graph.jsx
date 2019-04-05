@@ -379,9 +379,19 @@ export default class Graph extends React.Component {
             this.setState({
                 nodes: updatedNodes,
             });
+
+            let selected = Object.keys(
+                Object.filter(updatedNodes, function(d) {
+                    return d.selected;
+                })
+            );
+
+            this.props.onClickNode && this.props.onClickNode(selected);
         } else {
-            let nodes = Object.keys(this.state.nodes).forEach(key => {
-                this.state.nodes[key].selected = this.state.nodes[key].previouslySelected = false;
+            let nodes = this.state.nodes;
+
+            Object.keys(nodes).forEach(key => {
+                nodes[key].selected = nodes[key].previouslySelected = false;
             });
 
             nodes[clickedNodeId]["selected"] = !nodes[clickedNodeId]["previouslySelected"];
@@ -410,7 +420,6 @@ export default class Graph extends React.Component {
                 );
             } else {
                 this.setState({ d3ElementChange: true, nodes: nodes });
-
                 this.props.onClickNode && this.props.onClickNode(clickedNodeId);
             }
         }
