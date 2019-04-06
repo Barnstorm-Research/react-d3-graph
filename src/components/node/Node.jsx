@@ -125,8 +125,17 @@ export default class Node extends React.Component {
 
             // By default, if a view generator is set, it takes precedence over any svg image url
             if (this.props.viewGenerator && !this.props.overrideGlobalViewGenerator) {
+                nodeProps.stroke = this.props.stroke;
+                nodeProps.strokeWidth = this.props.strokeWidth;
                 node = (
                     <svg {...nodeProps} width={width} height={height}>
+                        <rect
+                            stroke={this.props.stroke}
+                            stroke-width={this.props.strokeWidth}
+                            fill="transparent"
+                            width={width}
+                            height={height}
+                        />
                         <foreignObject x="0" y="0" width="100%" height="100%">
                             <section style={{ height, width, backgroundColor: "transparent" }}>
                                 {this.props.viewGenerator(this.props)}
@@ -135,7 +144,19 @@ export default class Node extends React.Component {
                     </svg>
                 );
             } else {
-                node = <image {...nodeProps} href={this.props.svg} width={width} height={height} />;
+                node = (
+                    <svg>
+                        <image {...nodeProps} href={this.props.svg} width={width} height={height} />
+                        <rect
+                            {...nodeProps}
+                            stroke={this.props.stroke}
+                            stroke-width={this.props.strokeWidth}
+                            fill="transparent"
+                            width={width}
+                            height={height}
+                        />
+                    </svg>
+                );
             }
 
             // svg offset transform regarding svg width/height
