@@ -145,10 +145,9 @@ export default class Node extends React.Component {
                 );
             } else {
                 node = (
-                    <svg>
-                        <image {...nodeProps} href={this.props.svg} width={width} height={height} />
+                    <svg {...nodeProps}>
+                        <image href={this.props.svg} width={width} height={height} />
                         <rect
-                            {...nodeProps}
                             stroke={this.props.stroke}
                             stroke-width={this.props.strokeWidth}
                             fill="transparent"
