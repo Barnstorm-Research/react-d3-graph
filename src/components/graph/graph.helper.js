@@ -370,7 +370,7 @@ function checkForGraphElementsChanges(nextProps, currentState) {
  * @memberof Graph/helper
  */
 function checkForGraphConfigChanges(nextProps, currentState) {
-    const newConfig = nextProps.config || {};
+    const newConfig = Object.assign({}, utils.merge(DEFAULT_CONFIG, nextProps.config || {}));
     const configUpdated =
         newConfig && !utils.isEmptyObject(newConfig) && !utils.isDeepEqual(newConfig, currentState.config);
     const d3ConfigUpdated = newConfig && newConfig.d3 && !utils.isDeepEqual(newConfig.d3, currentState.config.d3);
