@@ -257,6 +257,7 @@ export default {
         width: undefined,
         height: undefined,
         strokeColor: "none",
+        selectedStrokeColor: "red",
         strokeWidth: 1.5,
         svg: "",
         symbolType: "circle",

@@ -197,7 +197,7 @@ function buildNodeProps(node, config, nodeCallbacks = {}, highlightedNode, highl
         fill = config.node.highlightColor;
     }
 
-    let stroke = node.strokeColor || config.node.strokeColor;
+    let stroke = node.selected ? config.node.selectedStrokeColor : node.strokeColor || config.node.strokeColor;
 
     if (highlight && config.node.highlightStrokeColor !== CONST.KEYWORDS.SAME) {
         stroke = config.node.highlightStrokeColor;
@@ -249,6 +249,8 @@ function buildNodeProps(node, config, nodeCallbacks = {}, highlightedNode, highl
         size: nodeSize ? nodeSize : undefined,
         width: nodeWidth ? nodeWidth : undefined,
         height: nodeHeight ? nodeHeight : undefined,
+        selected: node.selected ? node.selected : false,
+        previouslySelected: node.previouslySelected ? node.previouslySelected : false,
         stroke,
         strokeWidth: strokeWidth * t,
         svg,

@@ -8,7 +8,7 @@ function NodePO(id) {
     this.g = `#${this.id}`;
     this.path = `#${this.id} > path`;
     this.text = `#${this.id} > text`;
-    this.image = `#${this.id} > image`;
+    this.image = `#${this.id} > svg > image`;
 
     this.getPath = () => cy.get(this.path);
     this.getLabel = () => cy.get(this.text);

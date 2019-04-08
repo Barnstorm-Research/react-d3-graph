@@ -35,6 +35,7 @@ module.exports = {
         opacity: 0.9,
         renderLabel: true,
         size: 200,
+        selectedStrokeColor: "red",
         strokeColor: "none",
         strokeWidth: 1.5,
         svg: "",
