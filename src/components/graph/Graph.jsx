@@ -369,12 +369,15 @@ export default class Graph extends React.Component {
      * @returns {undefined}
      */
     onClickNode = (e, clickedNodeId) => {
+        let nodes = this.state.nodes;
+
         if (e.shiftKey || e.metaKey) {
-            const node = Object.assign({}, this.state.nodes[clickedNodeId], {
-                selected: !this.state.nodes[clickedNodeId]["previouslySelected"],
+            const node = Object.assign({}, nodes[clickedNodeId], {
+                selected: !nodes[clickedNodeId]["previouslySelected"],
+                previouslySelected: !nodes[clickedNodeId]["previouslySelected"],
             });
 
-            let updatedNodes = Object.assign({}, this.state.nodes, { [clickedNodeId]: node });
+            let updatedNodes = Object.assign({}, nodes, { [clickedNodeId]: node });
 
             this.setState({
                 nodes: updatedNodes,
@@ -388,13 +391,14 @@ export default class Graph extends React.Component {
 
             this.props.onClickNode && this.props.onClickNode(selected);
         } else {
-            let nodes = this.state.nodes;
+            const reset = nodes[clickedNodeId]["previouslySelected"] ? false : true;
 
             Object.keys(nodes).forEach(key => {
                 nodes[key].selected = nodes[key].previouslySelected = false;
             });
 
-            nodes[clickedNodeId]["selected"] = !nodes[clickedNodeId]["previouslySelected"];
+            nodes[clickedNodeId]["selected"] = reset;
+            nodes[clickedNodeId]["previouslySelected"] = reset;
 
             if (this.state.config.collapsible) {
                 this.setState({ d3ElementChange: true, nodes: nodes });
@@ -420,7 +424,9 @@ export default class Graph extends React.Component {
                 );
             } else {
                 this.setState({ d3ElementChange: true, nodes: nodes });
-                this.props.onClickNode && this.props.onClickNode(clickedNodeId);
+                if (reset) {
+                    this.props.onClickNode && this.props.onClickNode(clickedNodeId);
+                }
             }
         }
     };
