@@ -44,6 +44,7 @@ import nodeHelper from "./node.helper";
  *     type='square'
  *     viewGenerator=(node) => <CustomComponent node={node} />
  *     className='node'
+ *     isHidden=undefined
  *     onClickNode={onClickNode}
  *     onRightClickNode={onRightClickNode}
  *     onMouseOverNode={onMouseOverNode}
@@ -131,7 +132,7 @@ export default class Node extends React.Component {
                     <svg {...nodeProps} width={width} height={height}>
                         <rect
                             stroke={this.props.stroke}
-                            stroke-width={this.props.strokeWidth}
+                            strokeWidth={this.props.strokeWidth}
                             fill="transparent"
                             width={width}
                             height={height}
@@ -149,7 +150,7 @@ export default class Node extends React.Component {
                         <image href={this.props.svg} width={width} height={height} />
                         <rect
                             stroke={this.props.stroke}
-                            stroke-width={this.props.strokeWidth}
+                            strokeWidth={this.props.strokeWidth}
                             fill="transparent"
                             width={width}
                             height={height}

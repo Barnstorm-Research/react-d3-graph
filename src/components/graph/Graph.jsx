@@ -187,7 +187,7 @@ export default class Graph extends React.Component {
             this.state.config.automaticRearrangeAfterDropNode
         ) {
             this.setState({
-                d3ElementChange: false,
+                //  d3ElementChange: false,
                 nodeDragged: false,
             });
             this._setNodeHighlightedValue(this.state.highlightedNode, false);
@@ -204,6 +204,8 @@ export default class Graph extends React.Component {
      * node contains all information that was previously fed by rd3g.
      * @returns {undefined}
      */
+    /* eslint  no-unused-vars: "off"*/
+
     _onDragMove = (ev, index, nodeList) => {
         // const id = nodeList[index].id;
         let nodes = this.state.nodes;
@@ -257,7 +259,7 @@ export default class Graph extends React.Component {
         }
         this.setState({
             nodes: nodes,
-            d3ElementChange: true,
+            //  d3ElementChange: true,
             nodeDragged: true,
         });
 
@@ -401,7 +403,10 @@ export default class Graph extends React.Component {
             nodes[clickedNodeId]["previouslySelected"] = reset;
 
             if (this.state.config.collapsible) {
-                this.setState({ d3ElementChange: true, nodes: nodes });
+                this.setState({
+                    //d3ElementChange: true,
+                    nodes: nodes,
+                });
 
                 const leafConnections = collapseHelper.getTargetLeafConnections(
                     clickedNodeId,
@@ -423,7 +428,10 @@ export default class Graph extends React.Component {
                     () => this.props.onClickNode && this.props.onClickNode(clickedNodeId)
                 );
             } else {
-                this.setState({ d3ElementChange: true, nodes: nodes });
+                this.setState({
+                    //d3ElementChange: true,
+                    nodes: nodes,
+                });
                 if (reset) {
                     this.props.onClickNode && this.props.onClickNode(clickedNodeId);
                 }
@@ -461,7 +469,7 @@ export default class Graph extends React.Component {
         this.props.onMouseOverLink && this.props.onMouseOverLink(source, target);
 
         if (this.state.config.linkHighlightBehavior) {
-            this.setState({ d3ElementChange: true });
+            //  this.setState({ d3ElementChange: true });
             this.state.highlightedLink = { source, target };
             this._tock();
         }
@@ -477,7 +485,7 @@ export default class Graph extends React.Component {
         this.props.onMouseOutLink && this.props.onMouseOutLink(source, target);
 
         if (this.state.config.linkHighlightBehavior) {
-            this.setState({ d3ElementChange: true });
+            //  this.setState({ d3ElementChange: true });
             this.state.highlightedLink = undefined;
 
             this._tock();
@@ -593,8 +601,12 @@ export default class Graph extends React.Component {
 
     componentDidUpdate(prevProps, prevState) {
         if (prevState !== this.state) {
-            if (this.state.newGraphElements || this.state.d3ConfigUpdated) {
-                if (!this.state.config.staticGraph && this.state.config.automaticLayoutOn) {
+            if (this.state.newGraphElements || this.state.d3ConfigUpdated || this.state.d3ElementChange) {
+                if (
+                    (this.state.newGraphElements || this.state.d3ConfigUpdated) &&
+                    !this.state.config.staticGraph &&
+                    this.state.config.automaticLayoutOn
+                ) {
                     this._graphForcesConfig();
                     this.restartSimulation();
                 }
@@ -609,6 +621,7 @@ export default class Graph extends React.Component {
                 if (this.state.config.staticGraph) {
                     this.pauseSimulation();
                 }
+
                 this._zoomConfig();
                 this.setState({ configUpdated: false, d3ElementChange: false });
             }
