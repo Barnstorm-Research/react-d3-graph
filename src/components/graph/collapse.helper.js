@@ -144,8 +144,9 @@ function getTargetLeafConnections(rootNodeId, linksMatrix = {}, { directed }) {
 function isNodeVisible(nodeId, nodes, linksMatrix) {
     const { inDegree, outDegree } = computeNodeDegree(nodeId, linksMatrix);
     const orphan = !!nodes[nodeId]._orphan;
+    const hidden = nodes[nodeId].isHidden ? nodes[nodeId].isHidden : false;
 
-    return inDegree > 0 || outDegree > 0 || orphan;
+    return (inDegree > 0 || outDegree > 0 || orphan) && !hidden;
 }
 
 /**
