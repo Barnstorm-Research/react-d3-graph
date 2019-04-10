@@ -476,9 +476,9 @@ function initializeGraphState({ data, id, config }, state) {
  * @memberof Graph/helper
  */
 function updateNodeHighlightedValue(nodes, links, config, id, value = false) {
-    const highlightedNode = value ? id : "";
-    const node = Object.assign({}, nodes[id], { highlighted: value });
-    let updatedNodes = Object.assign({}, nodes, { [id]: node });
+    const highlightedNode = value && id && id !== "" ? id : "";
+    const node = id && id !== "" ? Object.assign({}, nodes[id], { highlighted: value }) : undefined;
+    let updatedNodes = id && id !== "" ? Object.assign({}, nodes, { [id]: node }) : nodes;
 
     // when highlightDegree is 0 we want only to highlight selected node
     if (links[id] && config.highlightDegree !== 0) {

@@ -190,7 +190,7 @@ export default class Graph extends React.Component {
                 //  d3ElementChange: false,
                 nodeDragged: false,
             });
-            this._setNodeHighlightedValue(this.state.highlightedNode, false);
+            this.state.config.nodeHighlightBehavior && this._setNodeHighlightedValue(this.state.highlightedNode, false);
             this.restartSimulationAlpha(this.state.config.d3.alphaTarget);
         }
     };
