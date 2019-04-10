@@ -187,7 +187,7 @@ export default class Graph extends React.Component {
             this.state.config.automaticRearrangeAfterDropNode
         ) {
             this.setState({
-                //  d3ElementChange: false,
+                d3ElementChange: false,
                 nodeDragged: false,
             });
             this.state.config.nodeHighlightBehavior && this._setNodeHighlightedValue(this.state.highlightedNode, false);
@@ -246,7 +246,7 @@ export default class Graph extends React.Component {
         }
         this.setState({
             nodes: nodes,
-            //  d3ElementChange: true,
+            d3ElementChange: true,
             nodeDragged: true,
         });
 
@@ -391,7 +391,7 @@ export default class Graph extends React.Component {
 
             if (this.state.config.collapsible) {
                 this.setState({
-                    //d3ElementChange: true,
+                    d3ElementChange: true,
                     nodes: nodes,
                 });
 
@@ -416,7 +416,7 @@ export default class Graph extends React.Component {
                 );
             } else {
                 this.setState({
-                    //d3ElementChange: true,
+                    d3ElementChange: true,
                     nodes: nodes,
                 });
                 if (reset) {
@@ -456,7 +456,7 @@ export default class Graph extends React.Component {
         this.props.onMouseOverLink && this.props.onMouseOverLink(source, target);
 
         if (this.state.config.linkHighlightBehavior) {
-            //  this.setState({ d3ElementChange: true });
+            this.setState({ d3ElementChange: true });
             this.state.highlightedLink = { source, target };
             this._tock();
         }
@@ -472,7 +472,7 @@ export default class Graph extends React.Component {
         this.props.onMouseOutLink && this.props.onMouseOutLink(source, target);
 
         if (this.state.config.linkHighlightBehavior) {
-            //  this.setState({ d3ElementChange: true });
+            this.setState({ d3ElementChange: true });
             this.state.highlightedLink = undefined;
 
             this._tock();
