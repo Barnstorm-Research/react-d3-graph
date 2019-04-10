@@ -38,7 +38,7 @@ import utils from "../../utils";
 import { computeNodeDegree } from "./collapse.helper";
 
 const NODE_PROPS_WHITELIST = ["id", "highlighted", "x", "y", "index", "vy", "vx"];
-const LINK_CUSTOM_PROPS_WHITELIST = ["color", "opacity", "strokeWidth", "label", "className", "isHidden"];
+const LINK_CUSTOM_PROPS_WHITELIST = ["color", "opacity", "strokeWidth", "label", "className"];
 
 Object.defineProperty(Array.prototype, "flat", {
     value: function(depth = 1) {

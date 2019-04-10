@@ -60,12 +60,6 @@
                       </a></li>
                       
                       <li><a
-                        href='#graph_graphconfigfunctions'
-                        class='regular pre-open'>
-                        #_graphConfigFunctions
-                      </a></li>
-                      
-                      <li><a
                         href='#graph_ondragend'
                         class='regular pre-open'>
                         #_onDragEnd
@@ -1607,21 +1601,8 @@ Use the following values under a property
     (default <code>null</code>)
   </td>
   <td class='break-word'><span>🔍🔍🔍 function that receives a node and returns a JSX view.
-</span></td>
-</tr>
 
-
-              
-                <tr>
-  <td class='break-word'><span class='code bold'>node.isHidden</span> <code class='quiet'><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></code>
-  
-    (default <code>undefined</code>)
-  </td>
-  <td class='break-word'><span>🔍🔍🔍 if a particular node should be hidden or visible.
-
-<BR/>
- 
-<strong><em>NOTE: this only hides the node. It is the caller's responsiblity to also set isHidden on any links</em></strong>
+<br/>
 </span></td>
 </tr>
 
@@ -1834,9 +1815,7 @@ following expression:
 <ul>
 <li>"STRAIGHT" <small>(default)</small> - a straight line.</li>
 <li>"CURVE_SMOOTH" - a slight curve between two nodes</li>
-<li>"CURVE_FULL" - a semicircumference trajectory unites source and target nodes.
-<img src="https://github.com/danielcaldas/react-d3-graph/blob/master/docs/rd3g-bend.gif?raw=true" width="820" height="480"/>
-<br/></li>
+<li>"CURVE_FULL" - a semicircumference trajectory unites source and target nodes.</li>
 </ul>
 </span></td>
 </tr>
@@ -1849,18 +1828,11 @@ following expression:
     (default <code>undefined</code>)
   </td>
   <td class='break-word'><span>the class names to pass onto this link. If undefined the CONST.LINK_CLASS_NAME will be used.
-</span></td>
-</tr>
+
+<br/>
 
 
-              
-                <tr>
-  <td class='break-word'><span class='code bold'>link.isHidden</span> <code class='quiet'><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></code>
-  
-    (default <code>undefined</code>)
-  </td>
-  <td class='break-word'><span>🔍🔍🔍 if a particular link should be hidden or visible.
-<p/>
+<img src="https://github.com/danielcaldas/react-d3-graph/blob/master/docs/rd3g-bend.gif?raw=true" width="820" height="480"/>
 </span></td>
 </tr>
 
@@ -1896,7 +1868,6 @@ following expression:
         <span class="hljs-attr">highlightColor</span>: <span class="hljs-string">"lightblue"</span>
     }
 };
-
 
 <span class="hljs-comment">// Sorry for the long config description, here"s a potato 🥔.</span></pre>
     
@@ -1974,18 +1945,18 @@ can be consulted <a href="https://github.com/danielcaldas/react-d3-graph/blob/ma
     <div class='py1 quiet mt1 prose-big'>Example</div>
     
       
-      <pre class='p1 overflow-auto round fill-light'><span class="hljs-keyword">import</span> { Graph } <span class="hljs-keyword">from</span> <span class="hljs-string">"react-d3-graph"</span>;
+      <pre class='p1 overflow-auto round fill-light'><span class="hljs-keyword">import</span> { Graph } <span class="hljs-keyword">from</span> <span class="hljs-string">'react-d3-graph'</span>;
 
 <span class="hljs-comment">// graph payload (with minimalist structure)</span>
 <span class="hljs-keyword">const</span> data = {
     <span class="hljs-attr">nodes</span>: [
-      {<span class="hljs-attr">id</span>: <span class="hljs-string">"Harry"</span>},
-      {<span class="hljs-attr">id</span>: <span class="hljs-string">"Sally"</span>},
-      {<span class="hljs-attr">id</span>: <span class="hljs-string">"Alice"</span>}
+      {<span class="hljs-attr">id</span>: <span class="hljs-string">'Harry'</span>},
+      {<span class="hljs-attr">id</span>: <span class="hljs-string">'Sally'</span>},
+      {<span class="hljs-attr">id</span>: <span class="hljs-string">'Alice'</span>}
     ],
     <span class="hljs-attr">links</span>: [
-        {<span class="hljs-attr">source</span>: <span class="hljs-string">"Harry"</span>, <span class="hljs-attr">target</span>: <span class="hljs-string">"Sally"</span>},
-        {<span class="hljs-attr">source</span>: <span class="hljs-string">"Harry"</span>, <span class="hljs-attr">target</span>: <span class="hljs-string">"Alice"</span>},
+        {<span class="hljs-attr">source</span>: <span class="hljs-string">'Harry'</span>, <span class="hljs-attr">target</span>: <span class="hljs-string">'Sally'</span>},
+        {<span class="hljs-attr">source</span>: <span class="hljs-string">'Harry'</span>, <span class="hljs-attr">target</span>: <span class="hljs-string">'Alice'</span>},
     ]
 };
 
@@ -1994,26 +1965,26 @@ can be consulted <a href="https://github.com/danielcaldas/react-d3-graph/blob/ma
 <span class="hljs-keyword">const</span> myConfig = {
     <span class="hljs-attr">nodeHighlightBehavior</span>: <span class="hljs-literal">true</span>,
     <span class="hljs-attr">node</span>: {
-        <span class="hljs-attr">color</span>: <span class="hljs-string">"lightgreen"</span>,
+        <span class="hljs-attr">color</span>: <span class="hljs-string">'lightgreen'</span>,
         <span class="hljs-attr">size</span>: <span class="hljs-number">120</span>,
-        <span class="hljs-attr">highlightStrokeColor</span>: <span class="hljs-string">"blue"</span>
+        <span class="hljs-attr">highlightStrokeColor</span>: <span class="hljs-string">'blue'</span>
     },
     <span class="hljs-attr">link</span>: {
-        <span class="hljs-attr">highlightColor</span>: <span class="hljs-string">"lightblue"</span>
+        <span class="hljs-attr">highlightColor</span>: <span class="hljs-string">'lightblue'</span>
     }
 };
 
 <span class="hljs-comment">// graph event callbacks</span>
 <span class="hljs-keyword">const</span> onClickGraph = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
-     <span class="hljs-built_in">window</span>.alert(<span class="hljs-string">"Clicked the graph background"</span>);
+     <span class="hljs-built_in">window</span>.alert(<span class="hljs-string">'Clicked the graph background'</span>);
 };
 
 <span class="hljs-keyword">const</span> onClickNode = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">nodeId</span>) </span>{
-     <span class="hljs-built_in">window</span>.alert(<span class="hljs-string">"Clicked node ${nodeId}"</span>);
+     <span class="hljs-built_in">window</span>.alert(<span class="hljs-string">'Clicked node ${nodeId}'</span>);
 };
 
 <span class="hljs-keyword">const</span> onRightClickNode = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">event, nodeId</span>) </span>{
-     <span class="hljs-built_in">window</span>.alert(<span class="hljs-string">"Right clicked node ${nodeId}"</span>);
+     <span class="hljs-built_in">window</span>.alert(<span class="hljs-string">'Right clicked node ${nodeId}'</span>);
 };
 
 <span class="hljs-keyword">const</span> onMouseOverNode = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">nodeId</span>) </span>{
@@ -2029,7 +2000,7 @@ can be consulted <a href="https://github.com/danielcaldas/react-d3-graph/blob/ma
 };
 
 <span class="hljs-keyword">const</span> onRightClickLink = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">event, source, target</span>) </span>{
-     <span class="hljs-built_in">window</span>.alert(<span class="hljs-string">"Right clicked link between ${source} and ${target}"</span>);
+     <span class="hljs-built_in">window</span>.alert(<span class="hljs-string">'Right clicked link between ${source} and ${target}'</span>);
 };
 
 <span class="hljs-keyword">const</span> onMouseOverLink = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">source, target</span>) </span>{
@@ -2041,7 +2012,7 @@ can be consulted <a href="https://github.com/danielcaldas/react-d3-graph/blob/ma
 };
 
 <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">Graph</span>
-     <span class="hljs-attr">id</span>=<span class="hljs-string">"graph-id"</span> // <span class="hljs-attr">id</span> <span class="hljs-attr">is</span> <span class="hljs-attr">mandatory</span>, <span class="hljs-attr">if</span> <span class="hljs-attr">no</span> <span class="hljs-attr">id</span> <span class="hljs-attr">is</span> <span class="hljs-attr">defined</span> <span class="hljs-attr">rd3g</span> <span class="hljs-attr">will</span> <span class="hljs-attr">throw</span> <span class="hljs-attr">an</span> <span class="hljs-attr">error</span>
+     <span class="hljs-attr">id</span>=<span class="hljs-string">'graph-id'</span> // <span class="hljs-attr">id</span> <span class="hljs-attr">is</span> <span class="hljs-attr">mandatory</span>, <span class="hljs-attr">if</span> <span class="hljs-attr">no</span> <span class="hljs-attr">id</span> <span class="hljs-attr">is</span> <span class="hljs-attr">defined</span> <span class="hljs-attr">rd3g</span> <span class="hljs-attr">will</span> <span class="hljs-attr">throw</span> <span class="hljs-attr">an</span> <span class="hljs-attr">error</span>
      <span class="hljs-attr">data</span>=<span class="hljs-string">{data}</span>
      <span class="hljs-attr">config</span>=<span class="hljs-string">{myConfig}</span>
      <span class="hljs-attr">onClickGraph</span>=<span class="hljs-string">{onClickGraph}</span>
@@ -2130,64 +2101,10 @@ transition duration to zero and clear transformation styles.</p>
 
   
 
-  <p>Sets d3 tick function and configures other d3 stuff such as forces</p>
+  <p>Sets d3 tick function and configures other d3 stuff such as forces and drag events.</p>
 
 
   <div class='pre p1 fill-light mt0'>_graphForcesConfig(): <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/undefined">undefined</a></div>
-  
-  
-
-  
-  
-  
-  
-  
-  
-
-  
-
-  
-
-  
-    
-      <div class='py1 quiet mt1 prose-big'>Returns</div>
-      <code><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/undefined">undefined</a></code>:
-        
-
-      
-    
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-</section>
-
-      </div>
-    </div>
-  
-    <div class='border-bottom' id='graph_graphconfigfunctions'>
-      <div class="clearfix small pointer toggle-sibling">
-        <div class="py1 contain">
-            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
-            <span class='code strong strong truncate'>_graphConfigFunctions()</span>
-        </div>
-      </div>
-      <div class="clearfix display-none toggle-target">
-        <section class='p2 mb2 clearfix bg-white minishadow'>
-
-  
-
-  <p>Configures other stuff like drag events</p>
-
-
-  <div class='pre p1 fill-light mt0'>_graphConfigFunctions(): <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/undefined">undefined</a></div>
   
   
 
@@ -2238,7 +2155,7 @@ transition duration to zero and clear transformation styles.</p>
 
   
 
-  <p>Handles d3 drag "end" event.</p>
+  <p>Handles d3 drag 'end' event.</p>
 
 
   <div class='pre p1 fill-light mt0'>_onDragEnd</div>
@@ -2292,7 +2209,7 @@ transition duration to zero and clear transformation styles.</p>
 
   
 
-  <p>Handles d3 "drag" event.
+  <p>Handles d3 'drag' event.
 <a href="https://github.com/d3/d3-drag/blob/master/README.md#drag_subject">more about d3 drag</a></p>
 
 
@@ -2380,7 +2297,7 @@ node contains all information that was previously fed by rd3g.
 
   
 
-  <p>Handles d3 drag "start" event.</p>
+  <p>Handles d3 drag 'start' event.</p>
 
 
   <div class='pre p1 fill-light mt0'>_onDragStart</div>
@@ -2394,39 +2311,6 @@ node contains all information that was previously fed by rd3g.
   
   
 
-  
-    <div class='py1 quiet mt1 prose-big'>Parameters</div>
-    <div class='prose'>
-      
-        <div class='space-bottom0'>
-          <div>
-            <span class='code bold'>ev</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>)</code>
-	    if not undefined it will contain event data.
-
-          </div>
-          
-        </div>
-      
-        <div class='space-bottom0'>
-          <div>
-            <span class='code bold'>index</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a>)</code>
-	    index of the node that is being dragged.
-
-          </div>
-          
-        </div>
-      
-        <div class='space-bottom0'>
-          <div>
-            <span class='code bold'>nodeList</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a>&#x3C;<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>>)</code>
-	    array of d3 nodes. This list of nodes is provided by d3, each
-node contains all information that was previously fed by rd3g.
-
-          </div>
-          
-        </div>
-      
-    </div>
   
 
   
@@ -2816,7 +2700,7 @@ along time as d3 calculates new node positioning.</p>
 
   
 
-  <p>Handler for "zoom" event within zoom config.</p>
+  <p>Handler for 'zoom' event within zoom config.</p>
 
 
   <div class='pre p1 fill-light mt0'>_zoomed</div>
@@ -2955,15 +2839,6 @@ along time as d3 calculates new node positioning.</p>
   
     <div class='py1 quiet mt1 prose-big'>Parameters</div>
     <div class='prose'>
-      
-        <div class='space-bottom0'>
-          <div>
-            <span class='code bold'>e</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>)</code>
-	    d3 event Object.
-
-          </div>
-          
-        </div>
       
         <div class='space-bottom0'>
           <div>
@@ -3660,7 +3535,7 @@ See
       <div class="clearfix small pointer toggle-sibling">
         <div class="py1 contain">
             <a class='icon pin-right py1 dark-link caret-right'>▸</a>
-            <span class='code strong strong truncate'>_renderLinks(nodes, links, linksMatrix, config, linkCallbacks, highlightedNode, highlightedLink, transform, nodeDragged, alpha)</span>
+            <span class='code strong strong truncate'>_renderLinks(nodes, links, linksMatrix, config, linkCallbacks, highlightedNode, highlightedLink, transform, alpha)</span>
         </div>
       </div>
       <div class="clearfix display-none toggle-target">
@@ -3671,7 +3546,7 @@ See
   <p>Build Link components given a list of links.</p>
 
 
-  <div class='pre p1 fill-light mt0'>_renderLinks(nodes: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>&#x3C;<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>, <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>>, links: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a>&#x3C;<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>>, linksMatrix: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a>&#x3C;<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>>, config: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>, linkCallbacks: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a>&#x3C;<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function">Function</a>>, highlightedNode: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>, highlightedLink: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>, transform: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a>, nodeDragged: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a>, alpha: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a>): <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a>&#x3C;<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>></div>
+  <div class='pre p1 fill-light mt0'>_renderLinks(nodes: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>&#x3C;<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>, <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>>, links: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a>&#x3C;<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>>, linksMatrix: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a>&#x3C;<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>>, config: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>, linkCallbacks: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a>&#x3C;<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function">Function</a>>, highlightedNode: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>, highlightedLink: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>, transform: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a>, alpha: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a>): <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a>&#x3C;<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>></div>
   
   
 
@@ -3767,15 +3642,6 @@ See
           <div>
             <span class='code bold'>transform</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a>)</code>
 	    value that indicates the amount of zoom transformation.
-
-          </div>
-          
-        </div>
-      
-        <div class='space-bottom0'>
-          <div>
-            <span class='code bold'>nodeDragged</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a>)</code>
-	    is repositioning happening because of node being dragged.
 
           </div>
           
@@ -4109,7 +3975,7 @@ is cached on the 1st call and from there we simply return the cached jsx.</p>
       <div class="clearfix small pointer toggle-sibling">
         <div class="py1 contain">
             <a class='icon pin-right py1 dark-link caret-right'>▸</a>
-            <span class='code strong strong truncate'>renderGraph(nodes, nodeCallbacks, links, linksMatrix, linkCallbacks, config, highlightedNode, highlightedLink, transform, nodeDragged, alpha)</span>
+            <span class='code strong strong truncate'>renderGraph(nodes, nodeCallbacks, links, linksMatrix, linkCallbacks, config, highlightedNode, highlightedLink, transform, alpha)</span>
         </div>
       </div>
       <div class="clearfix display-none toggle-target">
@@ -4121,7 +3987,7 @@ is cached on the 1st call and from there we simply return the cached jsx.</p>
 components.</p>
 
 
-  <div class='pre p1 fill-light mt0'>renderGraph(nodes: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>&#x3C;<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>, <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>>, nodeCallbacks: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a>&#x3C;<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function">Function</a>>, links: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a>&#x3C;<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>>, linksMatrix: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>&#x3C;<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>, <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>>, linkCallbacks: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a>&#x3C;<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function">Function</a>>, config: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>, highlightedNode: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>, highlightedLink: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>, transform: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a>, nodeDragged: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a>, alpha: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a>): <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></div>
+  <div class='pre p1 fill-light mt0'>renderGraph(nodes: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>&#x3C;<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>, <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>>, nodeCallbacks: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a>&#x3C;<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function">Function</a>>, links: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a>&#x3C;<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>>, linksMatrix: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>&#x3C;<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>, <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>>, linkCallbacks: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a>&#x3C;<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function">Function</a>>, config: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>, highlightedNode: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>, highlightedLink: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>, transform: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a>, alpha: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a>): <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></div>
   
   
 
@@ -4272,15 +4138,6 @@ there is an Object that maps adjacent nodes ids (string) and their values (numbe
           <div>
             <span class='code bold'>transform</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a>)</code>
 	    value that indicates the amount of zoom transformation.
-
-          </div>
-          
-        </div>
-      
-        <div class='space-bottom0'>
-          <div>
-            <span class='code bold'>nodeDragged</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a>)</code>
-	    is repositioning happening because of node being dragged.
 
           </div>
           
@@ -4482,7 +4339,7 @@ there is an Object that maps adjacent nodes ids (string) and their values (numbe
       <div class="clearfix small pointer toggle-sibling">
         <div class="py1 contain">
             <a class='icon pin-right py1 dark-link caret-right'>▸</a>
-            <span class='code strong strong truncate'>buildLinkProps(link, nodes, links, config, linkCallbacks, highlightedNode, highlightedLink, transform, nodeDragged, alpha)</span>
+            <span class='code strong strong truncate'>buildLinkProps(link, nodes, links, config, linkCallbacks, highlightedNode, highlightedLink, transform, alpha)</span>
         </div>
       </div>
       <div class="clearfix display-none toggle-target">
@@ -4493,7 +4350,7 @@ there is an Object that maps adjacent nodes ids (string) and their values (numbe
   <p>Build some Link properties based on given parameters.</p>
 
 
-  <div class='pre p1 fill-light mt0'>buildLinkProps(link: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>, nodes: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>&#x3C;<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>, <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>>, links: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>&#x3C;<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>, <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>>, config: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>, linkCallbacks: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a>&#x3C;<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function">Function</a>>, highlightedNode: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>, highlightedLink: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>, transform: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a>, nodeDragged: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a>, alpha: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a>): <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></div>
+  <div class='pre p1 fill-light mt0'>buildLinkProps(link: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>, nodes: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>&#x3C;<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>, <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>>, links: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>&#x3C;<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>, <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>>, config: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>, linkCallbacks: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a>&#x3C;<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function">Function</a>>, highlightedNode: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>, highlightedLink: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>, transform: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a>, alpha: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a>): <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></div>
   
   
 
@@ -4587,15 +4444,6 @@ there is an Object that maps adjacent nodes ids (string) and their values (numbe
           <div>
             <span class='code bold'>transform</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a>)</code>
 	    value that indicates the amount of zoom transformation.
-
-          </div>
-          
-        </div>
-      
-        <div class='space-bottom0'>
-          <div>
-            <span class='code bold'>nodeDragged</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a>)</code>
-	    is repositioning happening because of node being dragged.
 
           </div>
           
@@ -6929,7 +6777,6 @@ there is an object that maps adjacent nodes ids (string) and their values (numbe
     type='square'
     viewGenerator=(node) =&gt; &lt;CustomComponent node={node} /&gt;
     className='node'
-    isHidden=undefined
     onClickNode={onClickNode}
     onRightClickNode={onRightClickNode}
     onMouseOverNode={onMouseOverNode}
@@ -6969,20 +6816,6 @@ there is an object that maps adjacent nodes ids (string) and their values (numbe
   
   
 
-  
-    <div class='py1 quiet mt1 prose-big'>Parameters</div>
-    <div class='prose'>
-      
-        <div class='space-bottom0'>
-          <div>
-            <span class='code bold'>event</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>)</code>
-	    native event.
-
-          </div>
-          
-        </div>
-      
-    </div>
   
 
   
@@ -7477,7 +7310,6 @@ of d3 symbol.<br/>
     <span class="hljs-attr">opacity</span>=<span class="hljs-string">1</span>
     <span class="hljs-attr">mouseCursor</span>=<span class="hljs-string">'pointer'</span>
     <span class="hljs-attr">className</span>=<span class="hljs-string">''</span>
-    <span class="hljs-attr">isHidden</span>= <span class="hljs-string">undefined</span>
     <span class="hljs-attr">onClickLink</span>=<span class="hljs-string">{onClickLink}</span>
     <span class="hljs-attr">onRightClickLink</span>=<span class="hljs-string">{onRightClickLink}</span>
     <span class="hljs-attr">onMouseOverLink</span>=<span class="hljs-string">{onMouseOverLink}</span>
@@ -9795,7 +9627,7 @@ in the props list.</p>
   <p>Helper to prevent nodes being placed outside svg window</p>
 
 
-  <div class='pre p1 fill-light mt0'>safeNodePositioner(position: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a>, isX: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a>, config: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>, transform: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a>): <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></div>
+  <div class='pre p1 fill-light mt0'>safeNodePositioner(position: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a>, isX: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a>, config: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>): <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></div>
   
   
 
@@ -9833,15 +9665,6 @@ in the props list.</p>
             <span class='code bold'>config</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>)</code>
 	    same as 
 <a href="#graphrenderer">config in renderGraph</a>
-
-          </div>
-          
-        </div>
-      
-        <div class='space-bottom0'>
-          <div>
-            <span class='code bold'>transform</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a>)</code>
-	    the panAndZoom scale value
 
           </div>
           
@@ -9892,7 +9715,7 @@ in the props list.</p>
   <p>Helper to place nodes according to degree of connections</p>
 
 
-  <div class='pre p1 fill-light mt0'>degreeNodePositioner(degree: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a>, isX: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a>, config: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>, transform: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a>): <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></div>
+  <div class='pre p1 fill-light mt0'>degreeNodePositioner(degree: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a>, isX: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a>, config: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>): <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></div>
   
   
 
@@ -9930,15 +9753,6 @@ in the props list.</p>
             <span class='code bold'>config</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>)</code>
 	    same as 
 <a href="#graphrenderer">config in renderGraph</a>
-
-          </div>
-          
-        </div>
-      
-        <div class='space-bottom0'>
-          <div>
-            <span class='code bold'>transform</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a>)</code>
-	    the panAndZoom scale value
 
           </div>
           

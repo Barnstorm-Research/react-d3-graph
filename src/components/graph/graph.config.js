@@ -153,8 +153,7 @@
  *
  * **[note]** react-d3-graph will map this values to [d3 symbols](https://github.com/d3/d3-shape#symbols)
  * @param {Function} [node.viewGenerator=null] - 🔍🔍🔍 function that receives a node and returns a JSX view.
- * @param {boolean} [node.isHidden=undefined] - 🔍🔍🔍 if a particular node should be hidden or visible.
- *   <BR/> ***NOTE: this only hides the node. It is the caller's responsiblity to also set isHidden on any links***
+ * <br/>
  * @param {Object} link link object is explained in the next section. ⬇️
  * <h2 id="config-link"><a href="#config-link">#</a> Link level configurations</h2>
  * @param {string} [link.color="#d3d3d3"] - 🔍🔍🔍 the color for links
@@ -192,11 +191,9 @@
  * - "STRAIGHT" <small>(default)</small> - a straight line.
  * - "CURVE_SMOOTH" - a slight curve between two nodes
  * - "CURVE_FULL" - a semicircumference trajectory unites source and target nodes.
- * <img src="https://github.com/danielcaldas/react-d3-graph/blob/master/docs/rd3g-bend.gif?raw=true" width="820" height="480"/>
- * <br/>
  * @param {string} [link.className=undefined] the class names to pass onto this link. If undefined the CONST.LINK_CLASS_NAME will be used.
- * @param {boolean} [link.isHidden=undefined] - 🔍🔍🔍 if a particular link should be hidden or visible.
- * <p/>
+ * <br/>
+ * <img src="https://github.com/danielcaldas/react-d3-graph/blob/master/docs/rd3g-bend.gif?raw=true" width="820" height="480"/>
  *
  * @example
  * // A simple config that uses some properties
@@ -211,7 +208,6 @@
  *         highlightColor: "lightblue"
  *     }
  * };
- *
  *
  * // Sorry for the long config description, here"s a potato 🥔.
  */

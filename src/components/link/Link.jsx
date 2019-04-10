@@ -30,7 +30,6 @@ import React from "react";
  *     opacity=1
  *     mouseCursor='pointer'
  *     className=''
- *     isHidden= undefined
  *     onClickLink={onClickLink}
  *     onRightClickLink={onRightClickLink}
  *     onMouseOverLink={onMouseOverLink}
