@@ -351,10 +351,21 @@ function checkForGraphElementsChanges(nextProps, currentState) {
     const newGraphElements =
         nextNodes.length !== stateD3Nodes.length ||
         nextLinks.length !== stateD3Links.length ||
-        !utils.isDeepEqual(nextNodes.map(({ id }) => ({ id })), stateD3Nodes.map(({ id }) => ({ id }))) ||
         !utils.isDeepEqual(
-            nextLinks.map(({ source, target }) => `${source}-${target}`),
-            stateD3Links.map(({ source, target }) => `${source}-${target}`)
+            nextNodes.map(function(id, isHidden) {
+                return !isHidden ? id : null;
+            }),
+            stateD3Nodes.map(function(id, isHidden) {
+                return !isHidden ? id : null;
+            })
+        ) ||
+        !utils.isDeepEqual(
+            nextLinks.map(function(source, target, isHidden) {
+                return !isHidden ? `${source}-${target}` : null;
+            }),
+            stateD3Links.map(function(source, target, isHidden) {
+                return !isHidden ? `${source}-${target}` : null;
+            })
         );
 
     return { graphElementsUpdated, newGraphElements };
@@ -476,9 +487,9 @@ function initializeGraphState({ data, id, config }, state) {
  * @memberof Graph/helper
  */
 function updateNodeHighlightedValue(nodes, links, config, id, value = false) {
-    const highlightedNode = value ? id : "";
-    const node = Object.assign({}, nodes[id], { highlighted: value });
-    let updatedNodes = Object.assign({}, nodes, { [id]: node });
+    const highlightedNode = value && id && id !== "" ? id : "";
+    const node = id && id !== "" ? Object.assign({}, nodes[id], { highlighted: value }) : undefined;
+    let updatedNodes = id && id !== "" ? Object.assign({}, nodes, { [id]: node }) : nodes;
 
     // when highlightDegree is 0 we want only to highlight selected node
     if (links[id] && config.highlightDegree !== 0) {

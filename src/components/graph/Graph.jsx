@@ -190,7 +190,7 @@ export default class Graph extends React.Component {
                 d3ElementChange: false,
                 nodeDragged: false,
             });
-            this._setNodeHighlightedValue(this.state.highlightedNode, false);
+            this.state.config.nodeHighlightBehavior && this._setNodeHighlightedValue(this.state.highlightedNode, false);
             this.restartSimulationAlpha(this.state.config.d3.alphaTarget);
         }
     };
@@ -390,7 +390,10 @@ export default class Graph extends React.Component {
             nodes[clickedNodeId]["previouslySelected"] = reset;
 
             if (this.state.config.collapsible) {
-                this.setState({ d3ElementChange: true, nodes: nodes });
+                this.setState({
+                    d3ElementChange: true,
+                    nodes: nodes,
+                });
 
                 const leafConnections = collapseHelper.getTargetLeafConnections(
                     clickedNodeId,
@@ -412,7 +415,10 @@ export default class Graph extends React.Component {
                     () => this.props.onClickNode && this.props.onClickNode(clickedNodeId)
                 );
             } else {
-                this.setState({ d3ElementChange: true, nodes: nodes });
+                this.setState({
+                    d3ElementChange: true,
+                    nodes: nodes,
+                });
                 if (reset) {
                     this.props.onClickNode && this.props.onClickNode(clickedNodeId);
                 }
