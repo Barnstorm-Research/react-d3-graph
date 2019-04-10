@@ -588,12 +588,8 @@ export default class Graph extends React.Component {
 
     componentDidUpdate(prevProps, prevState) {
         if (prevState !== this.state) {
-            if (this.state.newGraphElements || this.state.d3ConfigUpdated || this.state.d3ElementChange) {
-                if (
-                    (this.state.newGraphElements || this.state.d3ConfigUpdated) &&
-                    !this.state.config.staticGraph &&
-                    this.state.config.automaticLayoutOn
-                ) {
+            if (this.state.newGraphElements || this.state.d3ConfigUpdated) {
+                if (!this.state.config.staticGraph && this.state.config.automaticLayoutOn) {
                     this._graphForcesConfig();
                     this.restartSimulation();
                 }
