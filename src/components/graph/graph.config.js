@@ -114,6 +114,7 @@
  * @param {string} [node.highlightFontWeight="normal"] - fontWeight in highlighted state.
  * @param {string} [node.highlightStrokeColor="SAME"] - strokeColor in highlighted state.
  * @param {number} [node.highlightStrokeWidth="SAME"] - strokeWidth in highlighted state.
+ * @param {string} [node.selectedStrokeColor="SAME"] - strokeColor in selected state.
  * @param {string|Function} [node.labelProperty="id"] - this is the node property that will be used in runtime to
  * fetch the label content. You just need to add some property (e.g. firstName) to the node payload and then set
  * node.labelProperty to be **"firstName"**. **This can also be a function!**, if you pass a function here it will be called
@@ -196,6 +197,7 @@
  * <br/>
  * @param {string} [link.className=undefined] the class names to pass onto this link. If undefined the CONST.LINK_CLASS_NAME will be used.
  * @param {boolean} [link.isHidden=undefined] - 🔍🔍🔍 if a particular link should be hidden or visible.
+ * @param {string} [link.selectedStrokeColor="SAME"] - strokeColor in selected state.
  * <p/>
  *
  * @example
@@ -269,6 +271,7 @@ export default {
     },
     link: {
         color: "#d3d3d3",
+        selectedStrokeColor: "red",
         fontColor: "black",
         fontSize: 8,
         fontWeight: "normal",

@@ -359,6 +359,12 @@ export default class Graph extends React.Component {
      */
     onClickNode = (e, clickedNodeId) => {
         let nodes = this.state.nodes;
+        let d3links = this.state.d3Links;
+
+        //unselect all the links
+        Object.keys(d3links).forEach(key => {
+            d3links[key].selected = d3links[key].previouslySelected = false;
+        });
 
         if (e.shiftKey || e.metaKey) {
             const node = Object.assign({}, nodes[clickedNodeId], {
@@ -418,12 +424,43 @@ export default class Graph extends React.Component {
                 this.setState({
                     d3ElementChange: true,
                     nodes: nodes,
+                    d3links: d3links,
                 });
                 if (reset) {
                     this.props.onClickNode && this.props.onClickNode(clickedNodeId);
                 }
             }
         }
+    };
+
+    /**
+     * Change the selection color of the links
+     * NOTE: only support single selection
+     * @param  {string} source - The id of the source node where the click was performed.
+     * @param {string} target - the id of the target of this link clicked
+     * @returns {undefined}
+     */
+    onClickLink = (source, target) => {
+        let nodes = this.state.nodes;
+        let d3links = this.state.d3Links;
+
+        //unselect all nodes
+        Object.keys(nodes).forEach(key => {
+            nodes[key].selected = nodes[key].previouslySelected = false;
+        });
+        Object.keys(d3links).forEach(key => {
+            const sel = d3links[key].source.id.toString() === source && d3links[key].target.id.toString() === target;
+
+            d3links[key].selected = d3links[key].previouslySelected = sel;
+        });
+
+        this.setState({
+            d3ElementChange: true,
+            nodes: nodes,
+            d3links: d3links,
+        });
+
+        this.props.onClickLink && this.props.onClickLink(source, target);
     };
 
     /**
@@ -639,7 +676,7 @@ export default class Graph extends React.Component {
             this.state.d3Links,
             this.state.links,
             {
-                onClickLink: this.props.onClickLink,
+                onClickLink: this.onClickLink,
                 onRightClickLink: this.props.onRightClickLink,
                 onMouseOverLink: this.onMouseOverLink,
                 onMouseOutLink: this.onMouseOutLink,

@@ -116,7 +116,8 @@ function buildLinkProps(
         opacity = highlight ? config.link.opacity : config.highlightOpacity;
     }
 
-    let stroke = link.color || config.link.color;
+    // let stroke = link.color || config.link.color;
+    let stroke = link.selected ? config.link.selectedStrokeColor : link.color || config.link.color;
 
     if (highlight) {
         stroke = config.link.highlightColor === CONST.KEYWORDS.SAME ? config.link.color : config.link.highlightColor;
@@ -166,6 +167,8 @@ function buildLinkProps(
         fontWeight,
         className: clsName,
         opacity,
+        selected: link.selected ? link.selected : false,
+        previouslySelected: link.previouslySelected ? link.previouslySelected : false,
         onClickLink: linkCallbacks.onClickLink,
         onRightClickLink: linkCallbacks.onRightClickLink,
         onMouseOverLink: linkCallbacks.onMouseOverLink,
