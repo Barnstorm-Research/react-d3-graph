@@ -111,6 +111,18 @@ function _renderNodes(nodes, nodeCallbacks, config, highlightedNode, highlighted
 }
 
 /**
+ * Set Equality check
+ * @param {Set} as first set
+ * @param {Set} bs second set
+ * @returns {boolean} if sets are equal or not
+ */
+function eqSet(as, bs) {
+    if (as.size !== bs.size) return false;
+    for (var a of as) if (!bs.has(a)) return false;
+    return true;
+}
+
+/**
  * Builds graph defs (for now markers, but we could also have gradients for instance).
  * NOTE: defs are static svg graphical objects, thus we only need to render them once, the result
  * is cached on the 1st call and from there we simply return the cached jsx.
@@ -119,9 +131,10 @@ function _renderNodes(nodes, nodeCallbacks, config, highlightedNode, highlighted
  */
 function _renderDefs() {
     let cachedDefs;
+    let knownColors;
 
-    return config => {
-        if (cachedDefs) {
+    return (config, colors) => {
+        if (cachedDefs && knownColors && eqSet(knownColors, colors)) {
             return cachedDefs;
         }
 
@@ -138,16 +151,30 @@ function _renderDefs() {
         const medium = small + (MARKER_MEDIUM_OFFSET * config.maxZoom) / 3;
         const large = small + (MARKER_LARGE_OFFSET * config.maxZoom) / 3;
 
-        cachedDefs = (
-            <defs>
-                <Marker id={MARKERS.MARKER_S} refX={small} fill={config.link.color} />
-                <Marker id={MARKERS.MARKER_SH} refX={small} fill={config.link.highlightColor} />
-                <Marker id={MARKERS.MARKER_M} refX={medium} fill={config.link.color} />
-                <Marker id={MARKERS.MARKER_MH} refX={medium} fill={config.link.highlightColor} />
-                <Marker id={MARKERS.MARKER_L} refX={large} fill={config.link.color} />
-                <Marker id={MARKERS.MARKER_LH} refX={large} fill={config.link.highlightColor} />
-            </defs>
-        );
+        // <Marker id='{MARKERS.MARKER_SH}+v' refX={small} fill={config.link.highlightColor} />
+        // <Marker id='{MARKERS.MARKER_M}+v' refX={medium} fill={config.link.color} />
+        // <Marker id='{MARKERS.MARKER_MH}+v' refX={medium} fill={config.link.highlightColor} />
+        // <Marker id='{MARKERS.MARKER_L}+v' refX={large} fill={config.link.color} />
+        // <Marker id='{MARKERS.MARKER_LH}+v' refX={large} fill={config.link.highlightColor} />
+        let mstyles = {};
+
+        mstyles[MARKERS.MARKER_S] = small;
+        mstyles[MARKERS.MARKER_M] = medium;
+        mstyles[MARKERS.MARKER_L] = large;
+
+        let m = Object.keys(mstyles)
+            .map(function(sk) {
+                return [...colors].map(v => {
+                    let i = sk + "-" + v;
+
+                    return <Marker key={i} id={i} refX={mstyles[sk]} fill={v} />;
+                });
+            })
+            .flat();
+
+        knownColors = colors;
+
+        cachedDefs = <defs>{m}</defs>;
 
         return cachedDefs;
     };
@@ -217,6 +244,14 @@ function renderGraph(
     nodeDragged,
     alpha
 ) {
+    let linkColors = new Set([config.link.color, config.link.highlightColor, config.link.selectedStrokeColor]); // eslint-disable-line no-undef
+
+    links.map(function(v) {
+        if (v.color && !linkColors.has(v.color)) {
+            linkColors.add(v.color);
+        }
+    });
+
     return {
         nodes: _renderNodes(nodes, nodeCallbacks, config, highlightedNode, highlightedLink, transform, linksMatrix),
         links: _renderLinks(
@@ -231,7 +266,7 @@ function renderGraph(
             nodeDragged,
             alpha
         ),
-        defs: _memoizedRenderDefs(config),
+        defs: _memoizedRenderDefs(config, linkColors),
     };
 }
 

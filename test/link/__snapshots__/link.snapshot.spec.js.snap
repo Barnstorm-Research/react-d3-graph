@@ -8,6 +8,7 @@ exports[`Snapshot - Link Component should match snapshot 1`] = `
   onMouseOver={[Function]}
   style={
     Object {
+      "color": "red",
       "cursor": undefined,
       "fill": "none",
       "opacity": "1",

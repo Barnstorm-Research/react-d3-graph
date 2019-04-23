@@ -4,30 +4,30 @@ describe("Marker Helper", () => {
     describe("#getMarkerId", () => {
         describe("when marker is highlighted", () => {
             test("and size is 'S'mall", () => {
-                const highlighted = true;
-                const markerId = markerHelper.getMarkerId(highlighted, 0.5, { maxZoom: 20 });
+                const color = "red";
+                const markerId = markerHelper.getMarkerId(0.5, color, { maxZoom: 20 });
 
-                expect(markerId).toEqual("marker-small-highlighted");
+                expect(markerId).toEqual("marker-small-red");
             });
         });
 
         describe("when marker is not highlighted", () => {
-            let highlighted;
+            let color;
 
             beforeAll(() => {
-                highlighted = false;
+                color = "gray";
             });
 
             test("and size is 'M'edium", () => {
-                const markerId = markerHelper.getMarkerId(highlighted, 2, { maxZoom: 8 });
+                const markerId = markerHelper.getMarkerId(2, color, { maxZoom: 8 });
 
-                expect(markerId).toEqual("marker-medium");
+                expect(markerId).toEqual("marker-medium-gray");
             });
 
             test("and size is 'L'arge", () => {
-                const markerId = markerHelper.getMarkerId(highlighted, 4, { maxZoom: 8 });
+                const markerId = markerHelper.getMarkerId(4, color, { maxZoom: 8 });
 
-                expect(markerId).toEqual("marker-large");
+                expect(markerId).toEqual("marker-large-gray");
             });
         });
     });

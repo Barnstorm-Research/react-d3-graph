@@ -69,6 +69,7 @@ export default class Link extends React.Component {
         const lineStyle = {
             strokeWidth: this.props.strokeWidth,
             stroke: this.props.stroke,
+            color: this.props.stroke,
             opacity: this.props.opacity,
             fill: "none",
             cursor: this.props.mouseCursor,

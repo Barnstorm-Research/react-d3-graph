@@ -131,7 +131,7 @@ function buildLinkProps(
         strokeWidth += (linkValue * strokeWidth) / 10;
     }
 
-    const markerId = config.directed ? getMarkerId(highlight, transform, config) : null;
+    const markerId = config.directed ? getMarkerId(transform, stroke, config) : null;
 
     const t = 1 / transform;
 
