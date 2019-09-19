@@ -148,7 +148,7 @@ export default class Graph extends React.Component {
             .on("tick", this._tick)
             .on("end", this._simulationEnd);
 
-        const forceLink = d3ForceLink(this.state.d3links)
+        const forceLink = d3ForceLink(this.state.d3Links)
             .id(l => l.id)
             .distance(this.state.config.d3.linkLength)
             .strength(this.state.config.d3.linkStrength);
@@ -472,7 +472,7 @@ export default class Graph extends React.Component {
                 this.setState({
                     d3ElementChange: true,
                     nodes: nodes,
-                    d3links: d3links,
+                    d3Links: d3links,
                 });
                 if (reset) {
                     this.props.onClickNode && this.props.onClickNode(clickedNodeId);
@@ -505,7 +505,7 @@ export default class Graph extends React.Component {
         this.setState({
             d3ElementChange: true,
             nodes: nodes,
-            d3links: d3links,
+            d3Links: d3links,
         });
 
         this.props.onClickLink && this.props.onClickLink(source, target);
