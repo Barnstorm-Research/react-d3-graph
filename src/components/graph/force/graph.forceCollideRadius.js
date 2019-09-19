@@ -54,8 +54,9 @@ export function forceCollideRadius() {
             configNodeWidth && configNodeHeight && diagLength(configNodeWidth() / 10, configNodeHeight() / 10) / 2.0;
     }
 
-    radius.initialize = function(_) {
-        // eslint-disable-line no-unused-vars
+    radius.initialize = function(
+        _ // eslint-disable-line no-unused-vars
+    ) {
         initialize();
     };
 
