@@ -144,13 +144,20 @@ export default class Graph extends React.Component {
     _graphForcesConfig() {
         this.state.simulation
             .nodes(this.state.d3Nodes)
+            //    .force("t",graphHelper.forceWeight().nodes(this.state.d3Nodes))
             .on("tick", this._tick)
             .on("end", this._simulationEnd);
 
-        const forceLink = d3ForceLink(this.state.d3Links)
+        const forceLink = d3ForceLink(this.state.d3links)
             .id(l => l.id)
             .distance(this.state.config.d3.linkLength)
             .strength(this.state.config.d3.linkStrength);
+
+        // const forceLink = d3ForceLink(this.state.d3Links)
+        //     .id(l => l.id)
+        //     .distance(this.state.config.d3.linkLength)
+        //     .strength(this.state.config.d3.linkStrength);
+        //
 
         this.state.simulation.force(CONST.LINK_CLASS_NAME, forceLink);
 
@@ -186,6 +193,22 @@ export default class Graph extends React.Component {
             this.state.config.automaticLayoutOn &&
             this.state.config.automaticRearrangeAfterDropNode
         ) {
+            let nodes = this.state.nodes;
+
+            // this is where d3 and react bind
+            let selected = Object.keys(
+                Object.filter(this.state.nodes, function(d) {
+                    return d.selected;
+                })
+            );
+
+            selected.forEach(function(idx) {
+                if (nodes[idx].fx && nodes[idx].fy) {
+                    Reflect.deleteProperty(nodes[idx], "fx");
+                    Reflect.deleteProperty(nodes[idx], "fy");
+                }
+            });
+
             this.setState({
                 d3ElementChange: false,
                 nodeDragged: false,
@@ -204,6 +227,7 @@ export default class Graph extends React.Component {
     _onDragMove = () => {
         // peviously used index and nodeList parameter const id = nodeList[index].id;
         let nodes = this.state.nodes;
+        let d3nodes = this.state.d3Nodes;
 
         if (!this.state.config.staticGraph) {
             // this is where d3 and react bind
@@ -214,11 +238,18 @@ export default class Graph extends React.Component {
             );
 
             selected.forEach(function(idx) {
-                nodes[idx].x += d3Event.dx;
-                nodes[idx].y += d3Event.dy;
+                const d3Node = d3nodes.find(d => {
+                    return idx == d.id;
+                });
 
-                nodes[idx]["fx"] = nodes[idx].x;
-                nodes[idx]["fy"] = nodes[idx].y;
+                d3Node.x += d3Event.dx;
+                d3Node.y += d3Event.dy;
+
+                nodes[idx].x = d3Node.x;
+                nodes[idx].y = d3Node.y;
+
+                nodes[idx]["fx"] = d3Node.x;
+                nodes[idx]["fy"] = d3Node.y;
             });
 
             this._tock();
@@ -275,6 +306,23 @@ export default class Graph extends React.Component {
      * @returns {undefined}
      */
     _tick = (state = {}, cb) => {
+        // d3Select(`#${this.state.id}-${CONST.GRAPH_WRAPPER_ID}`)
+        //     .selectAll(".line")
+        //     .attr("x1", function(d) {
+        //         return d.source.x;
+        //     })
+        //     .attr("y1", function(d) { return d.source.y; })
+        //     .attr("x2", function(d) { return d.target.x; })
+        //     .attr("y2", function(d) { return d.target.y; });
+        //
+        // d3Select(`#${this.state.id}-${CONST.GRAPH_WRAPPER_ID}`)
+        //     .selectAll(".node")
+        //     .attr("cx", function(d) { return d.x; })
+        //     .attr("cy", function(d) { return d.y; });
+
+        // linkNode.attr("cx", function(d) { return d.x = (d.source.x + d.target.x) * 0.5; })
+        //     .attr("cy", function(d) { return d.y = (d.source.y + d.target.y) * 0.5; });
+
         this._tock(state, cb);
     };
 
@@ -449,7 +497,7 @@ export default class Graph extends React.Component {
             nodes[key].selected = nodes[key].previouslySelected = false;
         });
         Object.keys(d3links).forEach(key => {
-            const sel = d3links[key].source.id.toString() === source && d3links[key].target.id.toString() === target;
+            const sel = d3links[key].source.toString() === source && d3links[key].target.toString() === target;
 
             d3links[key].selected = d3links[key].previouslySelected = sel;
         });
@@ -667,6 +715,7 @@ export default class Graph extends React.Component {
         let alpha = this.state.simulation.alpha();
         const { nodes, links, defs } = graphRenderer.renderGraph(
             this.state.nodes,
+            this.state.d3Nodes,
             {
                 onClickNode: this.onClickNode,
                 onRightClickNode: this.props.onRightClickNode,

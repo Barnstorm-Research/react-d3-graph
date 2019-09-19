@@ -25,7 +25,8 @@ import {
     forceY as d3ForceY,
     forceCollide as d3ForceCollide,
     forceSimulation as d3ForceSimulation,
-    //    forceManyBody as d3ForceManyBody,
+    // forceManyBody as d3ForceManyBody,
+    //forceCenter as d3ForceCenter,
 } from "d3-force";
 
 import { forceManyBodyReuse as d3ForceManyBodyReuse } from "d3-force-reuse";
@@ -36,6 +37,7 @@ import ERRORS from "../../err";
 
 import utils from "../../utils";
 import { computeNodeDegree } from "./collapse.helper";
+import { forceCollideRadius } from "./force/graph.forceCollideRadius";
 
 const NODE_PROPS_WHITELIST = ["id", "highlighted", "x", "y", "index", "vy", "vx"];
 const LINK_CUSTOM_PROPS_WHITELIST = ["color", "opacity", "strokeWidth", "label", "className", "isHidden"];
@@ -56,17 +58,25 @@ Object.defineProperty(Array.prototype, "flat", {
  * @param  {number} width - the width of the container area of the graph.
  * @param  {number} height - the height of the container area of the graph.
  * @param  {number} gravity - the force strength applied to the graph.
+ * @param {number} nodeSize - the config.node.size value
+ * @param {number} nodeWidth - the config.node.width value
+ * @param {number} nodeHeight - the config.node.height value
  * @returns {Object} returns the simulation instance to be consumed.
  * @memberof Graph/helper
  */
-function _createForceSimulation(width, height, gravity) {
+function _createForceSimulation(width, height, gravity, nodeSize, nodeWidth, nodeHeight) {
     const frx = d3ForceX(width / 2).strength(CONST.FORCE_X);
     const fry = d3ForceY(height / 2).strength(CONST.FORCE_Y);
     const forceStrength = gravity;
 
+    const radFunc = forceCollideRadius()
+        .configNodeSize(nodeSize)
+        .configNodeWidth(nodeWidth)
+        .configNodeHeight(nodeHeight);
+
     return d3ForceSimulation()
         .force("charge", d3ForceManyBodyReuse().strength(forceStrength)) //d3ForceManyBody().strength(forceStrength))
-        .force("collision", d3ForceCollide(CONST.RADIUS_COLLIDE))
+        .force("collision", d3ForceCollide().radius(radFunc))
         .force("x", frx)
         .force("y", fry);
 }
@@ -449,7 +459,14 @@ function initializeGraphState({ data, id, config }, state) {
     nodes = _findNodeDegree(nodes, data.links);
     const { nodes: d3Nodes, links: d3Links } = graph;
     const formatedId = id.replace(/ /g, "_");
-    const simulation = _createForceSimulation(newConfig.width, newConfig.height, newConfig.d3 && newConfig.d3.gravity);
+    const simulation = _createForceSimulation(
+        newConfig.width,
+        newConfig.height,
+        newConfig.d3 && newConfig.d3.gravity,
+        newConfig.node && newConfig.node.size,
+        newConfig.node && newConfig.node.width,
+        newConfig.node && newConfig.node.height
+    );
 
     const { minZoom, maxZoom, focusZoom } = newConfig;
 

@@ -65,6 +65,17 @@ function degreeNodePositioner(degree, isX, config, transform) {
 }
 
 /**
+ *
+ * @param {list} nodes list of all nodes
+ * @param {map} nodeLookupIdx node.id to index lookup
+ * @param {string} id node.id you want returned
+ * @returns {*} the node or undefined
+ */
+function getNode(nodes, nodeLookupIdx, id) {
+    return nodes[nodeLookupIdx[id]];
+}
+
+/**
  * Helper to create alternative layout functions
  * @param {string} layoutOptionInput WEAKTREE, STRONGTREE, WEAKFLOW, STRONGFLOW or default
  * @returns {function} tick layout function
@@ -87,82 +98,90 @@ function layoutCallbackHelper(layoutOptionInput) {
 
     switch (layoutOption) {
         case "WEAKTREE":
-            return function(nodes, links, source, target, link, config, transform, nodeDragged, alpha) {
+            return function(nodes, nodeLookupIdx, links, source, target, link, config, transform, nodeDragged, alpha) {
                 var k = alpha;
+                var nsource = getNode(nodes, nodeLookupIdx, source);
+                var ntarget = getNode(nodes, nodeLookupIdx, target);
 
-                if (nodes[source] != undefined && nodes[target] != undefined) {
-                    nodes[source].y = safeNodePositioner(nodes[source].y - k, false, config, transform);
-                    nodes[target].y = safeNodePositioner(nodes[target].y + k, false, config, transform);
+                if (nsource != undefined && ntarget != undefined) {
+                    nsource.y = safeNodePositioner(nsource.y - k, false, config, transform);
+                    ntarget.y = safeNodePositioner(ntarget.y + k, false, config, transform);
 
                     //make sure these don't wiggle out of the box
-                    nodes[source].x = safeNodePositioner(nodes[source].x, true, config, transform);
-                    nodes[target].x = safeNodePositioner(nodes[target].x, true, config, transform);
+                    nsource.x = safeNodePositioner(nsource.x, true, config, transform);
+                    ntarget.x = safeNodePositioner(ntarget.x, true, config, transform);
                 }
 
                 return nodes, links;
             };
         case "STRONGTREE":
-            return function(nodes, links, source, target, link, config, transform, nodeDragged, alpha) {
+            return function(nodes, nodeLookupIdx, links, source, target, link, config, transform, nodeDragged, alpha) {
                 var k = alpha;
+                var nsource = getNode(nodes, nodeLookupIdx, source);
+                var ntarget = getNode(nodes, nodeLookupIdx, target);
 
-                if (nodes[source] != undefined && nodes[target] != undefined) {
+                if (nsource != undefined && ntarget != undefined) {
                     if (nodeDragged) {
-                        nodes[source].y = safeNodePositioner(nodes[source].y, false, config, transform);
-                        nodes[target].y = safeNodePositioner(nodes[target].y, false, config, transform);
+                        nsource.y = safeNodePositioner(nsource.y, false, config, transform);
+                        ntarget.y = safeNodePositioner(ntarget.y, false, config, transform);
                     } else {
-                        nodes[source].y = safeNodePositioner(
-                            degreeNodePositioner(nodes[source].degree, false, config, transform) - k,
+                        nsource.y = safeNodePositioner(
+                            degreeNodePositioner(nsource.degree, false, config, transform) - k,
                             true,
                             config,
                             transform
                         );
-                        nodes[target].y = safeNodePositioner(
-                            degreeNodePositioner(nodes[target].degree, false, config, transform) + k,
+                        ntarget.y = safeNodePositioner(
+                            degreeNodePositioner(ntarget.degree, false, config, transform) + k,
                             true,
                             config,
                             transform
                         );
                     }
 
-                    nodes[source].x = safeNodePositioner(nodes[source].x, true, config, transform);
+                    nsource.x = safeNodePositioner(nsource.x, true, config, transform);
 
-                    nodes[target].x = safeNodePositioner(nodes[target].x, true, config, transform);
+                    ntarget.x = safeNodePositioner(ntarget.x, true, config, transform);
                 }
 
                 return nodes, links;
             };
         case "WEAKFLOW":
-            return function(nodes, links, source, target, link, config, transform, nodeDragged, alpha) {
+            return function(nodes, nodeLookupIdx, links, source, target, link, config, transform, nodeDragged, alpha) {
                 var k = alpha;
+                var nsource = getNode(nodes, nodeLookupIdx, source);
+                var ntarget = getNode(nodes, nodeLookupIdx, target);
 
-                if (nodes[source] != undefined && nodes[target] != undefined) {
-                    nodes[source].x = safeNodePositioner(nodes[source].x - k, true, config, transform);
-                    nodes[target].x = safeNodePositioner(nodes[target].x + k, true, config, transform);
+                if (nsource != undefined && ntarget != undefined) {
+                    nsource.x = safeNodePositioner(nsource.x - k, true, config, transform);
+                    ntarget.x = safeNodePositioner(ntarget.x + k, true, config, transform);
 
                     //make sure these don't wiggle out of the box
-                    nodes[source].y = safeNodePositioner(nodes[source].y, false, config, transform);
-                    nodes[target].y = safeNodePositioner(nodes[target].y, false, config, transform);
+                    nsource.y = safeNodePositioner(nsource.y, false, config, transform);
+                    ntarget.y = safeNodePositioner(ntarget.y, false, config, transform);
                 }
 
                 return nodes, links;
             };
         case "STRONGFLOW":
-            return function(nodes, links, source, target, link, config, transform, nodeDragged, alpha) {
+            return function(nodes, nodeLookupIdx, links, source, target, link, config, transform, nodeDragged, alpha) {
                 var k = alpha;
+                var nsource = getNode(nodes, nodeLookupIdx, source);
+                var ntarget = getNode(nodes, nodeLookupIdx, target);
 
-                if (nodes[source] != undefined && nodes[target] != undefined) {
+                if (nsource != undefined && ntarget != undefined) {
                     if (nodeDragged) {
-                        nodes[source].x = safeNodePositioner(nodes[source].x, true, config, transform);
-                        nodes[target].x = safeNodePositioner(nodes[target].x, true, config, transform);
+                        nsource.x = safeNodePositioner(nsource.x, true, config, transform);
+                        ntarget.x = safeNodePositioner(ntarget.x, true, config, transform);
                     } else {
-                        nodes[source].x = safeNodePositioner(
-                            degreeNodePositioner(nodes[source].degree, true, config, transform) - k,
+                        nsource.x = safeNodePositioner(
+                            degreeNodePositioner(nsource.degree, true, config, transform) - k,
                             true,
                             config,
                             transform
                         );
-                        nodes[target].x = safeNodePositioner(
-                            degreeNodePositioner(nodes[target].degree, true, config, transform) + k,
+                        ntarget.x = safeNodePositioner(
+                            degreeNodePositioner(ntarget.degree, true, config, transform) + k,
                             true,
                             config,
                             transform
@@ -170,22 +189,25 @@ function layoutCallbackHelper(layoutOptionInput) {
                     }
 
                     //make sure these don't wiggle out of the box
-                    nodes[source].y = safeNodePositioner(nodes[source].y, false, config, transform);
-                    nodes[target].y = safeNodePositioner(nodes[target].y, false, config, transform);
+                    nsource.y = safeNodePositioner(nsource.y, false, config, transform);
+                    ntarget.y = safeNodePositioner(ntarget.y, false, config, transform);
                 }
 
                 return nodes, links;
             };
         default:
             /* eslint no-unused-vars: ["error", { "args": "none" }] */
-            return function(nodes, links, source, target, link, config, transform, nodeDragged, alpha) {
-                //make sure these don't wiggle out of the box
-                nodes[source].x = safeNodePositioner(nodes[source].x, true, config, transform);
-                nodes[target].x = safeNodePositioner(nodes[target].x, true, config, transform);
+            return function(nodes, nodeLookupIdx, links, source, target, link, config, transform, nodeDragged, alpha) {
+                var nsource = getNode(nodes, nodeLookupIdx, source);
+                var ntarget = getNode(nodes, nodeLookupIdx, target);
 
                 //make sure these don't wiggle out of the box
-                nodes[source].y = safeNodePositioner(nodes[source].y, false, config, transform);
-                nodes[target].y = safeNodePositioner(nodes[target].y, false, config, transform);
+                nsource.x = safeNodePositioner(nsource.x, true, config, transform);
+                ntarget.x = safeNodePositioner(ntarget.x, true, config, transform);
+
+                //make sure these don't wiggle out of the box
+                nsource.y = safeNodePositioner(nsource.y, false, config, transform);
+                ntarget.y = safeNodePositioner(ntarget.y, false, config, transform);
 
                 return nodes, links;
             };

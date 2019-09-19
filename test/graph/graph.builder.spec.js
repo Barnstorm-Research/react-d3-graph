@@ -32,6 +32,8 @@ describe("Graph Helper", () => {
                     that.link,
                     {},
                     {},
+                    [],
+                    {},
                     that.config,
                     that.layoutcallback,
                     [],
@@ -53,6 +55,8 @@ describe("Graph Helper", () => {
                         that.link,
                         {},
                         {},
+                        [],
+                        {},
                         that.config,
                         that.layoutcallback,
                         [],
@@ -72,6 +76,8 @@ describe("Graph Helper", () => {
                         { ...that.link, color: "green" },
                         {},
                         {},
+                        [],
+                        {},
                         that.config,
                         that.layoutcallback,
                         [],
@@ -90,6 +96,8 @@ describe("Graph Helper", () => {
                     const props = graphHelper.buildLinkProps(
                         { ...that.link, className: "dottedLine" },
                         {},
+                        {},
+                        [],
                         {},
                         that.config,
                         that.layoutcallback,
@@ -135,7 +143,7 @@ describe("Graph Helper", () => {
                     highlightStrokeColor: "yellow",
                     highlightStrokeWidth: 2,
                 });
-                const props = graphHelper.buildNodeProps(that.node, that.config, undefined, "id", undefined, 1);
+                const props = graphHelper.buildNodeProps(that.node, [], that.config, undefined, "id", undefined, 1);
 
                 expect(props).toEqual({
                     ...that.node,
@@ -177,6 +185,7 @@ describe("Graph Helper", () => {
 
                     const props = graphHelper.buildNodeProps(
                         that.node,
+                        [],
                         that.config,
                         undefined,
                         {
@@ -226,6 +235,7 @@ describe("Graph Helper", () => {
 
                     const props = graphHelper.buildNodeProps(
                         that.node,
+                        [],
                         that.config,
                         undefined,
                         {
@@ -272,7 +282,15 @@ describe("Graph Helper", () => {
         });
         describe("and no custom strokeColor is set", () => {
             test("should return the default strokeColor in the props", () => {
-                const props = graphHelper.buildNodeProps(that.node, that.config, undefined, undefined, undefined, 1);
+                const props = graphHelper.buildNodeProps(
+                    that.node,
+                    [],
+                    that.config,
+                    undefined,
+                    undefined,
+                    undefined,
+                    1
+                );
 
                 expect(props.stroke).toEqual("none");
             });
@@ -281,6 +299,7 @@ describe("Graph Helper", () => {
             test("should return yellow strokeColor in the props", () => {
                 const props = graphHelper.buildNodeProps(
                     { ...that.node, strokeColor: "yellow" },
+                    [],
                     that.config,
                     undefined,
                     undefined,
@@ -298,7 +317,7 @@ describe("Graph Helper", () => {
                     width: 5000,
                     height: 100,
                 });
-                const props = graphHelper.buildNodeProps(that.node, that.config, undefined, "id", undefined, 1);
+                const props = graphHelper.buildNodeProps(that.node, [], that.config, undefined, "id", undefined, 1);
 
                 expect(props.width).toEqual(5000);
                 expect(props.height).toEqual(100);

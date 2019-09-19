@@ -43,6 +43,8 @@ function _getNodeOpacity(node, highlightedNode, highlightedLink, config) {
  * Build some Link properties based on given parameters.
  * @param  {Object} link - the link object for which we will generate properties.
  * @param  {Object.<string, Object>} nodes - same as {@link #graphrenderer|nodes in renderGraph}.
+ * @param  {Array.<Object>} d3Nodes - d3Nodes list
+ * @param  {Object.<string, integer>} nodeLookupIdx - look up map for nodes
  * @param  {Object.<string, Object>} links - same as {@link #graphrenderer|links in renderGraph}.
  * @param  {Object} config - same as {@link #graphrenderer|config in renderGraph}.
  * @param  {Function[]} linkCallbacks - same as {@link #graphrenderer|linkCallbacks in renderGraph}.
@@ -57,6 +59,8 @@ function _getNodeOpacity(node, highlightedNode, highlightedLink, config) {
 function buildLinkProps(
     link,
     nodes,
+    d3Nodes,
+    nodeLookupIdx,
     links,
     config,
     linkCallbacks,
@@ -69,9 +73,10 @@ function buildLinkProps(
     const { source, target } = link;
 
     if (config.automaticLayoutOn) {
-        nodes,
+        d3Nodes,
             (links = linkCallbacks["layoutCallback"](
-                nodes,
+                d3Nodes,
+                nodeLookupIdx,
                 links,
                 source,
                 target,
@@ -83,10 +88,13 @@ function buildLinkProps(
             ));
     }
 
-    const x1 = (nodes[source] && nodes[source].x) || 0;
-    const y1 = (nodes[source] && nodes[source].y) || 0;
-    const x2 = (nodes[target] && nodes[target].x) || 0;
-    const y2 = (nodes[target] && nodes[target].y) || 0;
+    const nodeSource = d3Nodes[nodeLookupIdx[source]];
+    const nodeTarget = d3Nodes[nodeLookupIdx[target]];
+
+    const x1 = (nodeSource && nodeSource.x) || 0;
+    const y1 = (nodeSource && nodeSource.y) || 0;
+    const x2 = (nodeTarget && nodeTarget.x) || 0;
+    const y2 = (nodeTarget && nodeTarget.y) || 0;
 
     const d = buildLinkPathDefinition({ source: { x: x1, y: y1 }, target: { x: x2, y: y2 } }, config.link.type);
 
@@ -179,6 +187,7 @@ function buildLinkProps(
 /**
  * Build some Node properties based on given parameters.
  * @param  {Object} node - the node object for whom we will generate properties.
+ * @param  {Object} d3Node - the d3 node object
  * @param  {Object} config - same as {@link #graphrenderer|config in renderGraph}.
  * @param  {Function[]} nodeCallbacks - same as {@link #graphrenderer|nodeCallbacks in renderGraph}.
  * @param  {string} highlightedNode - same as {@link #graphrenderer|highlightedNode in renderGraph}.
@@ -187,7 +196,7 @@ function buildLinkProps(
  * @returns {Object} returns object that contain Link props ready to be feeded to the Link component.
  * @memberof Graph/builder
  */
-function buildNodeProps(node, config, nodeCallbacks = {}, highlightedNode, highlightedLink, transform) {
+function buildNodeProps(node, d3Node, config, nodeCallbacks = {}, highlightedNode, highlightedLink, transform) {
     const highlight =
         node.highlighted ||
         (node.id === (highlightedLink && highlightedLink.source) ||
@@ -234,8 +243,8 @@ function buildNodeProps(node, config, nodeCallbacks = {}, highlightedNode, highl
         ...node,
         className: CONST.NODE_CLASS_NAME,
         cursor: config.node.mouseCursor,
-        cx: (node && node.x) || "0",
-        cy: (node && node.y) || "0",
+        cx: (d3Node && d3Node.x) || ((node && node.x) || "0"),
+        cy: (d3Node && d3Node.y) || ((node && node.y) || "0"),
         fill,
         fontColor,
         fontSize: fontSize * t,

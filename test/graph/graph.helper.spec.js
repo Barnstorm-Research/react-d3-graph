@@ -28,7 +28,7 @@ describe("Graph Helper", () => {
                 d3ForceX.mockImplementation(() => ({ strength: () => fr }));
                 d3ForceY.mockImplementation(() => ({ strength: () => fr }));
                 d3ForceManyBody.mockImplementation(() => ({ strength: () => fr }));
-                d3ForceCollide.mockImplementation(() => ({ strength: () => fr }));
+                d3ForceCollide.mockImplementation(() => ({ radius: () => fr }));
                 forceStub.mockImplementation(() => ({ force: forceStub }));
                 d3ForceSimulation.mockImplementation(() => ({ force: forceStub }));
                 utils.merge.mockImplementation(() => ({ config: "config" }));

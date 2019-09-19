@@ -17,6 +17,8 @@ import { isNodeVisible } from "./collapse.helper";
 /**
  * Build Link components given a list of links.
  * @param  {Object.<string, Object>} nodes - same as {@link #graphrenderer|nodes in renderGraph}.
+ * @param  {Array.<Object>} d3Nodes - same as d3Node
+ * @param {Object.<string, number>} nodeLookupIdx - map of node.id to index in nodes list
  * @param  {Array.<Object>} links - array of links {@link #Link|Link}.
  * @param  {Array.<Object>} linksMatrix - array of links {@link #Link|Link}.
  * @param  {Object} config - same as {@link #graphrenderer|config in renderGraph}.
@@ -31,6 +33,8 @@ import { isNodeVisible } from "./collapse.helper";
  */
 function _renderLinks(
     nodes,
+    d3Nodes,
+    nodeLookupIdx,
     links,
     linksMatrix,
     config,
@@ -56,6 +60,8 @@ function _renderLinks(
         const props = buildLinkProps(
             { ...link, source: `${sourceId}`, target: `${targetId}` },
             nodes,
+            d3Nodes,
+            nodeLookupIdx,
             linksMatrix,
             config,
             linkCallbacks,
@@ -73,6 +79,7 @@ function _renderLinks(
 /**
  * Function that builds Node components.
  * @param  {Object.<string, Object>} nodes - an object containing all nodes mapped by their id.
+ * @param  {Array.<Object>} d3nodes - d3Node list
  * @param  {Function[]} nodeCallbacks - array of callbacks for used defined event handler for node interactions.
  * @param  {Object} config - an object containing rd3g consumer defined configurations {@link #config config} for the graph.
  * @param  {string} highlightedNode - this value contains a string that represents the some currently highlighted node.
@@ -84,7 +91,7 @@ function _renderLinks(
  * @returns {Array.<Object>} returns the generated array of node components
  * @memberof Graph/renderer
  */
-function _renderNodes(nodes, nodeCallbacks, config, highlightedNode, highlightedLink, transform, linksMatrix) {
+function _renderNodes(nodes, d3nodes, nodeCallbacks, config, highlightedNode, highlightedLink, transform, linksMatrix) {
     let outNodes = Object.keys(nodes);
 
     if (config.collapsible) {
@@ -97,8 +104,13 @@ function _renderNodes(nodes, nodeCallbacks, config, highlightedNode, highlighted
     }
 
     return outNodes.map(nodeId => {
+        const d3Node = d3nodes.find(d => {
+            return nodeId == d.id;
+        });
+
         const props = buildNodeProps(
             Object.assign({}, nodes[nodeId], { id: `${nodeId}` }),
+            d3Node,
             config,
             nodeCallbacks,
             highlightedNode,
@@ -192,6 +204,7 @@ const _memoizedRenderDefs = _renderDefs();
  * Method that actually is exported an consumed by Graph component in order to build all Nodes and Link
  * components.
  * @param  {Object.<string, Object>} nodes - an object containing all nodes mapped by their id.
+ * @param  {Array.<Object>} d3Nodes - d3Node list
  * @param  {Function[]} nodeCallbacks - array of callbacks for used defined event handler for node interactions.
  * @param  {Array.<Object>} links - array of links {@link #Link|Link}.
  * @param  {Object.<string, Object>} linksMatrix - an object containing a matrix of connections of the graph, for each nodeId,
@@ -233,6 +246,7 @@ const _memoizedRenderDefs = _renderDefs();
  */
 function renderGraph(
     nodes,
+    d3Nodes, // the d3 nodes
     nodeCallbacks,
     links,
     linksMatrix,
@@ -252,10 +266,23 @@ function renderGraph(
         }
     });
 
+    let nodeLookupIdx = Object.assign({}, ...Object.keys(d3Nodes).map(k => ({ [d3Nodes[k].id]: k })));
+
     return {
-        nodes: _renderNodes(nodes, nodeCallbacks, config, highlightedNode, highlightedLink, transform, linksMatrix),
+        nodes: _renderNodes(
+            nodes,
+            d3Nodes,
+            nodeCallbacks,
+            config,
+            highlightedNode,
+            highlightedLink,
+            transform,
+            linksMatrix
+        ),
         links: _renderLinks(
             nodes,
+            d3Nodes,
+            nodeLookupIdx,
             links,
             linksMatrix,
             config,
