@@ -10,8 +10,9 @@ import { MARKERS, MARKER_SMALL_SIZE, MARKER_MEDIUM_OFFSET, MARKER_LARGE_OFFSET }
 
 import Link from "../link/Link";
 import Node from "../node/Node";
+import NodeLink from "../link/NodeLink";
 import Marker from "../marker/Marker";
-import { buildLinkProps, buildNodeProps } from "./graph.builder";
+import { buildLinkProps, buildNodeProps, buildNodeLinkProps } from "./graph.builder";
 import { isNodeVisible } from "./collapse.helper";
 
 /**
@@ -73,6 +74,75 @@ function _renderLinks(
         );
 
         return <Link key={key} id={key} {...props} />;
+    });
+}
+
+/**
+ * Build Node Link components given a list of node links.
+ * @param  {Object.<string, Object>} nodes - same as {@link #graphrenderer|nodes in renderGraph}.
+ * @param  {Array.<Object>} d3Nodes - same as d3Node
+ * @param {Object.<string, number>} nodeLookupIdx - map of node.id to index in nodes list
+ * @param  {Array.<Object>} links - array of links {@link #Link|Link}.
+ * @param  {Array.<Object>} linksMatrix - array of links {@link #Link|Link}.
+ * @param {Array.<Object>} d3NodeLinks - list of d3NodeLink objects
+ * @param  {Object} config - same as {@link #graphrenderer|config in renderGraph}.
+ * @param  {Function[]} linkCallbacks - same as {@link #graphrenderer|linkCallbacks in renderGraph}.
+ * @param  {string} highlightedNode - same as {@link #graphrenderer|highlightedNode in renderGraph}.
+ * @param  {Object} highlightedLink - same as {@link #graphrenderer|highlightedLink in renderGraph}.
+ * @param  {number} transform - value that indicates the amount of zoom transformation.
+ * @param  {boolean} nodeDragged - is repositioning happening because of node being dragged.
+ * @param  {number} alpha - the alpha value for layout
+ * @returns {Array.<Object>} returns the generated array of Link components.
+ * @memberof Graph/renderer
+ */
+function _renderNodeLinks(
+    nodes,
+    d3Nodes,
+    nodeLookupIdx,
+    links,
+    linksMatrix,
+    d3NodeLinks,
+    config,
+    linkCallbacks,
+    highlightedNode,
+    highlightedLink,
+    transform,
+    nodeDragged,
+    alpha
+) {
+    let outLinks = d3NodeLinks;
+
+    //if (config.collapsible) {
+    outLinks = outLinks.filter(({ isHidden }) => !isHidden);
+    //}
+
+    return outLinks.map(nodelink => {
+        const { source, target } = nodelink;
+        // FIXME: solve this source data inconsistency later
+        const sourceId = source.id !== undefined && source.id !== null ? source.id : source;
+        const targetId = target.id !== undefined && target.id !== null ? target.id : target;
+        const key = `${sourceId}${CONST.COORDS_SEPARATOR}${targetId}`;
+        const props = buildNodeLinkProps(
+            { ...nodelink, source: `${sourceId}`, target: `${targetId}` },
+            nodes,
+            d3Nodes,
+            nodeLookupIdx,
+            linksMatrix,
+            config,
+            linkCallbacks,
+            `${highlightedNode}`,
+            highlightedLink,
+            transform,
+            nodeDragged,
+            alpha
+        );
+
+        //not sure this should be done here but we need to update the node's position based on being
+        //  set from the link source and target positions
+        nodelink.x = props.x;
+        nodelink.y = props.y;
+
+        return <NodeLink key={key} id={key} {...props} />;
     });
 }
 
@@ -233,6 +303,7 @@ const _memoizedRenderDefs = _renderDefs();
  *  }
  * ```
  * @param  {Function[]} linkCallbacks - array of callbacks for used defined event handler for link interactions.
+ * @param {Array.<Object>} d3NodeLinks - list of d3NodeLinks used to help avoid link tangling
  * @param  {Object} config - an object containing rd3g consumer defined configurations {@link #config config} for the graph.
  * @param  {string} highlightedNode - this value contains a string that represents the some currently highlighted node.
  * @param  {Object} highlightedLink - this object contains a source and target property for a link that is highlighted at some point in time.
@@ -251,6 +322,7 @@ function renderGraph(
     links,
     linksMatrix,
     linkCallbacks,
+    d3NodeLinks,
     config,
     highlightedNode,
     highlightedLink,
@@ -285,6 +357,21 @@ function renderGraph(
             nodeLookupIdx,
             links,
             linksMatrix,
+            config,
+            linkCallbacks,
+            highlightedNode,
+            highlightedLink,
+            transform,
+            nodeDragged,
+            alpha
+        ),
+        nodeLinks: _renderNodeLinks(
+            nodes,
+            d3Nodes,
+            nodeLookupIdx,
+            links,
+            linksMatrix,
+            d3NodeLinks,
             config,
             linkCallbacks,
             highlightedNode,

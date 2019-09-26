@@ -143,7 +143,7 @@ export default class Graph extends React.Component {
      */
     _graphForcesConfig() {
         this.state.simulation
-            .nodes(this.state.d3Nodes)
+            .nodes(this.state.d3Nodes.concat(this.state.d3NodeLinks))
             //    .force("t",graphHelper.forceWeight().nodes(this.state.d3Nodes))
             .on("tick", this._tick)
             .on("end", this._simulationEnd);
@@ -152,12 +152,6 @@ export default class Graph extends React.Component {
             .id(l => l.id)
             .distance(this.state.config.d3.linkLength)
             .strength(this.state.config.d3.linkStrength);
-
-        // const forceLink = d3ForceLink(this.state.d3Links)
-        //     .id(l => l.id)
-        //     .distance(this.state.config.d3.linkLength)
-        //     .strength(this.state.config.d3.linkStrength);
-        //
 
         this.state.simulation.force(CONST.LINK_CLASS_NAME, forceLink);
 
@@ -713,7 +707,7 @@ export default class Graph extends React.Component {
 
     render() {
         let alpha = this.state.simulation.alpha();
-        const { nodes, links, defs } = graphRenderer.renderGraph(
+        const { nodes, links, defs, nodeLinks } = graphRenderer.renderGraph(
             this.state.nodes,
             this.state.d3Nodes,
             {
@@ -731,6 +725,7 @@ export default class Graph extends React.Component {
                 onMouseOutLink: this.onMouseOutLink,
                 layoutCallback: layoutHelper.layoutCallbackHelper(this.state.config.d3.layoutMode),
             },
+            this.state.d3NodeLinks,
             this.state.config,
             this.state.highlightedNode,
             this.state.highlightedLink,
@@ -753,6 +748,7 @@ export default class Graph extends React.Component {
                 <svg name={`svg-container-${this.state.id}`} style={svgStyle} onClick={this.onClickGraph}>
                     {defs}
                     <g id={`${this.state.id}-${CONST.GRAPH_CONTAINER_ID}`} {...containerProps}>
+                        {nodeLinks}
                         {links}
                         {nodes}
                     </g>

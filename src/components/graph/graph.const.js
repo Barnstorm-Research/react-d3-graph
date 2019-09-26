@@ -12,6 +12,7 @@ export default {
     },
     LINK_CLASS_NAME: "link",
     NODE_CLASS_NAME: "node",
+    NODE_LINK_CLASS_NAME: "node-link",
     LAYOUT_MODES: {
         DEFAULT: "DEFAULT",
         WEAKTREE: "WEAKTREE",

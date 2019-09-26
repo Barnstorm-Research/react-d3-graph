@@ -8,6 +8,12 @@ and publish under npm registry.
 1.  npm run dist:sandbox
 2.  npm run start
 
+### See Cypress Test Results
+
+You can run the cypress tests from the developers console by running
+`node_modules/cypress/bin/cypress open`. Select "Electron 59" tool
+and "Run All Tests".
+
 ### Release steps
 
 1.  npm run dist
@@ -20,4 +26,5 @@ and publish under npm registry.
 8.  git commit -m "Release x.x.x"
 9.  Create release x.x.x in github
 10. git pull (origin master)
-11. npm publish
+11. npm pack (to generate the tarball)
+12. npm publish (to publish to NPM repo)

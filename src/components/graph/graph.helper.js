@@ -25,16 +25,12 @@ import {
     forceY as d3ForceY,
     forceCollide as d3ForceCollide,
     forceSimulation as d3ForceSimulation,
-    // forceManyBody as d3ForceManyBody,
-    //forceCenter as d3ForceCenter,
 } from "d3-force";
 
 import { forceManyBodyReuse as d3ForceManyBodyReuse } from "d3-force-reuse";
-
 import CONST from "./graph.const";
 import DEFAULT_CONFIG from "./graph.config";
 import ERRORS from "../../err";
-
 import utils from "../../utils";
 import { computeNodeDegree } from "./collapse.helper";
 import { forceCollideRadius } from "./force/graph.forceCollideRadius";
@@ -458,6 +454,7 @@ function initializeGraphState({ data, id, config }, state) {
 
     nodes = _findNodeDegree(nodes, data.links);
     const { nodes: d3Nodes, links: d3Links } = graph;
+    const d3NodeLinks = _initializeNodeLinks(d3Links, config);
     const formatedId = id.replace(/ /g, "_");
     const simulation = _createForceSimulation(
         newConfig.width,
@@ -489,7 +486,27 @@ function initializeGraphState({ data, id, config }, state) {
         configUpdated: false,
         transform: 1,
         nodeDragged: false,
+        d3NodeLinks,
     };
+}
+
+/**
+ * create a node on the link - this is used to untangle the graph
+ * @param {Array} d3Links list of all the links
+ * @param {Object} config - same as {@link #graphrenderer|config in renderGraph}.
+ * @returns {*} list of one node per link (will be placed in center of the link)
+ * @private
+ * @memberof Graph/helper
+ */
+function _initializeNodeLinks(d3Links, config) {
+    return d3Links.map((l, index) => {
+        return {
+            source: l.source,
+            target: l.target,
+            id: "nodelink-" + index,
+            size: config && config.nodeLink && config.nodeLink.size ? config.nodeLink.size : 40, //default to 40
+        };
+    });
 }
 
 /**

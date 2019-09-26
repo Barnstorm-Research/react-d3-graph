@@ -16,7 +16,12 @@ function constant(x) {
  * @returns {function():*} calculate radius function pointer
  */
 export function forceCollideRadius() {
-    var configNodeSize, configNodeWidth, configNodeHeight, nodeSize, nodeDiagHalf;
+    var configNodeSize,
+        configNodeWidth,
+        configNodeHeight,
+        nodeSize,
+        nodeDiagHalf,
+        padding = 1.5;
 
     /**
      * helper function to calculate the length of the diagonal of a rectangle
@@ -41,7 +46,7 @@ export function forceCollideRadius() {
             nodeSize ||
             CONST.RADIUS_COLLIDE;
 
-        return r;
+        return r + padding;
     }
 
     /**

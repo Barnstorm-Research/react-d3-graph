@@ -83,7 +83,7 @@ function getNode(nodes, nodeLookupIdx, id) {
 function layoutCallbackHelper(layoutOptionInput) {
     // First check if defined, if not set to default
     if (!layoutOptionInput) {
-        layoutOptionInput = "default";
+        layoutOptionInput = "nothing";
     }
     // Check what type of variable we have
     let layoutOption;
@@ -195,7 +195,7 @@ function layoutCallbackHelper(layoutOptionInput) {
 
                 return nodes, links;
             };
-        default:
+        case "DEFAULT":
             /* eslint no-unused-vars: ["error", { "args": "none" }] */
             return function(nodes, nodeLookupIdx, links, source, target, link, config, transform, nodeDragged, alpha) {
                 var nsource = getNode(nodes, nodeLookupIdx, source);
@@ -209,6 +209,11 @@ function layoutCallbackHelper(layoutOptionInput) {
                 nsource.y = safeNodePositioner(nsource.y, false, config, transform);
                 ntarget.y = safeNodePositioner(ntarget.y, false, config, transform);
 
+                return nodes, links;
+            };
+        default:
+            /* eslint no-unused-vars: ["error", { "args": "none" }] */
+            return function(nodes, nodeLookupIdx, links, source, target, link, config, transform, nodeDragged, alpha) {
                 return nodes, links;
             };
     }

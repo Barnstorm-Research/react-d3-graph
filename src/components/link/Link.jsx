@@ -99,6 +99,7 @@ export default class Link extends React.Component {
                 fontWeight: this.props.fontWeight,
             },
         };
+
         /* eslint-enable no-unused-vars */
 
         // NOTE: this adds support for labels on the arcs but causes an issue

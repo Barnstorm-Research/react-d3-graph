@@ -98,6 +98,8 @@ function buildLinkProps(
 
     const d = buildLinkPathDefinition({ source: { x: x1, y: y1 }, target: { x: x2, y: y2 } }, config.link.type);
 
+    const endpoints = { source: { x: x1, y: y1 }, target: { x: x2, y: y2 } };
+
     let mainNodeParticipates = false;
 
     switch (config.highlightDegree) {
@@ -175,12 +177,99 @@ function buildLinkProps(
         fontWeight,
         className: clsName,
         opacity,
+        endpoints: endpoints,
         selected: link.selected ? link.selected : false,
         previouslySelected: link.previouslySelected ? link.previouslySelected : false,
         onClickLink: linkCallbacks.onClickLink,
         onRightClickLink: linkCallbacks.onRightClickLink,
         onMouseOverLink: linkCallbacks.onMouseOverLink,
         onMouseOutLink: linkCallbacks.onMouseOutLink,
+    };
+}
+
+/**
+ * Build some Node Link properties based on given parameters.
+ * @param  {Object} nodelink - the node link object for which we will generate properties.
+ * @param  {Object.<string, Object>} nodes - same as {@link #graphrenderer|nodes in renderGraph}.
+ * @param  {Array.<Object>} d3Nodes - d3Nodes list
+ * @param  {Object.<string, integer>} nodeLookupIdx - look up map for nodes
+ * @param  {Object.<string, Object>} links - same as {@link #graphrenderer|links in renderGraph}.
+ * @param  {Object} config - same as {@link #graphrenderer|config in renderGraph}.
+ * @param  {Function[]} linkCallbacks - same as {@link #graphrenderer|linkCallbacks in renderGraph}.
+ * @param  {string} highlightedNode - same as {@link #graphrenderer|highlightedNode in renderGraph}.
+ * @param  {Object} highlightedLink - same as {@link #graphrenderer|highlightedLink in renderGraph}.
+ * @param  {number} transform - value that indicates the amount of zoom transformation.
+ * @param  {boolean} nodeDragged - is repositioning happening because of node being dragged.
+ * @param  {number} alpha - the alpha value
+ * @returns {Object} returns an object that aggregates all props for creating respective Link component instance.
+ * @memberof Graph/builder
+ */
+function buildNodeLinkProps(
+    nodelink,
+    nodes,
+    d3Nodes,
+    nodeLookupIdx,
+    links,
+    config,
+    linkCallbacks,
+    highlightedNode,
+    highlightedLink,
+    transform,
+    nodeDragged,
+    alpha // eslint-disable-line no-unused-vars
+) {
+    const { source, target } = nodelink;
+
+    const nodeSource = d3Nodes[nodeLookupIdx[source]];
+    const nodeTarget = d3Nodes[nodeLookupIdx[target]];
+
+    const x1 = (nodeSource && nodeSource.x) || 0;
+    const y1 = (nodeSource && nodeSource.y) || 0;
+    const x2 = (nodeTarget && nodeTarget.x) || 0;
+    const y2 = (nodeTarget && nodeTarget.y) || 0;
+
+    const cx = (x1 + x2) * 0.5;
+    const cy = (y1 + y2) * 0.5;
+
+    nodelink.dx = cx;
+    nodelink.dy = cy;
+    nodelink.x = cx;
+    nodelink.y = cy;
+
+    let opacity = nodelink.opacity || config.nodeLink.opacity;
+    const fill = nodelink.color || config.nodeLink.color;
+    let stroke = nodelink.strokeColor || config.nodeLink.strokeColor;
+
+    if (!nodelink.strokeColor && config.nodeLink.strokeColor == CONST.KEYWORDS.SAME) {
+        stroke = fill;
+    }
+
+    const t = 1 / transform;
+    let strokeWidth = (nodelink.strokeWidth || config.nodeLink.strokeWidth) * t;
+
+    var clsName = CONST.NODE_LINK_CLASS_NAME;
+
+    if (nodelink.className || config.nodeLink.className) {
+        clsName += " " + (nodelink.className || config.nodeLink.className);
+    }
+
+    const size = nodelink.size / 10 || config.nodeLink.size / 10;
+
+    return {
+        source,
+        target,
+        strokeWidth: strokeWidth,
+        strokeColor: stroke,
+        fill: fill,
+        cx: cx,
+        cy: cy,
+        dx: cx,
+        dy: cy,
+        x: cx,
+        y: cy,
+        size: size,
+        className: clsName,
+        opacity,
     };
 }
 
@@ -272,4 +361,4 @@ function buildNodeProps(node, d3Node, config, nodeCallbacks = {}, highlightedNod
     };
 }
 
-export { buildLinkProps, buildNodeProps };
+export { buildLinkProps, buildNodeProps, buildNodeLinkProps };

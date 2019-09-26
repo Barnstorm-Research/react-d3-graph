@@ -319,6 +319,32 @@ describe("Graph Helper", () => {
                         force: forceStub,
                     },
                     transform: 1,
+                    d3NodeLinks: [
+                        {
+                            id: "nodelink-0",
+                            size: 40,
+                            source: {
+                                highlighted: false,
+                                id: "A",
+                            },
+                            target: {
+                                highlighted: false,
+                                id: "B",
+                            },
+                        },
+                        {
+                            id: "nodelink-1",
+                            size: 40,
+                            source: {
+                                highlighted: false,
+                                id: "C",
+                            },
+                            target: {
+                                highlighted: false,
+                                id: "A",
+                            },
+                        },
+                    ],
                 });
             });
         });
