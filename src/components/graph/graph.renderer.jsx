@@ -113,7 +113,18 @@ function _renderNodeLinks(
     let outLinks = d3NodeLinks;
 
     //if (config.collapsible) {
-    outLinks = outLinks.filter(({ isHidden }) => !isHidden);
+    outLinks = outLinks
+        .filter(({ isHidden }) => !isHidden)
+        .filter(nodelnk => {
+            const sourceId =
+                nodelnk.source.id !== undefined && nodelnk.source.id !== null ? nodelnk.source.id : nodelnk.source;
+            const targetId =
+                nodelnk.target.id !== undefined && nodelnk.target.id !== null ? nodelnk.target.id : nodelnk.target;
+            const nodeSource = d3Nodes[nodeLookupIdx[sourceId]];
+            const nodeTarget = d3Nodes[nodeLookupIdx[targetId]];
+
+            return !nodeSource.isHidden && !nodeTarget.isHidden;
+        });
     //}
 
     return outLinks.map(nodelink => {

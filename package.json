@@ -1,9 +1,8 @@
 {
-  "name": "react-d3-graph",
-  "private": true,
-  "version": "2.0.1",
-  "description": "React component to build interactive and configurable graphs with d3 effortlessly",
-  "author": "Barnstorm Research forked from Daniel Caldas",
+  "name": "@brc/react-d3-graph",
+  "version": "2.0.2",
+  "description": "React component to build interactive and configurable graphs with d3 effortlessly.  Forked from Daniel Caldas react-d3-graph",
+  "author": "Barnstorm Research",
   "license": "MIT",
   "scripts": {
     "check": "npm run docs:lint && npm run lint && npm run test && npm run functional",
@@ -115,6 +114,6 @@
     "visualization"
   ],
   "dependencies": {
-    
+
   }
 }
