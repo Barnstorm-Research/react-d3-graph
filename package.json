@@ -1,6 +1,6 @@
 {
   "name": "@brc/react-d3-graph",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "description": "React component to build interactive and configurable graphs with d3 effortlessly.  Forked from Daniel Caldas react-d3-graph",
   "author": "Barnstorm Research",
   "license": "MIT",

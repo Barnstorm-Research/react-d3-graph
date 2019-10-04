@@ -289,7 +289,7 @@ export default {
     },
     nodeLink: {
         color: "green",
-        opacity: 0.2,
+        opacity: 0,
         renderLabel: true,
         size: 80,
         strokeColor: "purple",

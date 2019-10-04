@@ -491,7 +491,7 @@ export default class Graph extends React.Component {
             nodes[key].selected = nodes[key].previouslySelected = false;
         });
         Object.keys(d3links).forEach(key => {
-            const sel = d3links[key].source.toString() === source && d3links[key].target.toString() === target;
+            const sel = d3links[key].source.id.toString() === source && d3links[key].target.id.toString() === target;
 
             d3links[key].selected = d3links[key].previouslySelected = sel;
         });
